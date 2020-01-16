@@ -122,7 +122,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
         </Container>
         <br></br>
         <Container  maxWidth="xs">
-          <Link href="#" variant="body2">
+          <Link href="register" variant="body2">
             {"Create Account"}
           </Link>          
         </Container>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import RegisterForm from '../components/RegisterForm';
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
     return (
       <>
         <RegisterForm />
@@ -9,4 +9,4 @@ const LoginPage: React.FC = () => {
     );
   };
   
-export default LoginPage;
+export default RegisterPage;
