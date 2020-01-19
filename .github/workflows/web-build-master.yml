@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: 10.16
     - name: see directory
-    - run: npm install -g yarn
-    - run: yarn install
-    - run: yarn build
+      run: npm install -g yarn
+      run: yarn install
+      run: yarn build
 
