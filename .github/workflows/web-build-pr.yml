@@ -1,0 +1,50 @@
+name: electron-build-pr
+
+on:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build_on_linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: electron
+    - uses: actions/setup-node@master
+      with:
+        node-version: 10.16
+    - name: Build the website
+      run: npm install -g yarn
+      run: yarn install
+      run: yarn build
+
+  build_on_mac:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: electron
+    - uses: actions/setup-node@master
+      with:
+        node-version: 10.16
+    - name: Build the website
+      run: npm install -g yarn
+      run: yarn install
+      run: yarn build
+
+
+  build_on_win:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: feature/github-actions        
+    - uses: actions/setup-node@master
+      with:
+        node-version: 10.16
+    - name: Build the website
+      run: npm install -g yarn
+      run: yarn install
+      run: yarn build
