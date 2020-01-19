@@ -15,10 +15,12 @@ jobs:
     - uses: actions/setup-node@master
       with:
         node-version: 10.16
+    steps:
     - name: Build the website
-      run: npm install -g yarn
-      run: yarn install
-      run: yarn build
+      run: |
+      npm install -g yarn
+      yarn install
+      yarn build
 
   build_on_mac:
     runs-on: macOS-latest
@@ -29,10 +31,12 @@ jobs:
     - uses: actions/setup-node@master
       with:
         node-version: 10.16
+    steps:
     - name: Build the website
-      run: npm install -g yarn
-      run: yarn install
-      run: yarn build
+      run: |
+      npm install -g yarn
+      yarn install
+      yarn build
 
 
   build_on_win:
@@ -44,7 +48,9 @@ jobs:
     - uses: actions/setup-node@master
       with:
         node-version: 10.16
+    steps:
     - name: Build the website
-      run: npm install -g yarn
-      run: yarn install
-      run: yarn build
+      run: |
+      npm install -g yarn
+      yarn install
+      yarn build
