@@ -1,7 +1,7 @@
-name: electron-build-master
+name: web-build-master
 
 on:
-  pull_request:
+  push:
     branches:
     - master
 
