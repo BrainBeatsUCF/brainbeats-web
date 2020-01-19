@@ -6,51 +6,18 @@ on:
     - master
 
 jobs:
-  build_on_linux:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: master
-    - uses: actions/setup-node@master
-      with:
-        node-version: 10.16
-    steps:
-    - name: Build the website
-      run: |
-      npm install -g yarn
-      yarn install
-      yarn build
-
   build_on_mac:
     runs-on: macOS-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@master
       with:
         ref: master
     - uses: actions/setup-node@master
       with:
         node-version: 10.16
-    steps:
-    - name: Build the website
+    - name: see directory
       run: |
       npm install -g yarn
       yarn install
       yarn build
 
-
-  build_on_win:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: master        
-    - uses: actions/setup-node@master
-      with:
-        node-version: 10.16
-    steps:
-    - name: Build the website
-      run: |
-      npm install -g yarn
-      yarn install
-      yarn build
