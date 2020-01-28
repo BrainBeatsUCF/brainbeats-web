@@ -2,11 +2,11 @@ import * as React from 'react';
 import LoginForm from '../components/LoginForm';
 
 const LoginPage: React.FC = () => {
-    return (
-      <>
-        <LoginForm />
-      </>
-    );
-  };
-  
+  return (
+    <>
+      <LoginForm />
+    </>
+  );
+};
+
 export default LoginPage;

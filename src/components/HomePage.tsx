@@ -17,8 +17,10 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import List from '@material-ui/core/List';
 import { History, LocationState } from 'history';
 import { useHistory } from 'react-router-dom';
+import { mainListItems } from '../components/listItems';
 
 const drawerWidth = 240;
 
@@ -207,23 +209,21 @@ export default function Dashboard() {
         </IconButton>
 		  </Toolbar>
 		</AppBar>
-		<Drawer
-		  variant="permanent"
-		  classes={{
-			paper: clsx(classes.drawerPaper, !openSideBar && classes.drawerPaperClose),
-		  }}
-		  open={openSideBar}
-		>
-		  <div className={classes.toolbarIcon}>
-			<IconButton onClick={handleDrawerClose}>
-			  <ChevronLeftIcon />
-			</IconButton>
-		  </div>
-		  <Divider />
-
-		  <Divider />
-
-		</Drawer>
+    <Drawer
+      variant="permanent"
+      classes={{
+        paper: clsx(classes.drawerPaper, !openSideBar && classes.drawerPaperClose),
+      }}
+      open={openSideBar}
+    >
+      <div className={classes.toolbarIcon}>
+        <IconButton onClick={handleDrawerClose}>
+          <ChevronLeftIcon />
+        </IconButton>
+      </div>
+      <Divider />
+      <List>{mainListItems}</List>
+    </Drawer>
 		<main className={classes.content}>
 		  <div className={classes.appBarSpacer} />
 		  <Container maxWidth="lg" className={classes.container}>
