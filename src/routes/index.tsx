@@ -4,19 +4,19 @@ import {
     Route,
     Switch,
   } from 'react-router-dom';
-import Login from '../views/Login';
-import Register from '../views/Register';
+import Login from '../views/LoginView';
+import Dashboard from '../views/DashboardView';
 
 const Routes = (): JSX.Element => {
-    return (
-      <BrowserRouter>
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-        </Switch>
-      </BrowserRouter>
-    )
-  };
+  return (
+    <BrowserRouter>
+      <Switch>
+		    <Route path="/" component={Dashboard} />
+        <Route path="/login" component={Login} />
+      </Switch>
+    </BrowserRouter>
+  )
+};
   
-  export default Routes;
+export default Routes;
   
