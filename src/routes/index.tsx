@@ -4,14 +4,14 @@ import {
     Route,
     Switch,
   } from 'react-router-dom';
-import Login from '../views/Login';
-import Home from '../views/Home';
+import Login from '../views/LoginView';
+import Dashboard from '../views/DashboardView';
 
 const Routes = (): JSX.Element => {
   return (
     <BrowserRouter>
       <Switch>
-		    <Route path="/" component={Home} />
+		    <Route path="/" component={Dashboard} />
         <Route path="/login" component={Login} />
       </Switch>
     </BrowserRouter>

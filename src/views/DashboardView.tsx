@@ -1,10 +1,10 @@
 import * as React from 'react';
-import HomePage from '../components/HomePage';
+import Dashboard from '../components/Dashboard';
 
 const Home: React.FC = () => {
   return (
     <>
-      <HomePage />
+      <Dashboard />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import clsx from 'clsx';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -18,9 +18,17 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import HomeIcon from '@material-ui/icons/Home';
+import LibraryMusicIcon from '@material-ui/icons/LibraryMusic';
+import NewReleasesIcon from '@material-ui/icons/NewReleases';
+
 import { History, LocationState } from 'history';
 import { useHistory } from 'react-router-dom';
-import { mainListItems } from '../components/listItems';
+import LibraryPage from './LibraryPage';
+import HomePage from './Home';
 
 const drawerWidth = 240;
 
@@ -44,7 +52,7 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    background : '#2E3B55', // theme background color
+    background : '#F36B5C', // theme background color
   },
   appBarShift: {
     marginLeft: drawerWidth,
@@ -144,6 +152,7 @@ export default function Dashboard() {
 	const history = useHistory();
 
   const [openSideBar, setOpen] = React.useState(false);
+  const [selectedPage, setPage] = React.useState(<HomePage />);
 
 	const handleDrawerOpen = () => {
 	  setOpen(true);
@@ -152,6 +161,10 @@ export default function Dashboard() {
 	const handleDrawerClose = () => {
 	  setOpen(false);
   };
+
+  const handlePageSelection = (page: React.SetStateAction<JSX.Element>) => {
+    setPage(page);
+  }
 
   const handleProfileMenuOpen = async (
     history: History<LocationState>): Promise<void> => {
@@ -222,34 +235,37 @@ export default function Dashboard() {
         </IconButton>
       </div>
       <Divider />
-      <List>{mainListItems}</List>
+      <List>
+        <ListItem button onClick={() => handlePageSelection(<HomePage/>)}>
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <SearchIcon />
+          </ListItemIcon>
+          <ListItemText primary="Search" />
+        </ListItem>
+        <ListItem button onClick={() => handlePageSelection(<LibraryPage/>)}>
+          <ListItemIcon>
+            <LibraryMusicIcon />
+          </ListItemIcon>
+          <ListItemText primary="Your Library"/>
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <NewReleasesIcon />
+          </ListItemIcon>
+          <ListItemText primary="Discover" />
+        </ListItem>        
+      </List>
     </Drawer>
 		<main className={classes.content}>
 		  <div className={classes.appBarSpacer} />
 		  <Container maxWidth="lg" className={classes.container}>
-			<Grid container spacing={3}>
-			  {/* Chart */}
-			  <Grid item xs={12} md={8} lg={9}>
-				<Paper className={fixedHeightPaper}>
-				  
-				</Paper>
-			  </Grid>
-			  {/* Recent Deposits */}
-			  <Grid item xs={12} md={4} lg={3}>
-				<Paper className={fixedHeightPaper}>
-				  
-				</Paper>
-			  </Grid>
-			  {/* Recent Orders */}
-			  <Grid item xs={12}>
-				<Paper className={classes.paper}>
-				  
-				</Paper>
-			  </Grid>
-			</Grid>
-			<Box pt={4}>
-			  
-			</Box>
+        {selectedPage}
 		  </Container>
 		</main>
 	  </div>
