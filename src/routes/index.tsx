@@ -18,5 +18,5 @@ const Routes = (): JSX.Element => {
   )
 };
   
-  export default Routes;
+export default Routes;
   
