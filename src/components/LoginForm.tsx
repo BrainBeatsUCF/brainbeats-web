@@ -13,6 +13,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 
+import { BackendContext } from '../util/api';
+import Api from '../util/api';
+
 const schema = yup.object({
 	email: yup
 		.string()
@@ -56,7 +59,12 @@ const useStyles = makeStyles(theme => ({
 
 const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 	const classes = useStyles();
-	const history = useHistory();
+  const history = useHistory();
+
+  const api = React.useContext(BackendContext);
+  // api.callGetEndpoint('weatherforecast', '').then((response) => console.log(response.data[0]));
+  api.test();
+
 	return (
 	  <>
     <CssBaseline />
