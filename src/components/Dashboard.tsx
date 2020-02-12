@@ -29,6 +29,7 @@ import { History, LocationState } from 'history';
 import { useHistory } from 'react-router-dom';
 import LibraryPage from './LibraryPage';
 import HomePage from './Home';
+import AudioPlayer from './AudioPlayer';
 
 const drawerWidth = 240;
 
@@ -266,6 +267,7 @@ export default function Dashboard() {
 		  <div className={classes.appBarSpacer} />
 		  <Container maxWidth="lg" className={classes.container}>
         {selectedPage}
+        <AudioPlayer></AudioPlayer>
 		  </Container>
 		</main>
 	  </div>

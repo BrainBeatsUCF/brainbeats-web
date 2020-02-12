@@ -1,6 +1,8 @@
 import React from 'react'
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
-export default class AudioPlayer extends React.Component {
+export default class Player extends React.Component {
   playAudio() {
     let audioPlayer = document.getElementById("audio-element");
 
@@ -9,14 +11,12 @@ export default class AudioPlayer extends React.Component {
  
   render() {
     return (
-      <div>
-        <button onClick={this.playAudio}>
-          <span>Play Audio</span>
-        </button>
-        <audio id="audio-element">
-          <source src="https://api.coderrocketfuel.com/assets/pomodoro-times-up.mp3"></source>
-        </audio>
-      </div>
+      <AudioPlayer
+      autoPlay
+      src="https://api.coderrocketfuel.com/assets/pomodoro-times-up.mp3"
+      onPlay={e => console.log("onPlay")}
+      // other props here
+    />
     )
   }
 }
