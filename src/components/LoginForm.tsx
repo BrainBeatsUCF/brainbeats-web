@@ -63,7 +63,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 
   const api = React.useContext(BackendContext);
   // api.callGetEndpoint('weatherforecast', '').then((response) => console.log(response.data[0]));
-  api.test();
+  console.log(api.getSavedPlaylists('nice', 'nice'));
 
 	return (
 	  <>
