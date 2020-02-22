@@ -27,7 +27,7 @@ import NewReleasesIcon from '@material-ui/icons/NewReleases';
 
 import { History, LocationState } from 'history';
 import { useHistory } from 'react-router-dom';
-import LibraryPage from './LibraryPage';
+import LibraryPage from './Playlists';
 import HomePage from './Home';
 
 const drawerWidth = 240;

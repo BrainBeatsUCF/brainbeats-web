@@ -6,13 +6,10 @@ import {
     Card,
     CardContent,
     Typography,
-    CardHeader,
     CardActionArea,
-    CardActions,
     CardMedia,
-    Button
+    Container
 } from '@material-ui/core/';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,7 +30,7 @@ interface Playlist {
   isPrivate: boolean;
 }
 
-const LibraryPage: React.FC = () => {
+const Playlists: React.FC = () => {
   const classes = useStyles();
   const api = React.useContext(BackendContext);
 
@@ -69,39 +66,42 @@ const LibraryPage: React.FC = () => {
   
   return(
     <div className={classes.root}>
-      <Grid
-        container
-        spacing={2}
-        direction="row"
-        justify="flex-start"
-        alignItems="flex-start"
-      >
-        {playlists !== undefined ? playlists.map((elem: Playlist) => (
-          <Grid item xs={12} sm={6} md={3} key={playlists.indexOf(elem)}>
-            <Card className={classes.card}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="Contemplative Reptile"
-                  height="240"
-                  image={elem.playlistImage}
-                  title="Contemplative Reptile"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2" align="left">
-                    {elem.playlistName}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" component="p" align="left">
-                    {elem.playlistName}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        )) : <div>Loading...</div>}
-      </Grid>
+      <Container>
+        <Grid
+          container
+          spacing={2}
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+        >
+          {playlists !== undefined ? playlists.map((elem: Playlist) => (
+            <Grid item xs={12} sm={6} md={3} key={playlists.indexOf(elem)}>
+              <Card className={classes.card}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    alt="Contemplative Reptile"
+                    height="240"
+                    image={elem.playlistImage}
+                    title="Contemplative Reptile"
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2" align="left">
+                      {elem.playlistName}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p" align="left">
+                      {elem.playlistName}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          )) : <div>Loading...</div>}
+        </Grid>
+      </Container>
+
     </div>
   );
 }
 
-export default LibraryPage;
+export default Playlists;
