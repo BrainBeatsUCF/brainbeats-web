@@ -5,6 +5,7 @@ export default function HomePage() {
   return (
     <React.Fragment>
       <CssBaseline />
+      Home :)
     </React.Fragment>
   );
 }

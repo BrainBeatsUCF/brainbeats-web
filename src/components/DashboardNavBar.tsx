@@ -149,7 +149,6 @@ const Dashboard: React.FC = () => {
 	const history = useHistory();
 
   const [openSideBar, setOpen] = React.useState(false);
-  const [selectedPage, setPage] = React.useState(<HomePage />);
 
 	const handleDrawerOpen = () => {
 	  setOpen(true);
@@ -160,7 +159,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handlePageSelection = (page: any) => {
-    setPage(page);
+    history.push(`/${page}`);
   }
 
   const handleProfileMenuOpen = async (
@@ -233,25 +232,19 @@ const Dashboard: React.FC = () => {
         </div>
         <Divider />
         <List>
-          <ListItem button onClick={() => handlePageSelection(<HomePage/>)}>
+          <ListItem button onClick={() => handlePageSelection('home')}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <SearchIcon />
-            </ListItemIcon>
-            <ListItemText primary="Search" />
-          </ListItem>
-          <ListItem button onClick={() => handlePageSelection(<LibraryPage/>)}>
+          <ListItem button onClick={() => handlePageSelection('playlists')}>
             <ListItemIcon>
               <LibraryMusicIcon />
             </ListItemIcon>
             <ListItemText primary="Your Library"/>
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => handlePageSelection('discover')}>
             <ListItemIcon>
               <NewReleasesIcon />
             </ListItemIcon>
