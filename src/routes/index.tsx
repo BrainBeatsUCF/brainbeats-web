@@ -5,14 +5,16 @@ import {
     Switch,
   } from 'react-router-dom';
 import Login from '../views/LoginView';
-import Dashboard from '../views/DashboardView';
+import Home from '../views/HomeView';
+import PlaylistPage from '../views/PlaylistView';
 
 const Routes = (): JSX.Element => {
   return (
     <BrowserRouter>
       <Switch>
-		    <Route path="/" component={Dashboard} />
+		    <Route path="/home" component={Home} />
         <Route path="/login" component={Login} />
+        <Route path="/playlists" component={PlaylistPage} />
       </Switch>
     </BrowserRouter>
   )
