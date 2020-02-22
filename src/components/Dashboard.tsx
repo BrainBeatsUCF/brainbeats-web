@@ -147,7 +147,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Dashboard() {
+const Dashboard: React.FC = () => {
   const classes = useStyles();
 	const history = useHistory();
 
@@ -162,7 +162,7 @@ export default function Dashboard() {
 	  setOpen(false);
   };
 
-  const handlePageSelection = (page: React.SetStateAction<JSX.Element>) => {
+  const handlePageSelection = (page: any) => {
     setPage(page);
   }
 
@@ -175,7 +175,7 @@ export default function Dashboard() {
     }
   };
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const menuId = 'primary-search-account-menu';
   
 	return (
@@ -214,7 +214,7 @@ export default function Dashboard() {
         aria-controls={menuId}
         aria-haspopup="true"
         onClick={async (): Promise<void> => {
-              handleProfileMenuOpen(history);
+          handleProfileMenuOpen(history);
         }}
         color="inherit"
         >
@@ -271,3 +271,5 @@ export default function Dashboard() {
 	  </div>
 	);
 }
+
+export default Dashboard;
