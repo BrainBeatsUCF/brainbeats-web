@@ -3,6 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DashboardNavBar from '../components/DashboardNavBar';
+import Home from '../components/Home';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,7 +30,7 @@ const HomeView: React.FC = () => {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
-            Home :)
+            <Home />
           </Container>
         </main>
       </div>
