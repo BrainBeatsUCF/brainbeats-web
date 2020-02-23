@@ -5,14 +5,10 @@ import {
     Switch,
   } from 'react-router-dom';
 import Login from '../views/LoginView';
-<<<<<<< HEAD
 import Home from '../views/HomeView';
 import PlaylistPage from '../views/PlaylistView';
-=======
 import Register from '../views/Register';
-import Dashboard from '../views/DashboardView';
 import PlaylistDetails from '../views/PlaylistDetails';
->>>>>>> Added playlistdetails view
 
 const Routes = (): JSX.Element => {
   
@@ -22,6 +18,8 @@ const Routes = (): JSX.Element => {
 		    <Route path="/home" component={Home} />
         <Route path="/login" component={Login} />
         <Route path="/playlists" component={PlaylistPage} />
+        <Route path="/register" component={Register} />
+        <Route path="/playlist/:playlistId" component={PlaylistDetails} />
       </Switch>
     </BrowserRouter>
   )
