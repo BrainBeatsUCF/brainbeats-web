@@ -8,7 +8,7 @@ import Login from '../views/LoginView';
 import Home from '../views/HomeView';
 import PlaylistPage from '../views/PlaylistView';
 import Register from '../views/Register';
-import PlaylistDetails from '../views/PlaylistDetails';
+import PlaylistDetails from '../views/PlaylistDetailsView';
 
 const Routes = (): JSX.Element => {
   
