@@ -10,6 +10,9 @@ import PlaylistPage from '../views/PlaylistView';
 import Register from '../views/Register';
 import PlaylistDetails from '../views/PlaylistDetailsView';
 
+// Testing
+import Beat from '../components/Beat';
+
 const Routes = (): JSX.Element => {
   
   return (
