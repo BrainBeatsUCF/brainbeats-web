@@ -1,5 +1,4 @@
 import React from 'react';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import { BackendContext } from '../util/api';
@@ -7,7 +6,7 @@ import {PlaylistDetail, Song} from '../util/api/types';
 import Box from '@material-ui/core/Box';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   header: {
     alignItems: 'left',
     paddingLeft: 20,
