@@ -1,19 +1,65 @@
 import axios, { AxiosInstance } from 'axios';
 
+// const CosmosClient = require('@azure/cosmos').CosmosClient;
+import { CosmosClient, Database } from '@azure/cosmos';
+
+import * as songs from './songs';
+import * as users from './users';
+
 const config = {
-  url:
-    process.env.NODE_ENV === 'production'
-      ? process.env.REACT_API_PROD_ENDPOINT
-      : process.env.REACT_API_DEV_ENDPOINT,
+  endpoint: "https://localhost:8081",
+  key: "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+  databaseId: "BrainBeats"
 };
 
 export default class Api {
-  private _apiUrl: string =
-  config.url || 'https://localhost:44349/';
   private _httpClient: AxiosInstance;
+  private _database: Database;
 
   constructor() {
     this._httpClient = axios.create();
+    
+    const endpoint = config.endpoint;
+    const key = config.key;
+    const databaseId = config.databaseId;
+
+    // Create Database
+    // EMULATOR NEEDS TO DISABLE SSL VERIFICATION
+    // https://docs.microsoft.com/en-us/azure/cosmos-db/sql-api-nodejs-get-started
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+    const cosmosClient = new CosmosClient({ endpoint, key });
+    cosmosClient.databases.createIfNotExists({ id: databaseId });
+    
+    // Create Containers
+    const containerId = 'Users';
+    const partitionKey = { kind: "Hash", paths: ["/userId"] };
+    cosmosClient.database(databaseId).containers.createIfNotExists({ id: containerId, partitionKey }, { offerThroughput: 400 });
+
+    this._database = cosmosClient.database(config.databaseId);
+  }
+
+  public async demoAddUser(): Promise<void> {
+    this._database.container('Users').items.upsert({ 
+      userId: 'testUserId1',
+      firstName: 'testFirstName1',
+      lastName: 'testLastName1',
+      savedBeats: ['testBeatId1', 'testBeatId2', 'testBeatId3'],
+      savedPlaylists: ['testPlaylistId1', 'testPlaylistId2', 'testPlaylistId3']
+    });
+  }
+
+  // User Functions
+  public async getUserProfile(userId: string): Promise<any> {
+    return users.getUserProfile(this._database, userId);
+  }
+
+  // Beat Functions
+  public async saveBeat(userId: string, beatId: string): Promise<void> {
+    return songs.saveBeat(this._database, userId, beatId);
+  };
+
+  public async deleteBeat(userId: string, beatId: string): Promise<void> {
+    return songs.deleteBeat(this._database, userId, beatId);
   }
 
   async demoGetSong(songId: string) {
