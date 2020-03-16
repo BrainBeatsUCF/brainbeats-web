@@ -31,9 +31,10 @@ export default class Api {
     cosmosClient.databases.createIfNotExists({ id: databaseId });
     
     // Create Containers
-    const containerId = 'Users';
-    const partitionKey = { kind: "Hash", paths: ["/userId"] };
-    cosmosClient.database(databaseId).containers.createIfNotExists({ id: containerId, partitionKey }, { offerThroughput: 400 });
+    const usersPartitionKey = { kind: "Hash", paths: ["/userId"] };
+    const beatsPartitionKey = { kind: "Hash", paths: ["/beatId"] };
+    cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Users', partitionKey: usersPartitionKey }, { offerThroughput: 400 });
+    cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Beats', partitionKey: beatsPartitionKey }, { offerThroughput: 400 });
 
     this._database = cosmosClient.database(config.databaseId);
   }
@@ -48,18 +49,63 @@ export default class Api {
     });
   }
 
+  public async demoAddBeat(): Promise<void> {
+    this._database.container('Beats').items.upsert({ 
+      beatId: 'testBeatId1',
+      duration: 180,
+      name: 'testBeatName1',
+      author: 'testUserId100',
+      owner: 'testUserId1',
+      createdDate: '50000000',
+      isPrivate: false,
+      modifiedDate: '50000005',
+      image: 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
+      composition: [{
+        'sampleId': 'testSampleId1',
+        'row': 0,
+        'col': 0,
+        'duration': 30
+      },
+      {
+        'sampleId': 'testSampleId2',
+        'row': 0,
+        'col': 5,
+        'duration': 15
+      },
+      {
+        'sampleId': 'testSampleId3',
+        'row': 1,
+        'col': 2,
+        'duration': 45
+      }],
+      instruments: ['mayonaise', 'harpsichord', 'ocarina']
+    });
+  }
+
   // User Functions
   public async getUserProfile(userId: string): Promise<any> {
     return users.getUserProfile(this._database, userId);
   }
 
+  public async cleanSavedBeats(userId: string): Promise<any> {
+    return users.cleanSavedBeats(this._database, userId);
+  }
+
   // Beat Functions
   public async saveBeat(userId: string, beatId: string): Promise<void> {
     return songs.saveBeat(this._database, userId, beatId);
-  };
+  }
 
   public async deleteBeat(userId: string, beatId: string): Promise<void> {
     return songs.deleteBeat(this._database, userId, beatId);
+  }
+
+  public async getBeat(userId: string, beatId: string): Promise<void> {
+    return songs.getBeat(this._database, userId, beatId);
+  }
+
+  public async markBeatAsUnavailable(userId: string, beatId: string): Promise<void> {
+    return songs.markBeatAsUnavailable(this._database, userId, beatId);
   }
 
   async demoGetSong(songId: string) {
