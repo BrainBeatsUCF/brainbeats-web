@@ -5,7 +5,6 @@ import { BackendContext } from '../util/api';
 import {PlaylistDetail, Song} from '../util/api/types';
 import Box from '@material-ui/core/Box';
 
-
 const useStyles = makeStyles(() => ({
   header: {
     alignItems: 'left',
@@ -20,13 +19,11 @@ const useStyles = makeStyles(() => ({
   card: {
     borderRadius: 10,
     display: 'inline-block',
-    color: 'white',
     textAlign: 'center',
     margin: 20,
     width: 350,
     height: 200,
     textDecoration: 'none',
-    
   },
   cardContent: {
     width: '100%',
@@ -87,16 +84,18 @@ const Beat: React.FC = () => {
   if (loading) return (<div>loading...</div>);
   
   return (
-    <div>
+    <div style={{color: 'white'}}>
       <div className={classes.header}>
-        <h4>My Beats</h4>
+        <div>
+          <span style={{marginRight: 10}}>My beats</span>
+          <input type="text" placeholder="Search.."></input>
+        </div>
         <hr></hr>
       </div>
       <div className={classes.scroll}>
         {songs.map((song, key) => {
           return (
-
-            <div className={classes.card} style={{backgroundImage: `url(${song.songImage})`}}>
+            <div className={classes.card} style={{backgroundImage: `url(${song.songImage})`}} key={key}>
               <div className={classes.cardContent}>
                 <div className={classes.songType}>
                   {/* 
