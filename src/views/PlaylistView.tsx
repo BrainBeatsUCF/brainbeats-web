@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Playlists from '../components/Playlists';
 import LibraryNavBar from '../components/LibraryNavBar';
 import DashboardNavBar from '../components/DashboardNavBar';

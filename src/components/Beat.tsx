@@ -6,6 +6,9 @@ import {PlaylistDetail, Song} from '../util/api/types';
 import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles(() => ({
+  componentContainer: {
+    color: 'white',
+  },
   header: {
     alignItems: 'left',
     paddingLeft: 20,
@@ -14,32 +17,40 @@ const useStyles = makeStyles(() => ({
   scroll: {
     overflow: 'auto',
     whiteSpace: 'nowrap',
-    width: '100%',
   },
   card: {
     borderRadius: 10,
     display: 'inline-block',
     textAlign: 'center',
     margin: 20,
-    width: 350,
-    height: 200,
     textDecoration: 'none',
+    position: 'relative',
+  },
+  background: {
+    backgroundRepeat: 'no-repeat',
+    width: 300,
+    height: 250,
+    opacity: 0.4
   },
   cardContent: {
     width: '100%',
     height: '100%',
-    position: 'relative',
   },
   songType: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     fontWeight: 'bold',
-    height: '100%'
+    width: '100%',
+    position: 'absolute',
+    left: 0,
+    top: '50%'
   },
   beatContainer: {
     position: 'absolute',
-    top: 120
+    margin: 0,
+    padding: 0,
+    bottom: 0
   },
   sampleInstrument: {
     borderRadius: 5,
@@ -47,7 +58,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'grey',
     margin: 5,
     opacity: 0.7
-  }
+  },
 }));
 
 const Beat: React.FC = () => {
@@ -78,16 +89,15 @@ const Beat: React.FC = () => {
       })
       .catch(err => console.log(err));
     }
-    
   }, []);
 
   if (loading) return (<div>loading...</div>);
   
   return (
-    <div style={{color: 'white'}}>
+    <div className={classes.componentContainer}>
       <div className={classes.header}>
         <div>
-          <span style={{marginRight: 10}}>My beats</span>
+          <span style={{marginRight: 10}}>My Beats</span>
           <input type="text" placeholder="Search.."></input>
         </div>
         <hr></hr>
@@ -95,23 +105,12 @@ const Beat: React.FC = () => {
       <div className={classes.scroll}>
         {songs.map((song, key) => {
           return (
-            <div className={classes.card} style={{backgroundImage: `url(${song.songImage})`}} key={key}>
+            <div className={classes.card} key={key}>
+              <img alt='' className={classes.background} src={song.songImage}></img>
               <div className={classes.cardContent}>
                 <div className={classes.songType}>
-                  {/* 
-                    get beat type, examples: 
-                      1. vibing not a phone in sight 
-                      2. first mix
-                      3. basic
-                      etc ... 
-                  */}
                   Vibing, Not a Phone in Sight
                 </div>
-
-
-                {/*
-                  for these box, get all the types of samples in a beat to display in the card
-                */}
                 <Box className={classes.beatContainer}
                   display="flex"
                   flexWrap="wrap"
@@ -141,8 +140,6 @@ const Beat: React.FC = () => {
         })}
       </div>
     </div>
-    
-    
   )
 };
 

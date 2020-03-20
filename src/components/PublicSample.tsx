@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { BackendContext } from '../util/api';
 
 const useStyles = makeStyles(() => ({
+  componentContainer: {
+    color: 'white',
+  },
   header: {
     paddingLeft: 20,
     margin: 0,
@@ -11,7 +14,6 @@ const useStyles = makeStyles(() => ({
   scroll: {
     overflow: 'auto',
     whiteSpace: 'nowrap',
-    width: '100%',
   },
   card: {
     borderRadius: 10,
@@ -32,7 +34,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Profile: React.FC = () => {
+const PublicSample: React.FC = () => {
   const api = React.useContext(BackendContext);
 
   const classes = useStyles();
@@ -73,7 +75,7 @@ const Profile: React.FC = () => {
   if (loading) return (<div>loading...</div>);
   
   return (
-    <div style={{color: 'white'}}>
+    <div className={classes.componentContainer}>
       <div className={classes.header}>
         <div>
           <span style={{marginRight: 10}}>Public Samples</span>
@@ -85,7 +87,7 @@ const Profile: React.FC = () => {
         {samples.map((sample, key) => {
           return (
             <div className={classes.card} key={key}>
-              <img className={classes.samplePicture} src={sample.picture}></img>
+              <img alt='' className={classes.samplePicture} src={sample.picture}></img>
               <div className={classes.sampleTitle}>{sample.title}</div>
             </div>
           )
@@ -95,4 +97,4 @@ const Profile: React.FC = () => {
   )
 };
 
-export default Profile;
+export default PublicSample;
