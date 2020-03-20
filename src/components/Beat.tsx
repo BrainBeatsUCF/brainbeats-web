@@ -74,14 +74,14 @@ const Beat: React.FC = () => {
   useEffect(() => {
     if (loading) {
       api.demoGetPlaylist(playlistId).then(async (res: PlaylistDetail) => {
-        
+
         let songsList = [] as Song[];
         res.songList.forEach(async (songId) => {
           await api.demoGetSong(songId).then((song) => {
             songsList.push(song);
           });
         });
-  
+
         setSongs(songsList);
       })
       .then(() => {
@@ -92,7 +92,7 @@ const Beat: React.FC = () => {
   }, []);
 
   if (loading) return (<div>loading...</div>);
-  
+
   return (
     <div className={classes.componentContainer}>
       <div className={classes.header}>
