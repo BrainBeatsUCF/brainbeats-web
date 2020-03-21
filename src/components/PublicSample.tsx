@@ -73,7 +73,7 @@ const PublicSample: React.FC = () => {
   }, []);
 
   if (loading) return (<div>loading...</div>);
-  
+
   return (
     <div className={classes.componentContainer}>
       <div className={classes.header}>
