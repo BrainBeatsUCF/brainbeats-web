@@ -23,7 +23,6 @@ const useStyles = makeStyles(() => ({
     display: 'inline-block',
     textAlign: 'center',
     margin: 20,
-    textDecoration: 'none',
     position: 'relative',
   },
   background: {
