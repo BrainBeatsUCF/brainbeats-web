@@ -5,6 +5,7 @@ import { CosmosClient, Database } from '@azure/cosmos';
 
 import * as songs from './songs';
 import * as users from './users';
+import * as playlists from './playlists';
 
 const config = {
   endpoint: "https://localhost:8081",
@@ -33,8 +34,12 @@ export default class Api {
     // Create Containers
     const usersPartitionKey = { kind: "Hash", paths: ["/userId"] };
     const beatsPartitionKey = { kind: "Hash", paths: ["/beatId"] };
+    const playlistsPartitionKey = { kind: "Hash", paths: ["/playlistId"] };
+    const samplesPartitionKey = { kind: "Hash", paths: ["/sampleId"] };
     cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Users', partitionKey: usersPartitionKey }, { offerThroughput: 400 });
     cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Beats', partitionKey: beatsPartitionKey }, { offerThroughput: 400 });
+    cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Playlists', partitionKey: playlistsPartitionKey }, { offerThroughput: 400 });
+    cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Samples', partitionKey: samplesPartitionKey }, { offerThroughput: 400 });
 
     this._database = cosmosClient.database(config.databaseId);
   }
@@ -106,6 +111,27 @@ export default class Api {
 
   public async markBeatAsUnavailable(userId: string, beatId: string): Promise<void> {
     return songs.markBeatAsUnavailable(this._database, userId, beatId);
+  }
+
+  // Playlist Functions
+  /*
+  public async addBeatToPlaylist(userId: string, beatId: string, playlistId: string): Promise<void> {
+    return playlists.addBeatToPlaylist(this._database, userId, beatId, playlistId);
+  }
+
+  public async removeBeatFromPlaylist(userId: string, beatId: string, playlistId: string): Promise<void> {
+    return playlists.removeBeatFromPlaylist(this._database, userId, beatId, playlistId);
+  }
+
+  public async deletePlaylist(userId: string, playlistId: string): Promise<void> {
+    return playlists.deletePlaylist(this._database, userId, playlistId);
+  }
+  */
+
+  public async createPlaylist(
+    userId: string, beatId: string, name: string, image: any, isPrivate: boolean
+    ): Promise<void> {
+    return playlists.createPlaylist(this._database, userId, beatId, name, image, isPrivate)
   }
 
   async demoGetSong(songId: string) {
