@@ -20,8 +20,8 @@ const useStyles = makeStyles(() => ({
   },
   background: {
     backgroundRepeat: 'no-repeat',
-    width: 250,
-    height: 200,
+    width: 300,
+    height: 250,
     opacity: 0.4
   },
   bottomLeftCorner: {
