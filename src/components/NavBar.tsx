@@ -24,9 +24,9 @@ const useStyles = makeStyles(() => ({
 
 const NavBar: React.FC = () => {
   const classes = useStyles();
-  
+
   return(
-    
+
     <ul className={classes.navbar}>
       <li className={clsx(classes.navbarElement, classes.active)}><a href=''>Home</a></li>
       <li className={clsx(classes.navbarElement)}><a href=''>Studio</a></li>

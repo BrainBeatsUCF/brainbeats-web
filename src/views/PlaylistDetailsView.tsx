@@ -12,5 +12,5 @@ const PlaylistDetailsView: React.FC<Props> = (props) => {
     <PlaylistDetails playlistId={params.playlistId} />
   );
 };
-  
+
 export default PlaylistDetailsView;

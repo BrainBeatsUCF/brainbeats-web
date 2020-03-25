@@ -13,7 +13,7 @@ import NavBar from '../components/NavBar';
 import SideBar from '../components/SideBar';
 
 const Routes = (): JSX.Element => {
-  
+
   return (
     <BrowserRouter>
       <Switch>
@@ -30,6 +30,5 @@ const Routes = (): JSX.Element => {
     </BrowserRouter>
   )
 };
-  
+
 export default Routes;
-  

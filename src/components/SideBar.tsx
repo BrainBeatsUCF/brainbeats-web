@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
   header: {
     paddingTop: 20,
     textAlign: 'center'
-  }, 
+  },
   picture: {
     width: 120,
     height: 120,
@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
 
 const SideBar: React.FC = () => {
   const classes = useStyles();
-  
+
   return(
     <div className={classes.sidebar}>
       <div className={classes.userStatus}>
