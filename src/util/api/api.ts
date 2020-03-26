@@ -1,19 +1,103 @@
-import axios, { AxiosInstance } from 'axios';
-
-const config = {
-  url:
-    process.env.NODE_ENV === 'production'
-      ? process.env.REACT_API_PROD_ENDPOINT
-      : process.env.REACT_API_DEV_ENDPOINT,
-};
+import { CosmosClient, Database } from '@azure/cosmos';
+import config from '../../config/databaseConfig.json';
+import * as beats from './beats';
+import * as users from './users';
+import * as playlists from './playlists';
 
 export default class Api {
-  private _apiUrl: string =
-  config.url || 'https://localhost:44349/';
-  private _httpClient: AxiosInstance;
+  private _database: Database;
 
   constructor() {
-    this._httpClient = axios.create();
+    const endpoint = config.endpoint;
+    const key = config.key;
+
+    // Create Database
+    // EMULATOR NEEDS TO DISABLE SSL VERIFICATION
+    // SOURCE: https://docs.microsoft.com/en-us/azure/cosmos-db/sql-api-nodejs-get-started
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+    this._database = new CosmosClient({ endpoint, key }).database(config.databaseId);
+  }
+
+  // User Functions
+  public async getUserProfile(email: string): Promise<any> {
+    return users.getUserProfile(this._database, email);
+  }
+
+  public async cleanSavedBeats(email: string): Promise<any> {
+    return users.cleanSavedBeats(this._database, email);
+  }
+
+  public async cleanSavedPlaylists(email: string): Promise<any> {
+    return users.cleanSavedPlaylists(this._database, email);
+  }
+
+  // Beat Functions
+  public async saveBeat(email: string, beatId: string): Promise<void> {
+    return beats.saveBeat(this._database, email, beatId);
+  }
+
+  public async removeBeatFromSaved(email: string, beatId: string): Promise<void> {
+    return beats.removeBeatFromSaved(this._database, email, beatId);
+  }
+
+  public async getBeatInformation(userId: string, beatId: string): Promise<void> {
+    return beats.getBeatInformation(this._database, userId, beatId);
+  }
+
+  public async markBeatAsUnavailable(email: string, beatId: string): Promise<void> {
+    return beats.markBeatAsUnavailable(this._database, email, beatId);
+  }
+
+  // Playlist Functions
+  public async createPlaylist(
+    email: string, beatId: string, name: string, image: any, isPrivate: boolean
+    ): Promise<void> {
+    return playlists.createPlaylist(this._database, email, beatId, name, image, isPrivate)
+  }
+
+  // Dummy functions that dont require database connections
+  public async demoAddUser(): Promise<void> {
+    this._database.container('Users').items.upsert({
+      id: 'testUserId1',
+      firstName: 'testFirstName1',
+      lastName: 'testLastName1',
+      email: 'testemail@email.com',
+      savedBeats: ['testBeatId1', 'testBeatId2', 'testBeatId3'],
+      savedPlaylists: ['testPlaylistId1', 'testPlaylistId2', 'testPlaylistId3']
+    });
+  }
+
+  public async demoAddBeat(): Promise<void> {
+    this._database.container('Beats').items.upsert({
+      id: 'testBeatId1',
+      duration: 180,
+      name: 'testBeatName1',
+      author: 'testUserId100',
+      owner: 'testUserId1',
+      createdDate: '50000000',
+      isPrivate: false,
+      modifiedDate: '50000005',
+      image: 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
+      composition: [{
+        'sampleId': 'testSampleId1',
+        'row': 0,
+        'col': 0,
+        'duration': 30
+      },
+      {
+        'sampleId': 'testSampleId2',
+        'row': 0,
+        'col': 5,
+        'duration': 15
+      },
+      {
+        'sampleId': 'testSampleId3',
+        'row': 1,
+        'col': 2,
+        'duration': 45
+      }],
+      instruments: ['mayonaise', 'harpsichord', 'ocarina']
+    });
   }
 
   async demoGetSong(songId: string) {
