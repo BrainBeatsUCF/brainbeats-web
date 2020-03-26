@@ -95,7 +95,7 @@ export async function removeBeatFromSaved(db: Database, email: string, beatId: s
             });
         } else {
           reject('User does not have beatId saved');
-        }  
+        }
       }
     }
   });
@@ -183,7 +183,7 @@ export async function markBeatAsUnavailable(
         } else {
           reject('User does not have beatId saved');
         }
-      
+
       }
     }
   });

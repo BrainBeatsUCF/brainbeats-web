@@ -57,7 +57,7 @@ export default class Api {
 
   // Dummy functions that dont require database connections
   public async demoAddUser(): Promise<void> {
-    this._database.container('Users').items.upsert({ 
+    this._database.container('Users').items.upsert({
       id: 'testUserId1',
       firstName: 'testFirstName1',
       lastName: 'testLastName1',
@@ -68,7 +68,7 @@ export default class Api {
   }
 
   public async demoAddBeat(): Promise<void> {
-    this._database.container('Beats').items.upsert({ 
+    this._database.container('Beats').items.upsert({
       id: 'testBeatId1',
       duration: 180,
       name: 'testBeatName1',
