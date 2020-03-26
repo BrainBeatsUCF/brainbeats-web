@@ -1,13 +1,13 @@
 import { Database } from '@azure/cosmos';
 
-export async function saveBeat(db: Database, userId: string, beatId: string): Promise<void> {
+export async function saveBeat(db: Database, email: string, userId: string, beatId: string): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const querySpec = {
-      query: 'SELECT * FROM Users u WHERE u.userId = @userId',
+      query: 'SELECT * FROM Users u WHERE u.email = @email',
       parameters: [
         {
-            name: '@userId',
-            value: `${userId}`
+            name: '@email',
+            value: `${email}`
         }
       ]
     };
@@ -21,7 +21,7 @@ export async function saveBeat(db: Database, userId: string, beatId: string): Pr
       reject('User not found');
     } else {
       for (var queryResult of resources) {
-        let { id, savedBeats, userId } = queryResult;
+        let { id, savedBeats, email } = queryResult;
 
         if (savedBeats === undefined) {
           savedBeats = [];
@@ -34,7 +34,7 @@ export async function saveBeat(db: Database, userId: string, beatId: string): Pr
 
           await db
             .container('Users')
-            .item(id, userId)
+            .item(id, email)
             .replace(queryResult)
             .then(() => {
               resolve();
@@ -48,14 +48,14 @@ export async function saveBeat(db: Database, userId: string, beatId: string): Pr
   });
 }
 
-export async function deleteBeat(db: Database, userId: string, beatId: string): Promise<void> {
+export async function deleteBeatFromSaved(db: Database, email: string, userId: string, beatId: string): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const querySpec = {
-      query: 'SELECT * FROM Users u WHERE u.userId = @userId',
+      query: 'SELECT * FROM Users u WHERE u.email = @email',
       parameters: [
         {
-            name: '@userId',
-            value: `${userId}`
+            name: '@email',
+            value: `${email}`
         }
       ]
     };
@@ -69,7 +69,7 @@ export async function deleteBeat(db: Database, userId: string, beatId: string): 
       reject('User not found');
     } else {
       for (var queryResult of resources) {
-        let { id, savedBeats, userId } = queryResult;
+        let { id, savedBeats, email } = queryResult;
 
         if (savedBeats === undefined) {
           savedBeats = [];
@@ -81,7 +81,7 @@ export async function deleteBeat(db: Database, userId: string, beatId: string): 
 
           await db
             .container('Users')
-            .item(id, userId)
+            .item(id, email)
             .replace(queryResult)
             .then(() => {
               resolve();
@@ -91,17 +91,16 @@ export async function deleteBeat(db: Database, userId: string, beatId: string): 
             });
         } else {
           reject('User does not have beatId saved');
-        }
-      
+        }  
       }
     }
   });
 }
 
-export async function getBeat(db: Database, userId: string, beatId: string): Promise<void> {
+export async function getBeatInformation(db: Database, userId: string, beatId: string): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const querySpec = {
-      query: 'SELECT * FROM Beats b WHERE b.beatId = @beatId',
+      query: 'SELECT * FROM Beats b WHERE b.id = @id',
       parameters: [
         {
             name: '@beatId',
@@ -119,9 +118,9 @@ export async function getBeat(db: Database, userId: string, beatId: string): Pro
       reject('Beat not found');
     } else {
       for (var queryResult of resources) {
-        let { owner, beatId, isPrivate } = queryResult;
+        let { ownerId, beatId, isPrivate } = queryResult;
 
-        if (owner !== userId && isPrivate) {
+        if (ownerId !== userId && isPrivate) {
           reject('Beat is private and user is not owner');
         } else {
           resolve(queryResult);

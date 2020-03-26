@@ -89,21 +89,25 @@ export default class Api {
   }
 
   // User Functions
-  public async getUserProfile(userId: string): Promise<any> {
-    return users.getUserProfile(this._database, userId);
+  public async getUserProfile(email: string): Promise<any> {
+    return users.getUserProfile(this._database, email);
   }
 
-  public async cleanSavedBeats(userId: string): Promise<any> {
-    return users.cleanSavedBeats(this._database, userId);
+  public async cleanSavedBeats(email: string): Promise<any> {
+    return users.cleanSavedBeats(this._database, email);
+  }
+
+  public async cleanSavedPlaylists(email: string): Promise<any> {
+    return users.cleanSavedPlaylists(this._database, email);
   }
 
   // Beat Functions
-  public async saveBeat(userId: string, beatId: string): Promise<void> {
-    return songs.saveBeat(this._database, userId, beatId);
+  public async saveBeat(email: string, userId: string, beatId: string): Promise<void> {
+    return songs.saveBeat(this._database, email, userId, beatId);
   }
 
-  public async deleteBeat(userId: string, beatId: string): Promise<void> {
-    return songs.deleteBeat(this._database, userId, beatId);
+  public async deleteBeat(email: string, userId: string, beatId: string): Promise<void> {
+    return songs.deleteBeat(this._database, email, userId, beatId);
   }
 
   public async getBeat(userId: string, beatId: string): Promise<void> {
