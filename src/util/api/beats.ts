@@ -1,6 +1,7 @@
 import { Database } from '@azure/cosmos';
 
-export async function saveBeat(db: Database, email: string, userId: string, beatId: string): Promise<void> {
+// Adds a Beat to a User's savedBeats array
+export async function saveBeat(db: Database, email: string, beatId: string): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const querySpec = {
       query: 'SELECT * FROM Users u WHERE u.email = @email',
@@ -23,7 +24,7 @@ export async function saveBeat(db: Database, email: string, userId: string, beat
       for (var queryResult of resources) {
         let { id, savedBeats, email } = queryResult;
 
-        if (savedBeats === undefined) {
+        if (savedBeats === undefined || savedBeats == null) {
           savedBeats = [];
         }
 
@@ -31,6 +32,7 @@ export async function saveBeat(db: Database, email: string, userId: string, beat
           reject('User already has beatId saved');
         } else {
           savedBeats.push(beatId);
+          queryResult.savedBeats = savedBeats;
 
           await db
             .container('Users')
@@ -48,7 +50,8 @@ export async function saveBeat(db: Database, email: string, userId: string, beat
   });
 }
 
-export async function deleteBeatFromSaved(db: Database, email: string, userId: string, beatId: string): Promise<void> {
+// Removes a Beat from a User's savedBeats array
+export async function removeBeatFromSaved(db: Database, email: string, beatId: string): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const querySpec = {
       query: 'SELECT * FROM Users u WHERE u.email = @email',
@@ -71,13 +74,14 @@ export async function deleteBeatFromSaved(db: Database, email: string, userId: s
       for (var queryResult of resources) {
         let { id, savedBeats, email } = queryResult;
 
-        if (savedBeats === undefined) {
+        if (savedBeats === undefined || savedBeats == null) {
           savedBeats = [];
         }
 
         const index = savedBeats.indexOf(beatId);
         if (index > -1) {
           savedBeats.splice(index, 1);
+          queryResult.savedBeats = savedBeats;
 
           await db
             .container('Users')
@@ -97,13 +101,14 @@ export async function deleteBeatFromSaved(db: Database, email: string, userId: s
   });
 }
 
+// Returns the Beat Object corresponding to the beatId, will need cached userId for verifying ownership
 export async function getBeatInformation(db: Database, userId: string, beatId: string): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const querySpec = {
       query: 'SELECT * FROM Beats b WHERE b.id = @id',
       parameters: [
         {
-            name: '@beatId',
+            name: '@id',
             value: `${beatId}`
         }
       ]
@@ -118,7 +123,7 @@ export async function getBeatInformation(db: Database, userId: string, beatId: s
       reject('Beat not found');
     } else {
       for (var queryResult of resources) {
-        let { ownerId, beatId, isPrivate } = queryResult;
+        let { ownerId, isPrivate } = queryResult;
 
         if (ownerId !== userId && isPrivate) {
           reject('Beat is private and user is not owner');
@@ -130,15 +135,17 @@ export async function getBeatInformation(db: Database, userId: string, beatId: s
   });
 }
 
+// Sets a Beat in a User's savedBeats array to be 'UNAVAILABLE' if that Beat
+// ever becomes lost or deleted by others
 export async function markBeatAsUnavailable(
-  db: Database, userId: string, beatId: string): Promise<void> {
+  db: Database, email: string, beatId: string): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const querySpec = {
-      query: 'SELECT * FROM Users u WHERE u.userId = @userId',
+      query: 'SELECT * FROM Users u WHERE u.email = @email',
       parameters: [
         {
-            name: '@userId',
-            value: `${userId}`
+            name: '@email',
+            value: `${email}`
         }
       ]
     };
@@ -154,14 +161,14 @@ export async function markBeatAsUnavailable(
       for (var queryResult of resources) {
         let { id, savedBeats, userId } = queryResult;
 
-        if (savedBeats === undefined) {
+        if (savedBeats === undefined || savedBeats == null) {
           savedBeats = [];
         }
 
         const index = savedBeats.indexOf(beatId);
         if (index > -1) {
           savedBeats.splice(index, 1, 'UNAVAILABLE');
-          console.log(savedBeats);
+          queryResult.savedBeats = savedBeats;
 
           await db
             .container('Users')

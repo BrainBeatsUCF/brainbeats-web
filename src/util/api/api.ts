@@ -1,49 +1,61 @@
-import axios, { AxiosInstance } from 'axios';
-
-// const CosmosClient = require('@azure/cosmos').CosmosClient;
 import { CosmosClient, Database } from '@azure/cosmos';
-
-import * as songs from './songs';
+import config from '../../config/databaseConfig.json';
+import * as beats from './beats';
 import * as users from './users';
 import * as playlists from './playlists';
 
-const config = {
-  endpoint: "https://localhost:8081",
-  key: "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
-  databaseId: "BrainBeats"
-};
-
 export default class Api {
-  private _httpClient: AxiosInstance;
   private _database: Database;
 
   constructor() {
-    this._httpClient = axios.create();
-    
     const endpoint = config.endpoint;
     const key = config.key;
-    const databaseId = config.databaseId;
 
     // Create Database
     // EMULATOR NEEDS TO DISABLE SSL VERIFICATION
-    // https://docs.microsoft.com/en-us/azure/cosmos-db/sql-api-nodejs-get-started
+    // SOURCE: https://docs.microsoft.com/en-us/azure/cosmos-db/sql-api-nodejs-get-started
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-    const cosmosClient = new CosmosClient({ endpoint, key });
-    cosmosClient.databases.createIfNotExists({ id: databaseId });
-    
-    // Create Containers
-    const usersPartitionKey = { kind: "Hash", paths: ["/email"] };
-    const beatsPartitionKey = { kind: "Hash", paths: ["/id"] };
-    const playlistsPartitionKey = { kind: "Hash", paths: ["/id"] };
-    const samplesPartitionKey = { kind: "Hash", paths: ["/id"] };
-    cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Users', partitionKey: usersPartitionKey }, { offerThroughput: 400 });
-    cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Beats', partitionKey: beatsPartitionKey }, { offerThroughput: 400 });
-    cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Playlists', partitionKey: playlistsPartitionKey }, { offerThroughput: 400 });
-    cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Samples', partitionKey: samplesPartitionKey }, { offerThroughput: 400 });
-
-    this._database = cosmosClient.database(config.databaseId);
+    this._database = new CosmosClient({ endpoint, key }).database(config.databaseId);
   }
 
+  // User Functions
+  public async getUserProfile(email: string): Promise<any> {
+    return users.getUserProfile(this._database, email);
+  }
+
+  public async cleanSavedBeats(email: string): Promise<any> {
+    return users.cleanSavedBeats(this._database, email);
+  }
+
+  public async cleanSavedPlaylists(email: string): Promise<any> {
+    return users.cleanSavedPlaylists(this._database, email);
+  }
+
+  // Beat Functions
+  public async saveBeat(email: string, beatId: string): Promise<void> {
+    return beats.saveBeat(this._database, email, beatId);
+  }
+
+  public async removeBeatFromSaved(email: string, beatId: string): Promise<void> {
+    return beats.removeBeatFromSaved(this._database, email, beatId);
+  }
+
+  public async getBeatInformation(userId: string, beatId: string): Promise<void> {
+    return beats.getBeatInformation(this._database, userId, beatId);
+  }
+
+  public async markBeatAsUnavailable(email: string, beatId: string): Promise<void> {
+    return beats.markBeatAsUnavailable(this._database, email, beatId);
+  }
+
+  // Playlist Functions
+  public async createPlaylist(
+    email: string, beatId: string, name: string, image: any, isPrivate: boolean
+    ): Promise<void> {
+    return playlists.createPlaylist(this._database, email, beatId, name, image, isPrivate)
+  }
+
+  // Dummy functions that dont require database connections
   public async demoAddUser(): Promise<void> {
     this._database.container('Users').items.upsert({ 
       id: 'testUserId1',
@@ -86,57 +98,6 @@ export default class Api {
       }],
       instruments: ['mayonaise', 'harpsichord', 'ocarina']
     });
-  }
-
-  // User Functions
-  public async getUserProfile(email: string): Promise<any> {
-    return users.getUserProfile(this._database, email);
-  }
-
-  public async cleanSavedBeats(email: string): Promise<any> {
-    return users.cleanSavedBeats(this._database, email);
-  }
-
-  public async cleanSavedPlaylists(email: string): Promise<any> {
-    return users.cleanSavedPlaylists(this._database, email);
-  }
-
-  // Beat Functions
-  public async saveBeat(email: string, userId: string, beatId: string): Promise<void> {
-    return songs.saveBeat(this._database, email, userId, beatId);
-  }
-
-  public async deleteBeat(email: string, userId: string, beatId: string): Promise<void> {
-    return songs.deleteBeat(this._database, email, userId, beatId);
-  }
-
-  public async getBeat(userId: string, beatId: string): Promise<void> {
-    return songs.getBeat(this._database, userId, beatId);
-  }
-
-  public async markBeatAsUnavailable(userId: string, beatId: string): Promise<void> {
-    return songs.markBeatAsUnavailable(this._database, userId, beatId);
-  }
-
-  // Playlist Functions
-  /*
-  public async addBeatToPlaylist(userId: string, beatId: string, playlistId: string): Promise<void> {
-    return playlists.addBeatToPlaylist(this._database, userId, beatId, playlistId);
-  }
-
-  public async removeBeatFromPlaylist(userId: string, beatId: string, playlistId: string): Promise<void> {
-    return playlists.removeBeatFromPlaylist(this._database, userId, beatId, playlistId);
-  }
-
-  public async deletePlaylist(userId: string, playlistId: string): Promise<void> {
-    return playlists.deletePlaylist(this._database, userId, playlistId);
-  }
-  */
-
-  public async createPlaylist(
-    userId: string, beatId: string, name: string, image: any, isPrivate: boolean
-    ): Promise<void> {
-    return playlists.createPlaylist(this._database, userId, beatId, name, image, isPrivate)
   }
 
   async demoGetSong(songId: string) {
