@@ -32,10 +32,10 @@ export default class Api {
     cosmosClient.databases.createIfNotExists({ id: databaseId });
     
     // Create Containers
-    const usersPartitionKey = { kind: "Hash", paths: ["/userId"] };
-    const beatsPartitionKey = { kind: "Hash", paths: ["/beatId"] };
-    const playlistsPartitionKey = { kind: "Hash", paths: ["/playlistId"] };
-    const samplesPartitionKey = { kind: "Hash", paths: ["/sampleId"] };
+    const usersPartitionKey = { kind: "Hash", paths: ["/email"] };
+    const beatsPartitionKey = { kind: "Hash", paths: ["/id"] };
+    const playlistsPartitionKey = { kind: "Hash", paths: ["/id"] };
+    const samplesPartitionKey = { kind: "Hash", paths: ["/id"] };
     cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Users', partitionKey: usersPartitionKey }, { offerThroughput: 400 });
     cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Beats', partitionKey: beatsPartitionKey }, { offerThroughput: 400 });
     cosmosClient.database(databaseId).containers.createIfNotExists({ id: 'Playlists', partitionKey: playlistsPartitionKey }, { offerThroughput: 400 });
@@ -46,9 +46,10 @@ export default class Api {
 
   public async demoAddUser(): Promise<void> {
     this._database.container('Users').items.upsert({ 
-      userId: 'testUserId1',
+      id: 'testUserId1',
       firstName: 'testFirstName1',
       lastName: 'testLastName1',
+      email: 'testemail@email.com',
       savedBeats: ['testBeatId1', 'testBeatId2', 'testBeatId3'],
       savedPlaylists: ['testPlaylistId1', 'testPlaylistId2', 'testPlaylistId3']
     });
@@ -56,7 +57,7 @@ export default class Api {
 
   public async demoAddBeat(): Promise<void> {
     this._database.container('Beats').items.upsert({ 
-      beatId: 'testBeatId1',
+      id: 'testBeatId1',
       duration: 180,
       name: 'testBeatName1',
       author: 'testUserId100',
