@@ -18,9 +18,9 @@ export default class Api {
       key = process.env.PROD_KEY ? process.env.PROD_KEY : "";
       databaseId = process.env.DATABASE_ID ? process.env.DATABASE_ID : "";
     } else {
-      endpoint = config.endpoint;
-      key = config.key;
-      databaseId = config.databaseId;
+      endpoint = require('../../config/databaseConfig').endpoint;
+      key = require('../../config/databaseConfig').key;
+      databaseId = require('../../config/databaseConfig').databaseId;
     }
 
     // Create Database
