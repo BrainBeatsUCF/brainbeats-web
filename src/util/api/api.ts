@@ -8,14 +8,26 @@ export default class Api {
   private _database: Database;
 
   constructor() {
-    const endpoint = config.endpoint;
-    const key = config.key;
+
+    let endpoint = "";
+    let key = "";
+    let databaseId = "";
+
+    if (process.env.NODE_ENV === 'production') {
+      endpoint = process.env.PROD_ENDPOINT ? process.env.PROD_ENDPOINT : "";
+      key = process.env.PROD_KEY ? process.env.PROD_KEY : "";
+      databaseId = process.env.DATABASE_ID ? process.env.DATABASE_ID : "";
+    } else {
+      endpoint = config.endpoint;
+      key = config.key;
+      databaseId = config.databaseId;
+    }
 
     // Create Database
     // EMULATOR NEEDS TO DISABLE SSL VERIFICATION
     // SOURCE: https://docs.microsoft.com/en-us/azure/cosmos-db/sql-api-nodejs-get-started
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-    this._database = new CosmosClient({ endpoint, key }).database(config.databaseId);
+    this._database = new CosmosClient({ endpoint, key }).database(databaseId);
   }
 
   // User Functions
