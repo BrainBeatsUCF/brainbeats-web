@@ -1,5 +1,4 @@
 import { CosmosClient, Database } from '@azure/cosmos';
-import config from '../../config/databaseConfig.json';
 import * as beats from './beats';
 import * as users from './users';
 import * as playlists from './playlists';
