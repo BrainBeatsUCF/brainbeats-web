@@ -13,21 +13,16 @@ const useStyles = makeStyles(() =>
       backgroundColor: '#1a1919',
       flexGrow: 1,
     },
-    fixedTopRight: {
-      position: 'fixed',
-      width: '100%',
-      height: '100%',
-      top: 0,
-      right: 0,
-      boxShadow: '-10px 10px 200px 20px #3d3d3d'
-    },
     fixedLeftTop: {
       position: 'fixed',
       top: 0,
       zIndex: 5
     },
     scrollableView: {
-      paddingTop: 60
+      paddingTop: 60,
+      '@media (max-width: 960px)': {
+        marginBottom: 251
+      }
     }
   }),
 );
@@ -38,7 +33,7 @@ const HomeView: React.FC = () => {
   return (
     <div className={classes.root}>
       <Grid container>
-        <Grid item xs={9}>
+        <Grid item xs={12} md={9}>
           <Grid container>
             <Grid className={classes.fixedLeftTop} item xs={12}>
               <NavBar />
@@ -50,7 +45,7 @@ const HomeView: React.FC = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid className={classes.fixedTopRight} item xs={3}>
+        <Grid item xs={12} md={3}>
           <SideBar />
         </Grid>
       </Grid>

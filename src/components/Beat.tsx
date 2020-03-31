@@ -24,12 +24,13 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     margin: 20,
     position: 'relative',
+    cursor: 'pointer'
   },
   background: {
     backgroundRepeat: 'no-repeat',
-    width: 300,
-    height: 250,
-    opacity: 0.4
+    width: 200,
+    height: 150,
+    opacity: 0.4,
   },
   cardContent: {
     width: '100%',
@@ -43,7 +44,8 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     position: 'absolute',
     left: 0,
-    top: '50%'
+    top: '50%',
+    fontSize: 13
   },
   beatContainer: {
     position: 'absolute',
@@ -56,7 +58,8 @@ const useStyles = makeStyles(() => ({
     padding: 2,
     backgroundColor: 'grey',
     margin: 5,
-    opacity: 0.7
+    opacity: 0.7,
+    fontSize: 10
   },
 }));
 
@@ -90,6 +93,10 @@ const Beat: React.FC = () => {
     }
   }, []);
 
+  const playBeat = (event: React.MouseEvent<HTMLImageElement>) => {
+    console.log("play Beat");
+  };
+
   if (loading) return (<div>loading...</div>);
 
   return (
@@ -104,7 +111,7 @@ const Beat: React.FC = () => {
       <div className={classes.scroll}>
         {songs.map((song, key) => {
           return (
-            <div className={classes.card} key={key}>
+            <div className={classes.card} key={key} onClick={playBeat}>
               <img alt='' className={classes.background} src={song.songImage}></img>
               <div className={classes.cardContent}>
                 <div className={classes.songType}>

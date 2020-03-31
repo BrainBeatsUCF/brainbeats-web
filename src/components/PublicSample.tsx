@@ -20,13 +20,14 @@ const useStyles = makeStyles(() => ({
     display: 'inline-block',
     textAlign: 'center',
     width: 200,
-    height: 200,
+    height: 150,
     textDecoration: 'none',
   },
   samplePicture: {
     width: 150,
     height: 150,
-    borderRadius: '50%'
+    borderRadius: '50%',
+    cursor: 'pointer'
   },
   sampleTitle: {
     overflow: 'hidden',
@@ -74,6 +75,10 @@ const PublicSample: React.FC = () => {
 
   if (loading) return (<div>loading...</div>);
 
+  const playSample = (event: React.MouseEvent<HTMLImageElement>) => {
+    console.log("Play sample");
+  };
+
   return (
     <div className={classes.componentContainer}>
       <div className={classes.header}>
@@ -87,7 +92,7 @@ const PublicSample: React.FC = () => {
         {samples.map((sample, key) => {
           return (
             <div className={classes.card} key={key}>
-              <img alt='' className={classes.samplePicture} src={sample.picture}></img>
+              <img alt='' className={classes.samplePicture} src={sample.picture} onClick={playSample}></img>
               <div className={classes.sampleTitle}>{sample.title}</div>
             </div>
           )
