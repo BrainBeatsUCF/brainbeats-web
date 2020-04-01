@@ -117,19 +117,22 @@ const SideBar: React.FC = () => {
 
   const [isPlaying, setIsPlay] = useState(false);
 
-  // musicContext
   const musicProvider = React.useContext(MusicContext);
 
   let audioPlayButtons, sidebar, audioInfo, userStat;
 
   const togglePlayAndPause = (event: React.MouseEvent<HTMLImageElement>) => {
-    setIsPlay(!isPlaying);
+    setIsPlay(!musicProvider.getPlayingStatus);
+    console.log("testing");
+    musicProvider.togglePlayingStatus();
+    console.log(musicProvider.getPlayingStatus);
   };
 
   // Todo: if musicContext.getStatus() is true
   if (isPlaying) {
     audioPlayButtons = (
       <>
+        <p>True</p>
         <img className={classes.audioPlayButton} alt='Back Button' src='images/backButton.png'></img>
         <img className={classes.audioPlayButton} alt='Pause Button' src='images/pauseButton.png' onClick={togglePlayAndPause}></img>
         <img className={classes.audioPlayButton} alt='Forward Button' src='images/forwardButton.png'></img>
@@ -138,6 +141,7 @@ const SideBar: React.FC = () => {
   } else {
     audioPlayButtons = (
       <>
+      <p>True</p>
         <img className={classes.audioPlayButton} alt='Back Button' src='images/backButton.png'></img>
         <img className={classes.audioPlayButton} alt='Play Button' src='images/playButton.png' onClick={togglePlayAndPause}></img>
         <img className={classes.audioPlayButton} alt='Forward Button' src='images/forwardButton.png'></img>
