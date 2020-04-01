@@ -122,10 +122,10 @@ const SideBar: React.FC = () => {
   let audioPlayButtons, sidebar, audioInfo, userStat;
 
   const togglePlayAndPause = (event: React.MouseEvent<HTMLImageElement>) => {
-    setIsPlay(!musicProvider.getPlayingStatus);
+    setIsPlay(!musicProvider.getPlayingStatus());
     console.log("testing");
     musicProvider.togglePlayingStatus();
-    console.log(musicProvider.getPlayingStatus);
+    console.log(musicProvider.getPlayingStatus());
   };
 
   // Todo: if musicContext.getStatus() is true

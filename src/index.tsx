@@ -3,13 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import Api, { BackendContext } from './util/api';
+import MusicContextProvider, { MusicContext } from './contexts';
 import * as serviceWorker from './serviceWorker';
 
 const api: Api = new Api();
+const musicContextProvider: MusicContextProvider = new MusicContextProvider();
 
 ReactDOM.render(
   <BackendContext.Provider value={api}>
-    <App />
+    <MusicContext.Provider value={musicContextProvider}>
+      <App />
+    </MusicContext.Provider>
   </BackendContext.Provider>,
   document.getElementById('root'),
 );
