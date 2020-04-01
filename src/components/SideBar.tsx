@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+// Todo: why cannot import
+import { MusicContext } from '../contexts';
+
 const useStyles = makeStyles(() => ({
   sidebarColumn: {
     height: 'calc(100% - 60px)',
@@ -114,12 +117,16 @@ const SideBar: React.FC = () => {
 
   const [isPlaying, setIsPlay] = useState(false);
 
+  // musicContext
+  const musicProvider = React.useContext(MusicContext);
+
   let audioPlayButtons, sidebar, audioInfo, userStat;
 
   const togglePlayAndPause = (event: React.MouseEvent<HTMLImageElement>) => {
     setIsPlay(!isPlaying);
   };
 
+  // Todo: if musicContext.getStatus() is true
   if (isPlaying) {
     audioPlayButtons = (
       <>

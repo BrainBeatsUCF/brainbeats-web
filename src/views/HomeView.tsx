@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import SideBar from '../components/SideBar';
 import NavBar from '../components/NavBar';
+import MusicContext from '../contexts/MusicContext';
 
 const useStyles = makeStyles(() =>
   createStyles({
