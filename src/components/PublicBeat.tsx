@@ -1,5 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles';
-import React from 'react';
+import React, { useState } from 'react';
+import { MusicContext } from '../contexts';
+import PublicBeatPlayButton from './PublicBeatPlayButton';
+
+interface PublicBeatProps {
+  isPlaying: boolean,
+  togglePlayPauseButon: any
+}
 
 const useStyles = makeStyles(() => ({
   componentContainer: {
@@ -44,8 +51,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const PublicBeat: React.FC = () => {
+const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   const classes = useStyles();
+  
+  // const [isPlaying, setIsPlaying] = useState(false);
+  const musicProvider = React.useContext(MusicContext);
 
   let beats = [
     {
@@ -97,6 +107,35 @@ const PublicBeat: React.FC = () => {
       'duration': 2131
     },
   ];
+
+  // const playOrPause = (event: React.MouseEvent<HTMLImageElement>) => {
+
+  //   // if status is false, then playNew
+  //   if (musicProvider.getPlayingStatus() === false)
+  //   {
+  //     console.log("false");
+  //     musicProvider.playNew();
+  //     setIsPlaying(musicProvider.getPlayingStatus());
+  //   } else {
+  //     console.log("true");
+  //     // if status is true, then toggle, which will pause
+  //     setIsPlaying(!musicProvider.getPlayingStatus());
+  //     musicProvider.togglePlayingStatus();
+  //   }
+  // };
+
+  // let button: any;
+
+  // if (isPlaying) {
+  //   button = (
+  //     <img className={classes.playButton} alt='Pause Button' src='images/pauseButton.png' onClick={playOrPause}></img>
+  //   );
+  // } else {
+  //   button = (
+  //     <img className={classes.playButton} alt='Play Button' src='images/playButton.png' onClick={playOrPause}></img>
+  //   );
+  // }
+
   return (
     <div className={classes.componentContainer}>
       <div className={classes.header}>
@@ -116,7 +155,9 @@ const PublicBeat: React.FC = () => {
                 <div>
                   <div>{beat.title}</div>
                   <div className={classes.playButtonAndBeatInfo}>
-                    <img className={classes.playButton} alt='' src='images/playButton.png'></img>
+                    {/* {button} */}
+                    {/* <PublicBeatPlayButton /> */}
+                    <PublicBeatPlayButton isPlaying={props.isPlaying} togglePlayPauseButon={props.togglePlayPauseButon}/>
                     <div>
                       <div>{beat.type}</div>
                       <div>{beat.duration}</div>

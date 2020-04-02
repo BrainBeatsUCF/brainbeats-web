@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-
-// Todo: why cannot import
 import { MusicContext } from '../contexts';
+
+interface SideBarProps {
+  isPlaying: boolean,
+  togglePlayPauseButon: any
+}
 
 const useStyles = makeStyles(() => ({
   sidebarColumn: {
-    height: 'calc(100% - 60px)',
     color: 'white',
     backgroundColor: '#1a1919',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    height: '100vh',
   },
   fixedLeftBottom: {
     position: 'fixed',
@@ -84,9 +87,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    '@media (min-width: 961px)': {
-      paddingBottom: 50
-    }
   },
   audioPictureContainer: {
     display: 'flex',
@@ -111,39 +111,52 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const SideBar: React.FC = () => {
+const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const classes = useStyles();
   const isOverMdBreakPoint = useMediaQuery('(min-width:960px)');
 
-  const [isPlaying, setIsPlay] = useState(false);
+  // const [isPlaying, setIsPlaying] = useState(false);
 
   const musicProvider = React.useContext(MusicContext);
 
   let audioPlayButtons, sidebar, audioInfo, userStat;
 
-  const togglePlayAndPause = (event: React.MouseEvent<HTMLImageElement>) => {
-    setIsPlay(!musicProvider.getPlayingStatus());
-    console.log("testing");
-    musicProvider.togglePlayingStatus();
-    console.log(musicProvider.getPlayingStatus());
-  };
+  // const togglePlayAndPause = (event: React.MouseEvent<HTMLImageElement>) => {
+  //   setIsPlaying(!musicProvider.getPlayingStatus());
+  //   musicProvider.togglePlayingStatus();
+  // };
 
   // Todo: if musicContext.getStatus() is true
-  if (isPlaying) {
+  // if (isPlaying) {
+  //   audioPlayButtons = (
+  //     <>
+  //       <img className={classes.audioPlayButton} alt='Back Button' src='images/backButton.png'></img>
+  //       <img className={classes.audioPlayButton} alt='Pause Button' src='images/pauseButton.png' onClick={togglePlayAndPause}></img>
+  //       <img className={classes.audioPlayButton} alt='Forward Button' src='images/forwardButton.png'></img>
+  //     </>
+  //   );
+  // } else {
+  //   audioPlayButtons = (
+  //     <>
+  //       <img className={classes.audioPlayButton} alt='Back Button' src='images/backButton.png'></img>
+  //       <img className={classes.audioPlayButton} alt='Play Button' src='images/playButton.png' onClick={togglePlayAndPause}></img>
+  //       <img className={classes.audioPlayButton} alt='Forward Button' src='images/forwardButton.png'></img>
+  //     </>
+  //   )
+  // }
+  if (props.isPlaying) {
     audioPlayButtons = (
       <>
-        <p>True</p>
         <img className={classes.audioPlayButton} alt='Back Button' src='images/backButton.png'></img>
-        <img className={classes.audioPlayButton} alt='Pause Button' src='images/pauseButton.png' onClick={togglePlayAndPause}></img>
+        <img className={classes.audioPlayButton} alt='Pause Button' src='images/pauseButton.png' onClick={props.togglePlayPauseButon}></img>
         <img className={classes.audioPlayButton} alt='Forward Button' src='images/forwardButton.png'></img>
       </>
     );
   } else {
     audioPlayButtons = (
       <>
-      <p>True</p>
         <img className={classes.audioPlayButton} alt='Back Button' src='images/backButton.png'></img>
-        <img className={classes.audioPlayButton} alt='Play Button' src='images/playButton.png' onClick={togglePlayAndPause}></img>
+        <img className={classes.audioPlayButton} alt='Play Button' src='images/playButton.png' onClick={props.togglePlayPauseButon}></img>
         <img className={classes.audioPlayButton} alt='Forward Button' src='images/forwardButton.png'></img>
       </>
     )
@@ -173,6 +186,11 @@ const SideBar: React.FC = () => {
         <img className={classes.statPicture} alt='Beat Icon' src='images/sampleButton.png'></img>
         <div className={classes.statValues}>
           <h4>Samples</h4>
+
+          {/* Todo: 
+          3 number format
+          Use padStart to fill it, for example: 5 should be 005, for consistent format 
+          */}
           <h4>155</h4>
         </div>
       </div>
