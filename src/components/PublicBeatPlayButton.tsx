@@ -19,41 +19,11 @@ const PublicBeatPlayButton: React.FC<PublicBeatPlayButtonProps> = ({...props}) =
   const classes = useStyles();
 
   const playOrPause = (event: React.MouseEvent<HTMLImageElement>) => {
-
-    // if status is false, then playNew
-    // if (musicProvider.getPlayingStatus() === false)
-    // {
-    //   console.log("false");
-    //   musicProvider.playNew();
-    //   setIsPlaying(musicProvider.getPlayingStatus());
-    // } else {
-    //   console.log("true");
-    //   // if status is true, then toggle, which will pause
-    //   setIsPlaying(!musicProvider.getPlayingStatus());
-    //   musicProvider.togglePlayingStatus();
-    // }
-    // setIsCardPlaying(!isCardPlaying);
-    // props.togglePlayPauseButon();
-    // if (props.isPlaying) {
-    //   props.togglePlayPauseButon();
-    //   return;
-    // }
     setIsCardPlaying(!props.isPlaying);
     props.togglePlayPauseButon();
-    
   };
 
   let button;
-
-  // if (isPlaying) {
-  //   button = (
-  //     <img className={classes.playButton} alt='' src='images/pauseButton.png' onClick={playOrPause}></img>
-  //   );
-  // } else {
-  //   button = (
-  //     <img className={classes.playButton} alt='' src='images/playButton.png' onClick={playOrPause}></img>
-  //   );
-  // }
 
   if (isCardPlaying) {
     button = (

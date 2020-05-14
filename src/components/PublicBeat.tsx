@@ -1,11 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import { MusicContext } from '../contexts';
-import PublicBeatPlayButton from './PublicBeatPlayButton';
 
 interface PublicBeatProps {
   isPlaying: boolean,
-  togglePlayPauseButon: any
+  togglePlayPauseButon: any,
+  setAudioGlobal: any,
 }
 
 const useStyles = makeStyles(() => ({
@@ -24,6 +24,7 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     display: 'inline-block',
     margin: 20,
+    cursor: 'pointer'
   },
   background: {
     backgroundRepeat: 'no-repeat',
@@ -54,11 +55,11 @@ const useStyles = makeStyles(() => ({
 const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   const classes = useStyles();
   
-  // const [isPlaying, setIsPlaying] = useState(false);
   const musicProvider = React.useContext(MusicContext);
 
   let beats = [
     {
+      'id': '6',
       'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
       'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
       'title': 'guitar testing title',
@@ -67,6 +68,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       'duration': 2131
     },
     {
+      'id': '7',
       'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
       'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
       'title': 'guitar testing title',
@@ -75,6 +77,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       'duration': 2131
     },
     {
+      'id': '8',
       'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
       'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
       'title': 'guitar testing title',
@@ -83,6 +86,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       'duration': 2131
     },
     {
+      'id': '9',
       'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
       'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
       'title': 'guitar testing title',
@@ -91,6 +95,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       'duration': 2131
     },
     {
+      'id': '10',
       'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
       'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
       'title': 'guitar testing title',
@@ -99,6 +104,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       'duration': 2131
     },
     {
+      'id': '11',
       'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
       'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
       'title': 'guitar testing title',
@@ -108,33 +114,9 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
     },
   ];
 
-  // const playOrPause = (event: React.MouseEvent<HTMLImageElement>) => {
-
-  //   // if status is false, then playNew
-  //   if (musicProvider.getPlayingStatus() === false)
-  //   {
-  //     console.log("false");
-  //     musicProvider.playNew();
-  //     setIsPlaying(musicProvider.getPlayingStatus());
-  //   } else {
-  //     console.log("true");
-  //     // if status is true, then toggle, which will pause
-  //     setIsPlaying(!musicProvider.getPlayingStatus());
-  //     musicProvider.togglePlayingStatus();
-  //   }
-  // };
-
-  // let button: any;
-
-  // if (isPlaying) {
-  //   button = (
-  //     <img className={classes.playButton} alt='Pause Button' src='images/pauseButton.png' onClick={playOrPause}></img>
-  //   );
-  // } else {
-  //   button = (
-  //     <img className={classes.playButton} alt='Play Button' src='images/playButton.png' onClick={playOrPause}></img>
-  //   );
-  // }
+  const playPublicBeat = (id:string) => {
+    props.setAudioGlobal(id);
+  }
 
   return (
     <div className={classes.componentContainer}>
@@ -148,16 +130,13 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       <div className={classes.scroll}>
         {beats.map((beat, key) => {
           return (
-            <div className={classes.card} key={key}>
+            <div className={classes.card} key={key} onClick={() => playPublicBeat(beat.id)}>
               <img alt='' className={classes.background} src={beat.background}></img>
               <div className={classes.bottomLeftCorner}>
                 <img className={classes.beatPicture} src={beat.picture}></img>
                 <div>
                   <div>{beat.title}</div>
                   <div className={classes.playButtonAndBeatInfo}>
-                    {/* {button} */}
-                    {/* <PublicBeatPlayButton /> */}
-                    <PublicBeatPlayButton isPlaying={props.isPlaying} togglePlayPauseButon={props.togglePlayPauseButon}/>
                     <div>
                       <div>{beat.type}</div>
                       <div>{beat.duration}</div>

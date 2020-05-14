@@ -7,7 +7,6 @@ const useStyles = makeStyles(() => ({
     height: 40,
     padding: 0,
     margin: 0,
-    color: 'white',
     backgroundColor: '#1a1919',
   },
   navbarElement: {
@@ -19,6 +18,10 @@ const useStyles = makeStyles(() => ({
   active: {
     backgroundColor: '#003585'
   },
+  tab: {
+    color: 'white',
+    textDecoration: 'none'
+  }
 
 }));
 
@@ -28,8 +31,12 @@ const NavBar: React.FC = () => {
   return(
     
     <ul className={classes.navbar}>
-      <li className={clsx(classes.navbarElement, classes.active)}><a href=''>Home</a></li>
-      <li className={clsx(classes.navbarElement)}><a href=''>Studio</a></li>
+      <li className={clsx(classes.navbarElement, classes.active)}>
+        <a href='' className={classes.tab}>
+          Home 
+          <img style={{width: 20, height: 20, paddingLeft: 5}} src='images/HomeImage.png'></img>
+        </a>
+      </li>
     </ul>
   );
 }

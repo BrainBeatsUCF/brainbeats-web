@@ -5,6 +5,12 @@ import { BackendContext } from '../util/api';
 import {PlaylistDetail, Song} from '../util/api/types';
 import Box from '@material-ui/core/Box';
 
+interface BeatProps {
+  isPlaying: boolean,
+  togglePlayPauseButon: any,
+  setAudioGlobal: any,
+}
+
 const useStyles = makeStyles(() => ({
   componentContainer: {
     color: 'white',
@@ -63,7 +69,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Beat: React.FC = () => {
+const Beat: React.FC<BeatProps> = ({...props}) => {
   const api = React.useContext(BackendContext);
 
   const classes = useStyles();
@@ -71,6 +77,7 @@ const Beat: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   // testing purpose
+  let id = '12';
   let playlistId = '1';
 
   useEffect(() => {
@@ -93,8 +100,8 @@ const Beat: React.FC = () => {
     }
   }, []);
 
-  const playBeat = (event: React.MouseEvent<HTMLImageElement>) => {
-    console.log("play Beat");
+  const playBeat = (id:string) => {
+    props.setAudioGlobal(id)
   };
 
   if (loading) return (<div>loading...</div>);
@@ -111,7 +118,8 @@ const Beat: React.FC = () => {
       <div className={classes.scroll}>
         {songs.map((song, key) => {
           return (
-            <div className={classes.card} key={key} onClick={playBeat}>
+            // Todo: change playbeat(id) to playbeat(song.id)
+            <div className={classes.card} key={key} onClick={() => playBeat(id)}>
               <img alt='' className={classes.background} src={song.songImage}></img>
               <div className={classes.cardContent}>
                 <div className={classes.songType}>
