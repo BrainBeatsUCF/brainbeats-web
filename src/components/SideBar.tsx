@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { MusicContext } from '../contexts';
-import { type } from 'os';
 import axios from 'axios';
 
-const song2 = require('../config/audio/song2.mp3');
-
+// Todo: format timer
 
 interface SideBarProps {
   isPlaying: boolean,
@@ -125,11 +123,20 @@ let startedAt: number;
 let pausedAt: number;
 let audioContext: AudioContext;
 let scriptNode: ScriptProcessorNode;
-let progressTime: number = 0;
+
+// Progress bar
 let rate: number;
+let progressTime: number = 0;
+
+// Audio Time
+let minutes: number = 0;
+let seconds: number = 0;
 
 // to see if an audio is paused, so audio 1 is paused, but audio 2 is clicked to play, then audio should start at 0
 let paused: boolean;
+
+
+
 
 const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const classes = useStyles();
@@ -137,8 +144,45 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioDuration, setAudioDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [progressRate, setProgressRate] = useState(0);
+  const [url, setUrl] = useState('');
 
 
+  // TIMER
+  const [secondRunning, setSecondRunning] = useState(0);
+  const [minuteRunning, setMinuteRunning] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+
+  const toggleActivateForTimer = () => {
+    setIsActive(!isActive);
+  }
+
+  const resetTimer = () => {
+    setSecondRunning(0);
+    setIsActive(false);
+  }
+
+
+  // why pause reset the second
+  React.useEffect(() => {
+    console.log(audioDuration);
+    console.log(secondRunning);
+    let interval: any;
+    console.log('isActivate ' + isActive);
+    if (secondRunning === audioDuration) {
+      console.log("yes clear");
+      clearInterval(interval);
+    } else if (isActive) {
+      interval = setInterval(() => {
+        setSecondRunning(second => second + 1);
+      }, 1000);
+    } else if (!isActive && secondRunning !== 0) {
+      clearInterval(interval);
+    } else if (secondRunning === audioDuration) {
+    }
+
+    return () => clearInterval(interval);
+  }, [isActive, secondRunning]);
 
   const getAudioContext = () => {
     AudioContext = window.AudioContext;
@@ -147,29 +191,11 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
 
   let audioPlayButtons, sidebar, audioInfo, userStat, header, audioPlayAreaUI;
 
-  // const loadAudio = async () => {
-  //   console.log('testing');
-  //   const url = 'https://cors-anywhere.herokuapp.com/' + 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-  //   const response = await axios.get(url, {
-  //     responseType: 'arraybuffer'
-  //   });
-
-  //   const audioContext = getAudioContext();
-
-  //   const audioBuffer = await audioContext.decodeAudioData(response.data);
-
-  //   const source = audioContext.createBufferSource();
-  //   source.buffer = audioBuffer;
-  //   source.connect(audioContext.destination);
-
-  //   console.log();
-  // }
+  const loadAudio = async () => {
+    setUrl('http://www.hubharp.com/web_sound/WalloonLilliShort.mp3');
+  }
 
   const playAudio = async () => {
-
-    console.log('currentTime: ' + currentTime);
-
-
     const url = 'https://cors-anywhere.herokuapp.com/' + 'http://www.hubharp.com/web_sound/WalloonLilliShort.mp3';
     const response = await axios.get(url, {
       responseType: 'arraybuffer'
@@ -177,63 +203,67 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     
     audioContext = getAudioContext();
     const audioBuffer = await audioContext.decodeAudioData(response.data);
-    setAudioDuration(audioBuffer.duration);
+    setAudioDuration(Math.ceil(audioBuffer.duration));
+
+    // get minutes and seconds for audio time
+    // minutes = Math.floor(audioBuffer.duration / 60);
+    // seconds = Math.ceil(audioBuffer.duration) - Math.floor(audioBuffer.duration / 60);
+
+    minutes = Math.floor(Math.ceil(audioBuffer.duration) / 60);
+    seconds = Math.ceil(audioBuffer.duration) % 60;
 
     // const source = audioContext.createBufferSource();
     source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
-
+    
     if (pausedAt && paused) {
       console.log('testing');
       startedAt = Date.now() - pausedAt;
       source.start(0, pausedAt / 1000);
       console.log('testing');
-      progressTime = currentTime;
+      // toggleActivateForTimer();
+      progressTime = progressRate;
     } else {
       startedAt = Date.now();
       source.start();
+      // resetTimer();
+      setIsActive(false);
+      setSecondRunning(0);
+
+      // toggleActivateForTimer();
       progressTime = 0;
     }
-
+    // toggleActivateForTimer();
+    setIsActive(true);
     setIsPlaying(true);
     paused = false;
-
-    // testing progress time
-    // progressTime = currentTime;
-
-    // progress is 0 if new audio, or currentTime if same audio
-    // progressTime = 0;
-
-    // console.log('progresTime: ' + progressTime);
-    // console.log('currentTime: ' + currentTime);
 
     // progress bar
     scriptNode = audioContext.createScriptProcessor(4096, audioBuffer.numberOfChannels, audioBuffer. numberOfChannels);
     scriptNode.connect(audioContext.destination);
 
 
-    // Todo: stop progress time when it finished
+    let testingTime: number = 0;
     
     // setCurrentTime(progressTime);
     scriptNode.onaudioprocess = (e) => {
-      console.log((e.playbackTime * 100) / audioBuffer.duration);
-      // const rate = parseInt((e.playbackTime * 100) / audioBuffer.duration, 10);
+      // console.log((e.playbackTime * 100) / audioBuffer.duration);
       rate = progressTime + (e.playbackTime * 100) / audioBuffer.duration;
-      setCurrentTime(rate);
+      setProgressRate(rate);
     }
 
-    source.addEventListener('ended', () => {
+    // executed when audio is pause or finished
+    source.onended = () => {
       setIsPlaying(false);
-      scriptNode.disconnect(audioContext.destination);
       scriptNode.onaudioprocess = null;
-      rate = 0;
-    });
+    }
   }
 
   const pauseAudio = () => {
     source.stop();
     source.disconnect(audioContext.destination);
+    setIsActive(false);
     scriptNode.onaudioprocess = null;
     pausedAt = Date.now() - startedAt;
     setIsPlaying(false);
@@ -274,8 +304,9 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       <div>
         Hung Nguyen
       </div>
-      <progress id="timebar" value={currentTime} max='100' style={{width: 200}}></progress>
-      <div>Time: {currentTime} / {audioDuration}</div>
+      <progress id="timebar" value={progressRate} max='100' style={{width: 200}}></progress>
+  <div>Time: {minuteRunning.toString().padStart(2, '0')}:{secondRunning.toString().padStart(2, '0')} / {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}</div>
+      
     </>
   );
 
@@ -335,6 +366,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     </>
   )
 
+
+  // Todo: put timer in one component only, so it does not reset the time when user resize the size of the app
   if (isOverMdBreakPoint) {
     sidebar = (
       <div className={classes.sidebarColumn}>
