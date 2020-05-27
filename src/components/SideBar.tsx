@@ -5,6 +5,29 @@ import { MusicContext } from '../contexts';
 import axios from 'axios';
 
 // Todo: format timer
+// Todo: allow user to scroll the timer
+
+import TestingAudioPlay from './TestingAudioPlay';
+let testingData = [
+  {
+    'imageUrl': 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMarshmello&psig=AOvVaw2ALIzI3KF1Z7pHQqPp01WF&ust=1590361099303000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPCQr_eKy-kCFQAAAAAdAAAAABAD',
+    'audioUrl': 'http://www.hubharp.com/web_sound/WalloonLilliShort.mp3',
+    'title': 'audio 1 title',
+    'authorName': 'author 1'
+  },
+  {
+    'imageUrl': 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F8c%2Fde%2Ffe%2F8cdefe3f2936ce6e4b48dac46205779e.jpg&imgrefurl=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F612137774323842838%2F&tbnid=NhSVoyTgAWCHNM&vet=12ahUKEwjcubD0isvpAhUGYa0KHfiUANsQMygFegUIARCmAg..i&docid=9UzCw1aLtGnUbM&w=1080&h=1350&q=marshmallow%20music&ved=2ahUKEwjcubD0isvpAhUGYa0KHfiUANsQMygFegUIARCmAg',
+    'audioUrl': 'http://www.hubharp.com/web_sound/BachGavotteShort.mp3',
+    'title': 'audio 2 title',
+    'authorName': 'author 2'
+  },
+  {
+    'imageUrl': 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F8c%2Fde%2Ffe%2F8cdefe3f2936ce6e4b48dac46205779e.jpg&imgrefurl=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F612137774323842838%2F&tbnid=NhSVoyTgAWCHNM&vet=12ahUKEwjcubD0isvpAhUGYa0KHfiUANsQMygFegUIARCmAg..i&docid=9UzCw1aLtGnUbM&w=1080&h=1350&q=marshmallow%20music&ved=2ahUKEwjcubD0isvpAhUGYa0KHfiUANsQMygFegUIARCmAg',
+    'audioUrl': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    'title': 'audio 3 title',
+    'authorName': 'author 3'
+  }
+];
 
 interface SideBarProps {
   isPlaying: boolean,
@@ -118,183 +141,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-let source:AudioBufferSourceNode;
-let startedAt: number;
-let pausedAt: number;
-let audioContext: AudioContext;
-let scriptNode: ScriptProcessorNode;
-
-// Progress bar
-let rate: number;
-let progressTime: number = 0;
-
-// Audio Time
-let minutes: number = 0;
-let seconds: number = 0;
-
-// to see if an audio is paused, so audio 1 is paused, but audio 2 is clicked to play, then audio should start at 0
-let paused: boolean;
-
-
-
 
 const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const classes = useStyles();
   const isOverMdBreakPoint = useMediaQuery('(min-width:960px)');
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audioDuration, setAudioDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [progressRate, setProgressRate] = useState(0);
-  const [url, setUrl] = useState('');
-
-
-  // TIMER
-  const [secondRunning, setSecondRunning] = useState(0);
-  const [minuteRunning, setMinuteRunning] = useState(0);
-  const [isActive, setIsActive] = useState(false);
-
-  const toggleActivateForTimer = () => {
-    setIsActive(!isActive);
-  }
-
-  const resetTimer = () => {
-    setSecondRunning(0);
-    setIsActive(false);
-  }
-
-
-  // why pause reset the second
-  React.useEffect(() => {
-    console.log(audioDuration);
-    console.log(secondRunning);
-    let interval: any;
-    console.log('isActivate ' + isActive);
-    if (secondRunning === audioDuration) {
-      console.log("yes clear");
-      clearInterval(interval);
-    } else if (isActive) {
-      interval = setInterval(() => {
-        setSecondRunning(second => second + 1);
-      }, 1000);
-    } else if (!isActive && secondRunning !== 0) {
-      clearInterval(interval);
-    } else if (secondRunning === audioDuration) {
-    }
-
-    return () => clearInterval(interval);
-  }, [isActive, secondRunning]);
-
-  const getAudioContext = () => {
-    AudioContext = window.AudioContext;
-    return new AudioContext();
-  }
 
   let audioPlayButtons, sidebar, audioInfo, userStat, header, audioPlayAreaUI;
-
-  const loadAudio = async () => {
-    setUrl('http://www.hubharp.com/web_sound/WalloonLilliShort.mp3');
-  }
-
-  const playAudio = async () => {
-    const url = 'https://cors-anywhere.herokuapp.com/' + 'http://www.hubharp.com/web_sound/WalloonLilliShort.mp3';
-    const response = await axios.get(url, {
-      responseType: 'arraybuffer'
-    });
-    
-    audioContext = getAudioContext();
-    const audioBuffer = await audioContext.decodeAudioData(response.data);
-    setAudioDuration(Math.ceil(audioBuffer.duration));
-
-    // get minutes and seconds for audio time
-    // minutes = Math.floor(audioBuffer.duration / 60);
-    // seconds = Math.ceil(audioBuffer.duration) - Math.floor(audioBuffer.duration / 60);
-
-    minutes = Math.floor(Math.ceil(audioBuffer.duration) / 60);
-    seconds = Math.ceil(audioBuffer.duration) % 60;
-
-    // const source = audioContext.createBufferSource();
-    source = audioContext.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
-    
-    if (pausedAt && paused) {
-      console.log('testing');
-      startedAt = Date.now() - pausedAt;
-      source.start(0, pausedAt / 1000);
-      console.log('testing');
-      // toggleActivateForTimer();
-      progressTime = progressRate;
-    } else {
-      startedAt = Date.now();
-      source.start();
-      // resetTimer();
-      setIsActive(false);
-      setSecondRunning(0);
-
-      // toggleActivateForTimer();
-      progressTime = 0;
-    }
-    // toggleActivateForTimer();
-    setIsActive(true);
-    setIsPlaying(true);
-    paused = false;
-
-    // progress bar
-    scriptNode = audioContext.createScriptProcessor(4096, audioBuffer.numberOfChannels, audioBuffer. numberOfChannels);
-    scriptNode.connect(audioContext.destination);
-
-
-    let testingTime: number = 0;
-    
-    // setCurrentTime(progressTime);
-    scriptNode.onaudioprocess = (e) => {
-      // console.log((e.playbackTime * 100) / audioBuffer.duration);
-      rate = progressTime + (e.playbackTime * 100) / audioBuffer.duration;
-      setProgressRate(rate);
-    }
-
-    // executed when audio is pause or finished
-    source.onended = () => {
-      setIsPlaying(false);
-      scriptNode.onaudioprocess = null;
-    }
-  }
-
-  const pauseAudio = () => {
-    source.stop();
-    source.disconnect(audioContext.destination);
-    setIsActive(false);
-    scriptNode.onaudioprocess = null;
-    pausedAt = Date.now() - startedAt;
-    setIsPlaying(false);
-    paused = true;
-  }
-  const backwardPlay = () => {
-
-  }
-
-  const forwardPlay = () => {
-
-  }
-  
-
-  if (isPlaying) {
-    audioPlayButtons = (
-      <>
-        <img className={classes.audioPlayButton} alt='Back Button' src='images/backButton.png'></img>
-        <img className={classes.audioPlayButton} alt='Pause Button' src='images/pauseButton.png' onClick={pauseAudio}></img>
-        <img className={classes.audioPlayButton} alt='Forward Button' src='images/forwardButton.png'></img>
-      </>
-    );
-  } else {
-    audioPlayButtons = (
-      <>
-        <img className={classes.audioPlayButton} alt='Back Button' src='images/backButton.png'></img>
-        <img className={classes.audioPlayButton} alt='Play Button' src='images/playButton.png' onClick={playAudio}></img>
-        <img className={classes.audioPlayButton} alt='Forward Button' src='images/forwardButton.png'></img>
-      </>
-    )
-  }
 
   audioInfo = (
     <>
@@ -304,8 +157,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       <div>
         Hung Nguyen
       </div>
-      <progress id="timebar" value={progressRate} max='100' style={{width: 200}}></progress>
-  <div>Time: {minuteRunning.toString().padStart(2, '0')}:{secondRunning.toString().padStart(2, '0')} / {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}</div>
       
     </>
   );
@@ -417,35 +268,13 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       </div>
     )
   }
-
-
-  // users have to load song first
-  // only new song gets to load and play at start
-  // current song is only able to play and pause/ resume
-  React.useEffect(() => {
-    console.log(props.id);
-
-    if (props.id == '')
-      return;
-
-    // stop another source before loading and play another one if props.id changes
-    if (source != null) {
-      source.stop();
-      scriptNode.onaudioprocess = null;
-      rate = 0;
-    }
-      
-    paused = false;
-    console.log('set current time back to 0');
-    setCurrentTime(0);
-
-    playAudio();
-    
-  }, [props.id]);
   
   return (
     <>
-    {sidebar}
+    {/* {sidebar} */}
+
+
+    <TestingAudioPlay id={15} audioObjectArrays={testingData}/>
     </>
   );
 }
