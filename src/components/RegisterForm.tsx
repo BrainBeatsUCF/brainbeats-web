@@ -10,6 +10,8 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import { useHistory } from 'react-router-dom';
+import { History, LocationState } from 'history';
 
 const schema = yup.object({
 	email: yup
@@ -37,10 +39,6 @@ interface RegisterProps {
   confirmPassword?: string;
 }
 
-const handleLogin = async (): Promise<void> => {
-	console.log("YES");
-};
-
 const useStyles = makeStyles(theme => ({
 	paper: {
 	  marginTop: theme.spacing(8),
@@ -59,6 +57,19 @@ const useStyles = makeStyles(theme => ({
 
 const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
   const classes = useStyles();
+  const history = useHistory();
+
+  const handleRegister = async (data: RegisterProps,
+    history: History<LocationState>): Promise<void> => {
+  
+    console.log(data);
+  
+    // send user object to register api to backend
+  
+    // save user object with token
+  
+    history.push("/home");
+  };
   
 	return (
 	  <>
@@ -80,7 +91,7 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
               confirmPassword: props.confirmPassword || '',
             }}
             onSubmit={async (data: RegisterProps): Promise<void> => {
-              handleLogin();
+              handleRegister(data, history);
             }}
             >
             {(): React.ReactElement => (
@@ -105,7 +116,7 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
                     </div>
                     <div>
                       <Field
-                      label="confirmPassword"
+                      label="Confirm Password"
                       name="confirmPassword"
                       component={TextFormField}
                       type="password"

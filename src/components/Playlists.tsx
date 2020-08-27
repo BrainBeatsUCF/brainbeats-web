@@ -10,6 +10,7 @@ import {
     CardMedia,
     Container
 } from '@material-ui/core/';
+import MusicContext from '../util/contexts/music/MusicContext';
 
 const useStyles = makeStyles(theme => ({
   root: {

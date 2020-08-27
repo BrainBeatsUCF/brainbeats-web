@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { BackendContext } from '../util/api';
 import {PlaylistDetail, Song} from '../util/api/types';
 import Box from '@material-ui/core/Box';
+import MusicContext from '../util/contexts/music/MusicContext';
 
 interface BeatProps {
   isPlaying: boolean,
@@ -71,6 +72,8 @@ const useStyles = makeStyles(() => ({
 
 const Beat: React.FC<BeatProps> = ({...props}) => {
   const api = React.useContext(BackendContext);
+  const musicProvider = React.useContext(MusicContext);
+
 
   const classes = useStyles();
   const [songs, setSongs] = useState([] as Song[]);
@@ -101,7 +104,9 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
   }, []);
 
   const playBeat = (id:string) => {
-    props.setAudioGlobal(id)
+    props.setAudioGlobal(id);
+    musicProvider.setId(id);
+    console.log(musicProvider.getCurrentId());
   };
 
   if (loading) return (<div>loading...</div>);

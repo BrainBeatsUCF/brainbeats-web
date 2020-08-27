@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MusicContext } from '../contexts';
+import { MusicContext } from '../util/contexts/music';
 import { makeStyles } from '@material-ui/core/styles';
 
 interface PublicBeatPlayButtonProps {
@@ -16,6 +16,7 @@ const useStyles = makeStyles(() => ({
 const PublicBeatPlayButton: React.FC<PublicBeatPlayButtonProps> = ({...props}) => {
   const [isCardPlaying, setIsCardPlaying] = useState(false);
   const musicProvider = React.useContext(MusicContext);
+
   const classes = useStyles();
 
   const playOrPause = (event: React.MouseEvent<HTMLImageElement>) => {

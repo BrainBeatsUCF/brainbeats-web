@@ -15,6 +15,9 @@ import Link from '@material-ui/core/Link';
 
 import { BackendContext } from '../util/api';
 import Api from '../util/api';
+import { UserContext } from '../util/contexts/user';
+
+import {useAuth0} from '@auth0/auth0-react';
 
 const schema = yup.object({
 	email: yup
@@ -31,15 +34,7 @@ interface LoginProps {
 	password?: string;
 }
 
-const handleLogin = async (
-	data: LoginProps,
-	history: History<LocationState>): Promise<void> => {
-	try {
-	  history.replace('/');
-	} catch (e) {
-	  alert(e.message);
-	}
-};
+
 
 const useStyles = makeStyles(theme => ({
 	paper: {
@@ -61,9 +56,23 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 	const classes = useStyles();
   const history = useHistory();
 
+  const { loginWithRedirect } = useAuth0();
+
   const api = React.useContext(BackendContext);
+  const user = React.useContext(UserContext);
+
   // api.callGetEndpoint('weatherforecast', '').then((response) => console.log(response.data[0]));
   console.log(api.getSavedPlaylists('nice', 'nice'));
+
+  const handleLogin = async (
+    data: LoginProps,
+    history: History<LocationState>): Promise<void> => {
+      try {
+        history.replace('/');
+      } catch (e) {
+        alert(e.message);
+      }
+  };
 
 	return (
 	  <>
@@ -118,9 +127,25 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                         Login
                       </Button>
                     </div>
-                    <Link href="#" variant="body2">
-                      Find my account
-                    </Link>
+                    <div>
+                      <Link href="#" variant="body2">
+                        Find my account
+                      </Link>
+                    </div>
+                    <div>
+                      <Link href="register" variant="body2">
+                        {"Create Account"}
+                      </Link>
+                    </div>
+                    <div>
+                      <button onClick={() => (
+                        // save user to DB
+
+                        loginWithRedirect()
+                      )}>
+                      Log in with Auth0
+                      </button>
+                    </div>
                   </CardContent>
                 </Card>
               </Form>
@@ -129,11 +154,24 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
           </div>
         </Container>
         <br></br>
-        <Container  maxWidth="xs">
+        {/* <Container  maxWidth="xs">
           <Link href="register" variant="body2">
             {"Create Account"}
           </Link>          
         </Container>
+
+
+        <Container  maxWidth="xs">
+          <button onClick={() => (
+
+            // save user to DB
+
+            loginWithRedirect()
+
+          )}>
+            Log in with Auth0
+          </button>         
+        </Container> */}
       </Grid>
 	  </>
 	);

@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
-import React, { useState } from 'react';
-import { MusicContext } from '../contexts';
+import React from 'react';
+import { MusicContext } from '../util/contexts/music';
 
 interface PublicBeatProps {
   isPlaying: boolean,
@@ -116,6 +116,8 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
 
   const playPublicBeat = (id:string) => {
     props.setAudioGlobal(id);
+    musicProvider.setId(id);
+    console.log(musicProvider.getCurrentId());
   }
 
   return (
@@ -133,7 +135,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
             <div className={classes.card} key={key} onClick={() => playPublicBeat(beat.id)}>
               <img alt='' className={classes.background} src={beat.background}></img>
               <div className={classes.bottomLeftCorner}>
-                <img className={classes.beatPicture} src={beat.picture}></img>
+                <img className={classes.beatPicture} src={beat.picture} alt=""></img>
                 <div>
                   <div>{beat.title}</div>
                   <div className={classes.playButtonAndBeatInfo}>

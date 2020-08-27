@@ -3,6 +3,10 @@
   pointer-events: none;
 }
 
+.rhap_theme-color, .rhap_background-color, .rhap_bar-color, .rhap_time-color, .rhap_font-family {
+  color: red !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -32,3 +36,5 @@
     transform: rotate(360deg);
   }
 }
+
+
