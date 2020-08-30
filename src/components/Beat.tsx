@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import { BackendContext } from '../util/api';
-import {PlaylistDetail, Song} from '../util/api/types';
+import { PlaylistDetail, Song } from '../util/api/types';
 import Box from '@material-ui/core/Box';
 import MusicContext from '../util/contexts/music/MusicContext';
 
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
   },
   header: {
     alignItems: 'left',
-    paddingLeft: 20,
+    paddingLeft: '20px',
     margin: 0,
   },
   scroll: {
@@ -26,17 +26,17 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
   },
   card: {
-    borderRadius: 10,
+    borderRadius: '10px',
     display: 'inline-block',
     textAlign: 'center',
-    margin: 20,
+    margin: '20px',
     position: 'relative',
     cursor: 'pointer'
   },
   background: {
     backgroundRepeat: 'no-repeat',
-    width: 200,
-    height: 150,
+    width: '200px',
+    height: '150px',
     opacity: 0.4,
   },
   cardContent: {
@@ -52,7 +52,7 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     left: 0,
     top: '50%',
-    fontSize: 13
+    fontSize: '13px'
   },
   beatContainer: {
     position: 'absolute',
@@ -61,19 +61,18 @@ const useStyles = makeStyles(() => ({
     bottom: 0
   },
   sampleInstrument: {
-    borderRadius: 5,
-    padding: 2,
+    borderRadius: '5px',
+    padding: '2px',
     backgroundColor: 'grey',
-    margin: 5,
+    margin: '5px',
     opacity: 0.7,
-    fontSize: 10
+    fontSize: '10px'
   },
 }));
 
 const Beat: React.FC<BeatProps> = ({...props}) => {
   const api = React.useContext(BackendContext);
   const musicProvider = React.useContext(MusicContext);
-
 
   const classes = useStyles();
   const [songs, setSongs] = useState([] as Song[]);

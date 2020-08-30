@@ -34,8 +34,6 @@ interface LoginProps {
 	password?: string;
 }
 
-
-
 const useStyles = makeStyles(theme => ({
 	paper: {
 	  marginTop: theme.spacing(8),
@@ -65,6 +63,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
   console.log(api.getSavedPlaylists('nice', 'nice'));
 
   const handleLogin = async (
+    // Todo: handle the login logic
     data: LoginProps,
     history: History<LocationState>): Promise<void> => {
       try {
@@ -154,28 +153,9 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
           </div>
         </Container>
         <br></br>
-        {/* <Container  maxWidth="xs">
-          <Link href="register" variant="body2">
-            {"Create Account"}
-          </Link>          
-        </Container>
-
-
-        <Container  maxWidth="xs">
-          <button onClick={() => (
-
-            // save user to DB
-
-            loginWithRedirect()
-
-          )}>
-            Log in with Auth0
-          </button>         
-        </Container> */}
       </Grid>
 	  </>
 	);
 };
   
 export default LoginForm;
-  

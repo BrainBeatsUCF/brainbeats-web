@@ -21,7 +21,7 @@ const PublicBeatPlayButton: React.FC<PublicBeatPlayButtonProps> = ({...props}) =
 
   const playOrPause = (event: React.MouseEvent<HTMLImageElement>) => {
     setIsCardPlaying(!props.isPlaying);
-    props.togglePlayPauseButon();
+    // props.togglePlayPauseButon();
   };
 
   let button;
@@ -38,7 +38,7 @@ const PublicBeatPlayButton: React.FC<PublicBeatPlayButtonProps> = ({...props}) =
 
   return (
     <>
-    {button}
+      {button}
     </>
   );
 }

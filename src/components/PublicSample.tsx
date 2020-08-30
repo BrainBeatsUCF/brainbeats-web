@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
     color: 'white',
   },
   header: {
-    paddingLeft: 20,
+    paddingLeft: '20px',
     margin: 0,
   },
   scroll: {
@@ -23,16 +23,16 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
   },
   card: {
-    borderRadius: 10,
+    borderRadius: '10px',
     display: 'inline-block',
     textAlign: 'center',
-    width: 200,
-    height: 150,
+    width: '200px',
+    height: '150px',
     textDecoration: 'none',
   },
   samplePicture: {
-    width: 150,
-    height: 150,
+    width: '150px',
+    height: '150px',
     borderRadius: '50%',
     cursor: 'pointer'
   },

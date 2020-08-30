@@ -7,7 +7,7 @@ import Hidden from '@material-ui/core/Hidden';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { List, ListItem, ListItemAvatar, ListItemText, Tooltip, Fade } from '@material-ui/core';
 import { BackendContext } from '../util/api';
-import {PlaylistDetail, Song} from '../util/api/types';
+import { PlaylistDetail, Song } from '../util/api/types';
 
 interface Props {
   playlistId: string

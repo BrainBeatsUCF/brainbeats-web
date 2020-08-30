@@ -38,12 +38,12 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
   }, 
   picture: {
-    width: 120,
-    height: 120,
+    width: '120px',
+    height: '120px',
     borderRadius: '50%',
     '@media (max-width: 450px)': {
-      width: 50,
-      height: 50
+      width: '50px',
+      height: '50px'
     }
   },
   statContainer: {
@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    height: 38,
+    height: '38px',
     width: '100%',
     '@media (max-width: 960px)': {
       width: '100%'
@@ -67,16 +67,16 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    fontSize: 14,
+    fontSize: '14px',
     '@media (max-width: 960px)': {
-      width: 120,
+      width: '120px',
       fontSize: '2vw'
     },
   },
   statPicture: {
-    paddingRight: 10,
-    height: 38,
-    width: 38
+    paddingRight: '10px',
+    height: '38px',
+    width: '38px'
   },
   audioArea: {
     display: 'flex',
@@ -88,13 +88,13 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 130,
-    width: 130,
+    height: '130px',
+    width: '130px',
     border: 'solid rgb(208, 53, 30) 1px',
     borderRadius: '130px',
     '@media (max-width: 450px)': {
-      width: 60,
-      height: 60
+      width: '60px',
+      height: '60px'
     }
   },
   playButtonArea: {
@@ -102,7 +102,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row'
   },
   audioPlayButton: {
-    padding: 5,
+    padding: '5px',
     cursor: 'pointer'
   },
   sideBarContainer: {
@@ -123,12 +123,12 @@ const useStyles = makeStyles(() => ({
     } 
   },
   userPicture: {
-    height: 120,
-    width: 120,
+    height: '120px',
+    width: '120px',
     borderRadius: '50%',
     '@media (max-width: 959px)': {
-      height: 60,
-      width: 60
+      height: '60px',
+      width: '60px'
     },
   },
   userPictureContainer: {

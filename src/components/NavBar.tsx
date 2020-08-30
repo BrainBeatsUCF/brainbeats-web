@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   navbar: {
-    height: 53,
+    height: '53px',
     padding: 0,
     margin: 0,
     backgroundColor: '#1a1919',
   },
   navbarElement: {
-    padding: 15,
+    padding: '15px',
     listStyle: 'none',
     display: 'inline-block',
     backgroundColor: '#1a1919',

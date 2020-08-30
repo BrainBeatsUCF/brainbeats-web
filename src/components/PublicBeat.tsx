@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
     color: 'white',
   },
   header: {
-    paddingLeft: 20,
+    paddingLeft: '20px',
     margin: 0,
   },
   scroll: {
@@ -23,13 +23,13 @@ const useStyles = makeStyles(() => ({
   card: {
     position: 'relative',
     display: 'inline-block',
-    margin: 20,
+    margin: '20px',
     cursor: 'pointer'
   },
   background: {
     backgroundRepeat: 'no-repeat',
-    width: 200,
-    height: 150,
+    width: '200px',
+    height: '150px',
     opacity: 0.4
   },
   bottomLeftCorner: {
@@ -40,8 +40,8 @@ const useStyles = makeStyles(() => ({
     alignItems: 'flex-end'
   },
   beatPicture: {
-    width: 75,
-    height: 75,
+    width: '75px',
+    height: '75px',
   },
   playButtonAndBeatInfo: {
     display: 'flex',
@@ -144,8 +144,8 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
                       <div>{beat.duration}</div>
                     </div>
                   </div>
-                  </div>
                 </div>
+              </div>
             </div>
           )
         })}

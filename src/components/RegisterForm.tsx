@@ -150,4 +150,3 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
 };
   
 export default RegisterForm;
-  
