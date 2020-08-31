@@ -1,6 +1,7 @@
 import React from 'react';
 import BackendContext from '../util/api/backendContext';
 import { makeStyles } from '@material-ui/core/styles';
+import MusicContext from '../util/contexts/music/MusicContext';
 import {
     Grid,
     Card,
@@ -17,7 +18,7 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(2)
   },
   card: {
-    maxWidth: 345
+    maxWidth: '345px'
   }
 }))
 

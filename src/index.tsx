@@ -3,18 +3,37 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import Api, { BackendContext } from './util/api';
-import * as serviceWorker from './serviceWorker';
+import MusicContextProvider, { MusicContext } from './util/contexts/music';
+import UserContextProvider, { UserContext } from './util/contexts/user';
+import { Auth0Provider } from '@auth0/auth0-react';
+import auth0Config from '../src/config/auth0Config.json';
 
 const api: Api = new Api();
+const musicContextProvider: MusicContextProvider = new MusicContextProvider();
+const userContextProvider: UserContextProvider = new UserContextProvider();
+
+const domain = auth0Config.REACT_APP_AUTH0_DOMAIN;
+const clientId = auth0Config.REACT_APP_AUTH0_CLIENT_ID;
+
+// Todo: rename /home to /
+// if not authenticated, redirect to /login
+
 
 ReactDOM.render(
-  <BackendContext.Provider value={api}>
-    <App />
-  </BackendContext.Provider>,
-  document.getElementById('root'),
+    <BackendContext.Provider value={api}>
+      <MusicContext.Provider value={musicContextProvider}>
+        <UserContext.Provider value={userContextProvider}>
+          <Auth0Provider
+            domain={domain}
+            clientId={clientId}
+            redirectUri={window.location.origin}
+          >
+          <App />
+          </Auth0Provider>
+        </UserContext.Provider>
+      </MusicContext.Provider>
+    </BackendContext.Provider>,
+    document.getElementById('root'),
+  
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();

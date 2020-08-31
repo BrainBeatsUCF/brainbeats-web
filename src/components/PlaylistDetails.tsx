@@ -7,7 +7,7 @@ import Hidden from '@material-ui/core/Hidden';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { List, ListItem, ListItemAvatar, ListItemText, Tooltip, Fade } from '@material-ui/core';
 import { BackendContext } from '../util/api';
-import {PlaylistDetail, Song} from '../util/api/types';
+import { PlaylistDetail, Song } from '../util/api/types';
 
 interface Props {
   playlistId: string
@@ -73,7 +73,7 @@ const PlaylistDetails: React.FC<Props> = (props) => {
       <Grid item xs={12} sm={3}>
         <Grid container>
           <Grid item xs={5} sm={12}>
-            <img alt='' className={clsx(classes.large)} src={picture}/>
+            <img alt='Playlist Picture' className={clsx(classes.large)} src={picture}/>
           </Grid>
           <Grid item xs={5} sm={12}>
             <Hidden smUp>
