@@ -155,12 +155,9 @@ const HomeView: React.FC = () => {
                       <div className={classes.edit}>
                         <CameraAltIcon style={{fontSize: 25}}/>
                       </div>
-                      
                     </div>
                   </label>
-                  
                 </div>
-                
                 <TextField
                   className={classes.textField}
                   id="email"
@@ -182,7 +179,6 @@ const HomeView: React.FC = () => {
                   value={lastName}
                   onChange={onChangeLastname}
                 />
-
                 <div className={classes.submitButtonContainer}>
                   <Button className={classes.submitButton} onClick={handleSubmit}>Submit</Button>
                 </div>
