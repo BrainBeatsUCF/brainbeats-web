@@ -124,7 +124,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
           return (
             // Todo: change playbeat(id) to playbeat(song.id)
             <div className={classes.card} key={key} onClick={() => playBeat(id)}>
-              <img alt='' className={classes.background} src={song.songImage}></img>
+              <img alt='Song Picture' className={classes.background} src={song.songImage}></img>
               <div className={classes.cardContent}>
                 <div className={classes.songType}>
                   Vibing, Not a Phone in Sight

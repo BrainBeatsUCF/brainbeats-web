@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
+import HomeImageImage from '../images/HomeImage.png';
 
 const useStyles = makeStyles(() => ({
   navbar: {
@@ -20,10 +21,9 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#003585'
   },
   tab: {
-    color: 'white',
+    color: '#fff',
     textDecoration: 'none'
   }
-
 }));
 
 const NavBar: React.FC = () => {
@@ -35,7 +35,7 @@ const NavBar: React.FC = () => {
       <li className={clsx(classes.navbarElement, classes.active)}>
         <Link to="/" className={classes.tab}>
           Home 
-          <img style={{width: 20, height: 20, paddingLeft: 5}} src='images/HomeImage.png' alt=''></img>
+          <img style={{width: 20, height: 20, paddingLeft: 5}} src={HomeImageImage} alt=''></img>
         </Link>
       </li>
     </ul>

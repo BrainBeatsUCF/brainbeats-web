@@ -13,7 +13,6 @@ interface PrivateRouteProps extends RouteProps {
 }
 
 export class PrivateRoute extends Route<PrivateRouteProps> {
-  
   render() {
       console.log("isAuthenticated in PrivateRoute: " + this.props.isAuthenticated);
       return (

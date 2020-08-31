@@ -4,7 +4,11 @@ import '@brainbeatsucf/brainbeats-audio-player/src/style.css';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useStyles } from './SideBarUseStyles';
-import AudioDataTesting from './AudioDataTesting.json';
+import AudioDataTesting from '../data/AudioDataTesting.json';
+import BeatButtonImage from '../images/beatButton.png';
+import ShareButtonImage from '../images/shareButton.png';
+import SampleButtonImage from '../images/sampleButton.png';
+import LogOutImage from '../images/LogoutImage.png'
 
 interface SideBarProps {
   isPlaying: boolean,
@@ -49,21 +53,21 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   userStat = (
     <>
       <div className={classes.statElement}>
-        <img className={classes.statPicture} alt='Beat Icon' src='images/beatButton.png'></img>
+        <img className={classes.statPicture} alt='Beat Icon' src={BeatButtonImage}></img>
         <div className={classes.statValues}>
           <h4>Beats</h4>
           <h4>23</h4>
         </div>
       </div>
       <div className={classes.statElement}>
-        <img className={classes.statPicture} alt='Beat Icon' src='images/sampleButton.png'></img>
+        <img className={classes.statPicture} alt='Sample Icon' src={SampleButtonImage}></img>
         <div className={classes.statValues}>
           <h4>Samples</h4>
           <h4>15</h4>
         </div>
       </div>
       <div className={classes.statElement}>
-        <img className={classes.statPicture} alt='Beat Icon' src='images/shareButton.png'></img>
+        <img className={classes.statPicture} alt='Share Icon' src={ShareButtonImage}></img>
         <div className={classes.statValues}>
           <h4>Shares</h4>
           <h4>135</h4>
@@ -85,7 +89,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           <img onClick={() => {
             // handle log out logic
             logout();
-          }} alt='' src='images/LogoutImage.png'></img>
+          }} alt='Logout Picture' src={LogOutImage}></img>
         </div>
         <div className={classes.userPictureContainer}>
           <Link to='user/profile'><img className={classes.userPicture} src="https://qph.fs.quoracdn.net/main-qimg-70d48d9e6d598aa364c13ef739b489d4" alt=""></img></Link>

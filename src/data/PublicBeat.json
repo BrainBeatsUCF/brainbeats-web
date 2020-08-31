@@ -1,0 +1,56 @@
+[
+  {
+    "id": "6",
+    "picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg",
+    "background": "https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5",
+    "title": "guitar testing title",
+    "type": "rock",
+    "numBeats": 10,
+    "duration": 2131
+  },
+  {
+    "id": "7",
+    "picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg",
+    "background": "https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5",
+    "title": "guitar testing title",
+    "type": "R&B",
+    "numBeats": 10,
+    "duration": 2131
+  },
+  {
+    "id": "8",
+    "picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg",
+    "background": "https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5",
+    "title": "guitar testing title",
+    "type": "ballad",
+    "numBeats": 10,
+    "duration": 2131
+  },
+  {
+    "id": "9",
+    "background": "https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5",
+    "picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg",
+    "title": "guitar testing title",
+    "type": "rap",
+    "numBeats": 10,
+    "duration": 2131
+  },
+  {
+    "id": "10",
+    "background": "https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5",
+    "picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg",
+    "title": "guitar testing title",
+    "type": "R&B",
+    "numBeats": 10,
+    "duration": 2131
+  },
+  {
+    "id": "11",
+    "background": "https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5",
+    "picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg",
+    "title": "guitar testing title",
+    "type": "Piano",
+    "numBeats": 10,
+    "duration": 2131
+  }
+]

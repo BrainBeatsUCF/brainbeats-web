@@ -1,6 +1,7 @@
 import React from 'react';
 import BackendContext from '../util/api/backendContext';
 import { makeStyles } from '@material-ui/core/styles';
+import MusicContext from '../util/contexts/music/MusicContext';
 import {
     Grid,
     Card,
@@ -10,7 +11,6 @@ import {
     CardMedia,
     Container
 } from '@material-ui/core/';
-import MusicContext from '../util/contexts/music/MusicContext';
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -73,7 +73,7 @@ const PlaylistDetails: React.FC<Props> = (props) => {
       <Grid item xs={12} sm={3}>
         <Grid container>
           <Grid item xs={5} sm={12}>
-            <img alt='' className={clsx(classes.large)} src={picture}/>
+            <img alt='Playlist Picture' className={clsx(classes.large)} src={picture}/>
           </Grid>
           <Grid item xs={5} sm={12}>
             <Hidden smUp>

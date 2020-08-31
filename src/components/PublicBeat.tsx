@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { MusicContext } from '../util/contexts/music';
+import PublicBeatData from '../data/PublicBeat.json';
 
 interface PublicBeatProps {
   isPlaying: boolean,
@@ -54,65 +55,8 @@ const useStyles = makeStyles(() => ({
 
 const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   const classes = useStyles();
-  
   const musicProvider = React.useContext(MusicContext);
-
-  let beats = [
-    {
-      'id': '6',
-      'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
-      'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
-      'title': 'guitar testing title',
-      'type': 'abcabcabcabcabcabcabcabcabc',
-      'numBeats': 10,
-      'duration': 2131
-    },
-    {
-      'id': '7',
-      'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
-      'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
-      'title': 'guitar testing title',
-      'type': 'abc',
-      'numBeats': 10,
-      'duration': 2131
-    },
-    {
-      'id': '8',
-      'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
-      'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
-      'title': 'guitar testing title',
-      'type': 'abc',
-      'numBeats': 10,
-      'duration': 2131
-    },
-    {
-      'id': '9',
-      'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
-      'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
-      'title': 'guitar testing title',
-      'type': 'abcabcabcabcabcabcabcabcabc',
-      'numBeats': 10,
-      'duration': 2131
-    },
-    {
-      'id': '10',
-      'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
-      'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
-      'title': 'guitar testing title',
-      'type': 'abc',
-      'numBeats': 10,
-      'duration': 2131
-    },
-    {
-      'id': '11',
-      'background': 'https://img-aws.ehowcdn.com/560x560p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/aac4f9b5127946ec8cc85c718d4261d5',
-      'picture': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/440px-African_Bush_Elephant.jpg',
-      'title': 'guitar testing title',
-      'type': 'abc',
-      'numBeats': 10,
-      'duration': 2131
-    },
-  ];
+  let beats = PublicBeatData;
 
   const playPublicBeat = (id:string) => {
     props.setAudioGlobal(id);
@@ -133,7 +77,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
         {beats.map((beat, key) => {
           return (
             <div className={classes.card} key={key} onClick={() => playPublicBeat(beat.id)}>
-              <img alt='' className={classes.background} src={beat.background}></img>
+              <img alt='Public Beat Picture' className={classes.background} src={beat.background}></img>
               <div className={classes.bottomLeftCorner}>
                 <img className={classes.beatPicture} src={beat.picture} alt=""></img>
                 <div>
