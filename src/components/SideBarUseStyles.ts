@@ -130,12 +130,19 @@ const useStyles = makeStyles(() => ({
     color: 'red',
     display: 'flex',
     flexDirection: 'column',
-    position: 'absolute',
-    top: '0px',
     backgroundColor: 'black',
     height: '150px',
     overflow: 'auto',
     whiteSpace: 'nowrap',
+    width: '100%',
+  },
+  playlistTitle: {
+    cursor: 'pointer',
+    padding: '5px',
+  },
+  addPlaylistButton: {
+    backgroundColor: 'red',
+    borderRadius: '5px'
   }
 }));
 

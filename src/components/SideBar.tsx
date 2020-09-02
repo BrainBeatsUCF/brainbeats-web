@@ -10,6 +10,7 @@ import ShareButtonImage from '../images/shareButton.png';
 import SampleButtonImage from '../images/sampleButton.png';
 import LogOutImage from '../images/LogoutImage.png'
 import Playlist from '../data/Playlist.json';
+import CreatePlaylistPopup from './CreatePlaylistPopup';
 
 interface SideBarProps {
   setAudioGlobal: any,
@@ -32,11 +33,21 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const [showPlaylists, setShowPlaylists] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [audioId, setAudioId] = useState(props.id);
+  const [playListPopup, setPlaylistPopup] = useState(false);
   
   // Todo: get playlist from api
   let playlistsData = Playlist;
 
   const { logout } = useAuth0(); 
+
+  const openCreatePlaylistPopup = () => {
+    setPlaylistPopup(true);
+  }
+
+  const closeCreatePlaylistPopup = () => {
+    console.log("playListPopup in closeCreatePlaylistPopup: " + playListPopup);
+    setPlaylistPopup(false);
+  }
 
   const showPlaylistArea = () => {
     setShowPlaylists(true);
@@ -47,11 +58,18 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }
 
   const handleClick = (e: any) => {
+    // Todo: why is playlistpopup is false always in here
+    console.log("playListPopup in handleClick: " + playListPopup);
     if (wrapperRef !== null) {
       if (wrapperRef.current && wrapperRef.current.contains(e.target)) {
         // inside click
         return;
       }
+    }
+
+    // Do not close playlists area if playlist create panel is up
+    if (playListPopup) {
+      return;
     }
       
     // outside click 
@@ -65,7 +83,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     return () => {
       document.removeEventListener("mousedown", handleClick);
     };
-  }, []);
+  }, [playListPopup]);
 
   useEffect(() => {
     console.log("props.id in SideBar: " + props.id);
@@ -117,7 +135,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   if (audioArray.length > 0) {
     audioContent = (
       <>
-        <button onClick={showPlaylistArea}>Add to playlist</button>
+        <button className={classes.addPlaylistButton} onClick={showPlaylistArea}>Add to my playlists</button>
 
         {/* Todo: How to figure out the audioId for next audio in a playlist */}
         {/* Maybe go back to brain beats audio package to export another function to get the current audioId */}
@@ -131,19 +149,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   return (
     <div className={classes.sideBarContainer}>
       <div className={classes.userInfo}>
-        <div className={classes.playlists} ref={wrapperRef} style={{display: showPlaylists ? 'flex' : 'none'}}>
-          {/* Todo:  Loop through playlists testing data to populate playlist*/}
-          <button>Create a playlist</button>
-          {playlistsData.map((playlist, key) => {
-            return (
-              <div style={{cursor: 'pointer', padding: '5px'}} key={key} onClick={() => {addToPlaylist(audioId, playlist.id)}}>
-                {key + 1}. {playlist.title}
-              </div>
-            )
-          })}
-          
-        </div>
-
         <div style={{textAlign: 'right'}}>
           <img onClick={() => {
             // handle log out logic
@@ -157,6 +162,19 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         <div className={classes.userStatContainer}>
           {userStat}
         </div>
+
+        <div className={classes.playlists} ref={wrapperRef} style={{display: showPlaylists ? 'flex' : 'none'}}>
+          {/* Todo:  Loop through playlists testing data to populate playlist*/}
+          <button onClick={openCreatePlaylistPopup}>Create a playlist</button>
+          {playlistsData.map((playlist, key) => {
+            return (
+              <div className={classes.playlistTitle} key={key} onClick={() => {addToPlaylist(audioId, playlist.id)}}>
+                {key + 1}. {playlist.title}
+              </div>
+            )
+          })}
+        </div>
+        {playListPopup ? <CreatePlaylistPopup closeCreatePlaylistPopup={closeCreatePlaylistPopup}/> : ""}
       </div>
 
       <div>
