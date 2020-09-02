@@ -126,6 +126,24 @@ const useStyles = makeStyles(() => ({
       display: 'none'
     },
   },
+  playlists: {
+    color: 'red',
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: 'black',
+    height: '150px',
+    overflow: 'auto',
+    whiteSpace: 'nowrap',
+    width: '100%',
+  },
+  playlistTitle: {
+    cursor: 'pointer',
+    padding: '5px',
+  },
+  addPlaylistButton: {
+    backgroundColor: 'red',
+    borderRadius: '5px'
+  }
 }));
 
 export {useStyles};

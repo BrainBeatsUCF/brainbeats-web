@@ -40,19 +40,13 @@ const useStyles = makeStyles(() =>
 
 const HomeView: React.FC = () => {
   const classes = useStyles();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [id, setId] = useState(0);
+  const [id, setId] = useState("0");
 
   const { user, isAuthenticated } = useAuth0();
 
   console.log("Is Authenticated In Home:" + isAuthenticated);
 
-  const togglePlayPauseButon = () => {
-    console.log("isPlaying in Home: " + isPlaying);
-    setIsPlaying(!isPlaying);
-  }
-
-  const setAudioGlobal = (audioId: number) => {
+  const setAudioGlobal = (audioId: string) => {
     console.log(audioId);
     setId(audioId);
   };
@@ -66,14 +60,14 @@ const HomeView: React.FC = () => {
                 <NavBar />
               </Grid>
               <Grid className={classes.scrollableView} item xs={12}>
-                <Beat isPlaying={isPlaying} setAudioGlobal={setAudioGlobal} togglePlayPauseButon={togglePlayPauseButon}/>
-                <PublicSample isPlaying={isPlaying} setAudioGlobal={setAudioGlobal} togglePlayPauseButon={togglePlayPauseButon}/>
-                <PublicBeat isPlaying={isPlaying} setAudioGlobal={setAudioGlobal} togglePlayPauseButon={togglePlayPauseButon}/>
+                <Beat setAudioGlobal={setAudioGlobal}/>
+                <PublicSample setAudioGlobal={setAudioGlobal}/>
+                <PublicBeat setAudioGlobal={setAudioGlobal}/>
               </Grid>
             </Grid>
           </Grid>
           <Grid className={classes.fixedTopRight} item xs={12} md={3}>
-            <SideBar id={id} isPlaying={isPlaying} setAudioGlobal={setAudioGlobal} togglePlayPauseButon={togglePlayPauseButon}/>
+            <SideBar id={id} setAudioGlobal={setAudioGlobal}/>
           </Grid>
         </Grid>
       </div>
