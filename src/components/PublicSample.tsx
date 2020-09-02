@@ -6,8 +6,6 @@ import MusicContext from '../util/contexts/music/MusicContext';
 import PublicSampleData from '../data/PublicSample.json';
 
 interface PublicSampleProps {
-  isPlaying: boolean,
-  togglePlayPauseButon: any,
   setAudioGlobal: any,
 }
 

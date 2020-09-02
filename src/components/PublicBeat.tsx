@@ -4,8 +4,6 @@ import { MusicContext } from '../util/contexts/music';
 import PublicBeatData from '../data/PublicBeat.json';
 
 interface PublicBeatProps {
-  isPlaying: boolean,
-  togglePlayPauseButon: any,
   setAudioGlobal: any,
 }
 
@@ -79,7 +77,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
             <div className={classes.card} key={key} onClick={() => playPublicBeat(beat.id)}>
               <img alt='Public Beat Picture' className={classes.background} src={beat.background}></img>
               <div className={classes.bottomLeftCorner}>
-                <img className={classes.beatPicture} src={beat.picture} alt=""></img>
+                <img className={classes.beatPicture} src={beat.picture} alt="Beat Picture"></img>
                 <div>
                   <div>{beat.title}</div>
                   <div className={classes.playButtonAndBeatInfo}>

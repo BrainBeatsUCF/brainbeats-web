@@ -7,8 +7,6 @@ import Box from '@material-ui/core/Box';
 import MusicContext from '../util/contexts/music/MusicContext';
 
 interface BeatProps {
-  isPlaying: boolean,
-  togglePlayPauseButon: any,
   setAudioGlobal: any,
 }
 
