@@ -1,10 +1,9 @@
 export default class MusicContextProvider {
   private isPlaying: boolean = false;
   private id: string = "0";
-  // GABE
+ 
   private songIdList: Array<number> = [];
   private songId: number = 0;
-  // END GABE
   
   public getPlayingStatus(): boolean {
     return this.isPlaying;
@@ -51,14 +50,26 @@ export default class MusicContextProvider {
     return (this.songIdList.length == 0) ? true : false
   }
 
+  /**
+   * Print current songs loaded onto list.
+   * @returns {number[]} List of songids
+   */
   public printList(): Array<number>{
     return this.songIdList;
   }
 
+  /**
+   * set current songid from AudioSongObject
+   * @param newSongId {number}
+   */
   public setSongId(newSongId: number): void{
     this.songId = newSongId;
   }
 
+  /**
+   * Return current songid from player
+   * @returns {number}
+   */
   public getSongId(): number{
     return this.songId;
   }

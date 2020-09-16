@@ -14,7 +14,6 @@ import LogOutImage from '../images/LogoutImage.png'
 import Playlist from '../data/Playlist.json';
 import CreatePlaylistPopup from './CreatePlaylistPopup';
 
-import AudioIndexContext from '../util/contexts/audio_index/AudioIndex';
 import MusicContext from "../util/contexts/music/MusicContext";
 
 interface SideBarProps {
@@ -111,14 +110,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       setAudioArray([
         AudioDataTesting[1], AudioDataTesting[2], AudioDataTesting[3]
       ]);
-      /*
-      console.log(`Size of audioArray after setAudioArray: ${audioArray.length}`)
-      musicContext.enqueue(audioArray.map(audioObject => parseInt(audioObject.audioId)));
-      console.log(`filterTest: ${musicContext.printList()}`);
-      console.log(`OUTSIDE OF AUDIO PLAYER`)
-      for (let i = 0; i < audioArray.length; i++){
-        console.log(`${i} : ${audioArray[i].title}`)
-      }*/
     } else if (parseInt(props.id) >= 7 && parseInt(props.id) <= 11) {
       setAudioArray([
         AudioDataTesting[2]
