@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
-import { BackendContext } from '../util/api';
 import MusicContext from '../util/contexts/music/MusicContext';
 import PublicSampleData from '../data/PublicSample.json';
 
@@ -42,7 +41,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
-  const api = React.useContext(BackendContext);
   const musicProvider = React.useContext(MusicContext);
   const classes = useStyles();
   const [loading, setLoading] = useState(true);

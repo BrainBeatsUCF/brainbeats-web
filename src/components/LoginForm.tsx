@@ -66,11 +66,11 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
     // Todo: handle the login logic
     data: LoginProps,
     history: History<LocationState>): Promise<void> => {
-      try {
-        history.replace('/');
-      } catch (e) {
-        alert(e.message);
+      // call api, if success, then save userEmail to local storage
+      if (data.email != null) {
+        localStorage.setItem('userEmail', data.email);
       }
+      history.push('/');
   };
 
 	return (

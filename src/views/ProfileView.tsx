@@ -4,6 +4,8 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import NavBar from '../components/NavBar';
 import { TextField, Container, Button } from '@material-ui/core'; 
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import { useHistory } from "react-router-dom";
+let userEmail = localStorage.getItem('userEmail');
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -75,6 +77,8 @@ const HomeView: React.FC = () => {
   const [lastName, setLastname] = useState('Nguyen');
   const [imageUrl, setImageUrl] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR0AdkwPc3U4twT_LVngZb0XbcbTpJBqqBhZz-kKeTtdwVyS5FhE9DgW4MNrg&usqp=CAc');
   const [imageRaw, setImageRaw] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR0AdkwPc3U4twT_LVngZb0XbcbTpJBqqBhZz-kKeTtdwVyS5FhE9DgW4MNrg&usqp=CAc');
+  let history = useHistory();
+  let userEmail = localStorage.getItem('userEmail');
 
   const onChangeEmail = (e: any) => {
     setEmail(e.target.value);
@@ -118,6 +122,10 @@ const HomeView: React.FC = () => {
     //         'content-type': 'multipart/form-data'
     //     }
     // });
+  }
+
+  if (userEmail == null) {
+    history.push('/login');
   }
 
   return (

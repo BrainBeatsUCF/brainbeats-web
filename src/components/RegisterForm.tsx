@@ -12,31 +12,40 @@ import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import { useHistory } from 'react-router-dom';
 import { History, LocationState } from 'history';
+import axios from 'axios';
 
 const schema = yup.object({
 	email: yup
 		.string()
 		.email()
-		.required(),
-	password: yup
-		.string()
     .required(),
-  confirmPassword: yup
-		.string()
-    .required()
-    .when('password', {
-      is: (val) => (val && val.length),
-      then: yup.string().oneOf(
-        [yup.ref('password')],
-        'Password confirmation does not match.',
-      ),
-    }),
+  firstName: yup
+  .string()
+  .required(),
+  lastName: yup
+  .string()
+  .required(),
+	// password: yup
+	// 	.string()
+  //   .required(),
+  // confirmPassword: yup
+	// 	.string()
+  //   .required()
+  //   .when('password', {
+  //     is: (val) => (val && val.length),
+  //     then: yup.string().oneOf(
+  //       [yup.ref('password')],
+  //       'Password confirmation does not match.',
+  //     ),
+  //   }),
 });
 
 interface RegisterProps {
 	email?: string;
-  password?: string;
-  confirmPassword?: string;
+  // password?: string;
+  // confirmPassword?: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -48,11 +57,14 @@ const useStyles = makeStyles(theme => ({
 	},
 	form: {
 	  width: '100%', // Fix IE 11 issue.
-	  marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1),
 	},
 	submit: {
 	  margin: theme.spacing(3, 0, 2),
-	},
+  },
+  container: {
+    backgroundColor: 'black'
+  }
 }));
 
 const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
@@ -62,9 +74,12 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
   const handleRegister = async (data: RegisterProps,
     history: History<LocationState>): Promise<void> => {
   
-    console.log(data);
+    // console.log(data);
   
     // send user object to register api to backend
+    const response = await axios.post('https://brain-beats-server.azurewebsites.net/api/user/create', data);
+
+    // console.log(response);
   
     // save user object with token
   
@@ -86,9 +101,11 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
             <Formik
             validationSchema = {schema}
             initialValues={{
-              email: props.email || '',
-              password: props.password || '',
-              confirmPassword: props.confirmPassword || '',
+              email: props.email || 'Your email',
+              // password: props.password || 'Your password',
+              // confirmPassword: props.confirmPassword || 'Your password',
+              firstName: props.firstName || 'Your first name',
+              lastName: props.lastName || 'Your last name'
             }}
             onSubmit={async (data: RegisterProps): Promise<void> => {
               handleRegister(data, history);
@@ -96,7 +113,7 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
             >
             {(): React.ReactElement => (
               <Form className={classes.form}>
-                <Card>
+                <Card className={classes.container} >
                   <CardContent>
                     <div>
                       <Field
@@ -106,7 +123,7 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
                       type="email"
                       />
                     </div>
-                    <div>
+                    {/* <div>
                       <Field
                       label="Password"
                       name="password"
@@ -120,6 +137,20 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
                       name="confirmPassword"
                       component={TextFormField}
                       type="password"
+                      />
+                    </div> */}
+                    <div>
+                      <Field
+                      label="First Name"
+                      name="firstName"
+                      component={TextFormField}
+                      />
+                    </div>
+                    <div>
+                      <Field
+                      label="Last Name"
+                      name="lastName"
+                      component={TextFormField}
                       />
                     </div>
                     <div>

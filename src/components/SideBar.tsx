@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import BrainBeatsAudioPlayer from '@brainbeatsucf/brainbeats-audio-player';
 import '@brainbeatsucf/brainbeats-audio-player/src/style.css';
 import { Link } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useStyles } from './SideBarUseStyles';
 import AudioDataTesting from '../data/AudioDataTesting.json';
 import BeatButtonImage from '../images/beatButton.png';
@@ -11,6 +10,8 @@ import SampleButtonImage from '../images/sampleButton.png';
 import LogOutImage from '../images/LogoutImage.png'
 import Playlist from '../data/Playlist.json';
 import CreatePlaylistPopup from './CreatePlaylistPopup';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 interface SideBarProps {
   setAudioGlobal: any,
@@ -34,11 +35,24 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [audioId, setAudioId] = useState(props.id);
   const [playListPopup, setPlaylistPopup] = useState(false);
+  const history = useHistory();
+
+  const [beats, setBeats] = useState([]);
+  let userEmail = localStorage.getItem('userEmail');
+  const url = "https://brain-beats-server-docker.azurewebsites.net/";
   
   // Todo: get playlist from api
   let playlistsData = Playlist;
 
-  const { logout } = useAuth0(); 
+  const logout = () => {
+    // call log out api
+
+      // remove local storage
+      localStorage.removeItem('userEmail');
+
+      // push to login
+      history.push('login');
+  }
 
   const openCreatePlaylistPopup = () => {
     setPlaylistPopup(true);
@@ -76,6 +90,53 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     setShowPlaylists(false);
   };
 
+  const loadBeat = async () => {
+    console.log('props.id ' + props.id);
+    if (props.id === '0') {
+      console.log('id = 0');
+      return;
+    }
+      
+    const beatResponse = await axios.post(url + 'api/beat/read_beat', {
+      beatId: props.id
+    });
+
+    console.log(beatResponse.data);
+
+    let audioArrayData = [] as AudioObject[];
+
+    beatResponse.data.forEach((item: any) => {
+      console.log(item);
+
+      // const instrumentListArray = [] as String[];
+
+      // item.properties['instrumentList']
+
+      const newAudio = 
+      {
+        "imageUrl": beatResponse.data[0].properties['image'][0]['value'],
+        "audioUrl": beatResponse.data[0].properties['audio'][0]['value'],
+        "title": beatResponse.data[0].properties['name'][0]['value'],
+        "authorName": "Hung Nguyen"
+      };
+      
+      audioArrayData.push(newAudio);
+    });
+
+    setAudioArray(audioArrayData);
+  }
+
+  useEffect(() => {
+    const getBeat = async () => {
+      await loadBeat();
+    };
+    getBeat();
+
+    // setBeat here
+    // setAudioArray
+  }, [props.id]);
+
+  // playListPopUp 
   useEffect(() => {
     // add when mounted
     document.addEventListener("mousedown", handleClick);
@@ -85,24 +146,33 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     };
   }, [playListPopup]);
 
-  useEffect(() => {
-    console.log("props.id in SideBar: " + props.id);
-    setAudioId(props.id);
+  // play audio
+  // useEffect(() => {
+  //   setAudioId(props.id);
+  //   console.log('CHANGED ID');
 
-    if (parseInt(props.id) >= 1 && parseInt(props.id) <= 6) {
-      setAudioArray([
-        AudioDataTesting[1]
-      ]);
-    } else if (parseInt(props.id) >= 7 && parseInt(props.id) <= 11) {
-      setAudioArray([
-        AudioDataTesting[2]
-      ]);
-    } else if (parseInt(props.id) >= 12){
-      setAudioArray([
-        AudioDataTesting[3]
-      ]);
-    }
-  }, [props.id]);
+  //   // Beat audio
+  //   // call read beat api
+  //   // let beatResponse = await axios.post(url + 'api/beat/read_beat', {
+  //   //   beatId: props.id
+  //   // });
+
+  //   // console.log(beatResponse.data);
+
+  //   if (parseInt(props.id) >= 1 && parseInt(props.id) <= 6) {
+  //     setAudioArray([
+  //       AudioDataTesting[1]
+  //     ]);
+  //   } else if (parseInt(props.id) >= 7 && parseInt(props.id) <= 11) {
+  //     setAudioArray([
+  //       AudioDataTesting[2]
+  //     ]);
+  //   } else if (parseInt(props.id) >= 12){
+  //     setAudioArray([
+  //       AudioDataTesting[3]
+  //     ]);
+  //   }
+  // }, [props.id]);
 
   let audioContent, userStat;  
 
@@ -153,7 +223,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           <img onClick={() => {
             // handle log out logic
             logout();
-          }} alt='Logout Picture' src={LogOutImage}></img>
+          }} alt='Logout' src={LogOutImage}></img>
         </div>
         <div className={classes.userPictureContainer}>
           <Link to='user/profile'><img className={classes.userPicture} src="https://qph.fs.quoracdn.net/main-qimg-70d48d9e6d598aa364c13ef739b489d4" alt=""></img></Link>
@@ -168,7 +238,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           <button onClick={openCreatePlaylistPopup}>Create a playlist</button>
           {playlistsData.map((playlist, key) => {
             return (
-              <div className={classes.playlistTitle} key={key} onClick={() => {addToPlaylist(audioId, playlist.id)}}>
+              <div className={classes.playlistTitle} key={key} onClick={() => {addToPlaylist(props.id, playlist.id)}}>
                 {key + 1}. {playlist.title}
               </div>
             )

@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import SideBar from '../components/SideBar';
 import NavBar from '../components/NavBar';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -37,19 +37,22 @@ const useStyles = makeStyles(() =>
   }),
 );
 
+// Todo: handle whether use clicks on play beat/sample/ or playling to call a right apis in sidebar
 
 const HomeView: React.FC = () => {
   const classes = useStyles();
   const [id, setId] = useState("0");
-
-  const { user, isAuthenticated } = useAuth0();
-
-  console.log("Is Authenticated In Home:" + isAuthenticated);
+  let history = useHistory();
+  let userEmail = localStorage.getItem('userEmail');
 
   const setAudioGlobal = (audioId: string) => {
-    console.log(audioId);
+    console.log('audioId in home: ' + audioId);
     setId(audioId);
   };
+
+  if (userEmail == null) {
+    history.push('/login');
+  }
 
   return (
     <div className={classes.root}>
