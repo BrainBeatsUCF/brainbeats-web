@@ -1,0 +1,17 @@
+.rhap_volume-indicator, .rhap_progress-indicator {
+  background-color: red !important;
+}
+
+.rhap_time, .rhap_header, .rhap_button-clear {
+  color: red !important;
+}
+
+.rhap_header {
+  text-align: center;
+}
+
+.rhap_container {
+  width: 100%;
+  background-color: #1a1919 !important;
+  box-shadow: none !important;
+}

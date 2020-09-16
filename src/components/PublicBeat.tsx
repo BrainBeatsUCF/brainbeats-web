@@ -59,7 +59,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   const playPublicBeat = (id:string) => {
     props.setAudioGlobal(id);
     musicProvider.setId(id);
-    console.log(musicProvider.getCurrentId());
+    console.log(`musicProvider Id: ${musicProvider.getCurrentId()}`);
   }
 
   return (

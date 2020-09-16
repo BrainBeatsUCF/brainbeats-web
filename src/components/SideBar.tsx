@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import BrainBeatsAudioPlayer from '@brainbeatsucf/brainbeats-audio-player';
-import '@brainbeatsucf/brainbeats-audio-player/src/style.css';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+// import BrainBeatsAudioPlayer from '@brainbeatsucf/brainbeats-audio-player';
+import BrainBeatsAudioPlayer from '../components/audio-player/index';
+import '../components/audio-player/style.css'
+// import '@brainbeatsucf/brainbeats-audio-player/src/style.css';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useStyles } from './SideBarUseStyles';
@@ -12,6 +14,9 @@ import LogOutImage from '../images/LogoutImage.png'
 import Playlist from '../data/Playlist.json';
 import CreatePlaylistPopup from './CreatePlaylistPopup';
 
+import AudioIndexContext from '../util/contexts/audio_index/AudioIndex';
+import MusicContext from "../util/contexts/music/MusicContext";
+
 interface SideBarProps {
   setAudioGlobal: any,
   id: string
@@ -22,6 +27,7 @@ interface AudioObject {
   audioUrl: string
   title: string,
   authorName: string,
+  audioId: string,
 }
 
 // Todo: Add icon when audio is successfully/finished added to playlist
@@ -34,6 +40,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [audioId, setAudioId] = useState(props.id);
   const [playListPopup, setPlaylistPopup] = useState(false);
+
+  const musicContext = useContext(MusicContext);
   
   // Todo: get playlist from api
   let playlistsData = Playlist;
@@ -45,7 +53,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }
 
   const closeCreatePlaylistPopup = () => {
-    console.log("playListPopup in closeCreatePlaylistPopup: " + playListPopup);
+    console.log(" playListPopup in closeCreatePlaylistPopup: " + playListPopup);
     setPlaylistPopup(false);
   }
 
@@ -54,12 +62,20 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }
 
   const addToPlaylist = (audioId: string, playlistId: string) => {
-    console.log("add audioId: " + audioId + "to playlistId: " + playlistId);
+
+    console.log(`The audioId that will be parsed: ${audioId}`)
+    var playListName = playlistsData.filter((playlist) => playlist.id == playlistId);
+
+    console.log(" add audioId: " + audioId + " to playlistId: " + playlistId);
+    console.log(`musicContext songId: ${musicContext.getSongId()}`)
+    console.log(`adding song: ${audioArray[musicContext.getSongId()].title} to playlistName: ${playListName[0].title}`)
+    console.log(audioArray)
+    // console.log(` TestContext: ${AudioIndex.getId}`)
   }
 
   const handleClick = (e: any) => {
     // Todo: why is playlistpopup is false always in here
-    console.log("playListPopup in handleClick: " + playListPopup);
+    console.log(" playListPopup in handleClick: " + playListPopup);
     if (wrapperRef !== null) {
       if (wrapperRef.current && wrapperRef.current.contains(e.target)) {
         // inside click
@@ -86,13 +102,23 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }, [playListPopup]);
 
   useEffect(() => {
-    console.log("props.id in SideBar: " + props.id);
+    console.log(" props.id in SideBar: " + props.id);
     setAudioId(props.id);
+
+    if (!musicContext.emptyListCheck()) { musicContext.emptyList() }
 
     if (parseInt(props.id) >= 1 && parseInt(props.id) <= 6) {
       setAudioArray([
-        AudioDataTesting[1]
+        AudioDataTesting[1], AudioDataTesting[2], AudioDataTesting[3]
       ]);
+      /*
+      console.log(`Size of audioArray after setAudioArray: ${audioArray.length}`)
+      musicContext.enqueue(audioArray.map(audioObject => parseInt(audioObject.audioId)));
+      console.log(`filterTest: ${musicContext.printList()}`);
+      console.log(`OUTSIDE OF AUDIO PLAYER`)
+      for (let i = 0; i < audioArray.length; i++){
+        console.log(`${i} : ${audioArray[i].title}`)
+      }*/
     } else if (parseInt(props.id) >= 7 && parseInt(props.id) <= 11) {
       setAudioArray([
         AudioDataTesting[2]

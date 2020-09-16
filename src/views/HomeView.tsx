@@ -37,7 +37,6 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-
 const HomeView: React.FC = () => {
   const classes = useStyles();
   const [id, setId] = useState("0");
@@ -47,9 +46,10 @@ const HomeView: React.FC = () => {
   console.log("Is Authenticated In Home:" + isAuthenticated);
 
   const setAudioGlobal = (audioId: string) => {
-    console.log(audioId);
+    console.log(`setAudioGlobal: ${audioId}`);
     setId(audioId);
   };
+
 
   return (
     <div className={classes.root}>
@@ -67,7 +67,7 @@ const HomeView: React.FC = () => {
             </Grid>
           </Grid>
           <Grid className={classes.fixedTopRight} item xs={12} md={3}>
-            <SideBar id={id} setAudioGlobal={setAudioGlobal}/>
+              <SideBar id={id} setAudioGlobal={setAudioGlobal}/>
           </Grid>
         </Grid>
       </div>

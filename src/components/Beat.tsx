@@ -103,7 +103,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
   const playBeat = (id:string) => {
     props.setAudioGlobal(id);
     musicProvider.setId(id);
-    console.log(musicProvider.getCurrentId());
+    console.log(`Beat.tsx: musicProvider Current id: ${musicProvider.getCurrentId()}`);
   };
 
   if (loading) return (<div>loading...</div>);
