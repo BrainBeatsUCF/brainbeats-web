@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
-import { BackendContext } from '../util/api';
-import { PlaylistDetail, Song } from '../util/api/types';
 import Box from '@material-ui/core/Box';
 import MusicContext from '../util/contexts/music/MusicContext';
 import axios from 'axios';
@@ -11,7 +9,7 @@ interface BeatProps {
   setAudioGlobal: any,
 }
 
-interface AudioObject {
+interface BeatObject {
   name: string
   // instrumentList: string[],
   id: string,
@@ -77,45 +75,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Beat: React.FC<BeatProps> = ({...props}) => {
-  const api = React.useContext(BackendContext);
   const musicProvider = React.useContext(MusicContext);
 
   const classes = useStyles();
-  const [songs, setSongs] = useState([] as Song[]);
   const [loading, setLoading] = useState(true);
 
-  const [beats, setBeats] = useState([] as AudioObject[]);
-  const beatArray = [] as AudioObject[];
+  const [beats, setBeats] = useState([] as BeatObject[]);
+  const beatArray = [] as BeatObject[];
   let userEmail = localStorage.getItem('userEmail');
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
 
-  // testing purpose
-  let id = '12';
-  let playlistId = '1';
-
-  useEffect(() => {
-    if (loading) {
-      api.demoGetPlaylist(playlistId).then(async (res: PlaylistDetail) => {
-
-        let songsList = [] as Song[];
-        res.songList.forEach(async (songId) => {
-          await api.demoGetSong(songId).then((song) => {
-            songsList.push(song);
-          });
-        });
-
-        setSongs(songsList);
-      })
-      .then(() => {
-        setLoading(false);
-      })
-      .catch(err => console.log(err));
-    }
-  }, []);
-
   const loadData = async () => {
-    // console.log(`userEmail : ${userEmail}`);
-    // console.log('testing');
     let beatResponse = await axios.post(url + 'api/user/get_owned_beats', {
         email: userEmail
     });
@@ -150,6 +120,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
   useEffect(() => {
     const getData = async () => {
       await loadData();
+      setLoading(false);
     };
     getData();
   }, []);
@@ -162,8 +133,6 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
     console.log(beats);
   };
 
-  if (loading) return (<div>loading...</div>);
-
   return (
     <div className={classes.componentContainer}>
       <div className={classes.header}>
@@ -173,46 +142,49 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
         </div>
         <hr></hr>
       </div>
-      <div className={classes.scroll}>
-        {beats.map((beat, key) => {
-          return (
-            // Todo: change playbeat(id) to playbeat(song.id)
-            <div className={classes.card} key={key} onClick={() => playBeat(beat.id)}>
-              <img alt='Song' className={classes.background} src={beat.imageUrl}></img>
-              <div className={classes.cardContent}>
-                <div className={classes.songType}>
-                  {/* Vibing, Not a Phone in Sight */}
-                  {beat.name}
-                </div>
-                <Box className={classes.beatContainer}
-                  display="flex"
-                  flexWrap="wrap"
-                  alignContent="flex-start"
-                  p={1}
-                  m={1}
-                >
-                  {/* {instrumentList} */}
-                  <Box className={classes.sampleInstrument} p={1}>
-                    Clap
-                  </Box>
-                  <Box className={classes.sampleInstrument} p={1}>
-                    Saxophone
-                  </Box>
-                  <Box className={classes.sampleInstrument} p={1}>
-                    Heavy Gutar
-                  </Box>
-                  <Box className={classes.sampleInstrument} p={1}>
-                    Drums
-                  </Box>
-                  <Box className={classes.sampleInstrument} p={1}>
-                    Snare
-                  </Box>
-                </Box>
+      {loading ? <div>loading...</div> : 
+        <div className={classes.scroll}>
+          {beats.map((beat, key) => {
+            return (
+              // Todo: change playbeat(id) to playbeat(song.id)
+              <div className={classes.card} key={key} onClick={() => playBeat(beat.id)}>
+                <img alt='Song' className={classes.background} src={beat.imageUrl}></img>
+                <div className={classes.cardContent}>
+                  <div className={classes.songType}>
+                    {/* Vibing, Not a Phone in Sight */}
+                    {beat.name}
                   </div>
-              </div>
-          )
-        })}
-      </div>
+                  <Box className={classes.beatContainer}
+                    display="flex"
+                    flexWrap="wrap"
+                    alignContent="flex-start"
+                    p={1}
+                    m={1}
+                  >
+                    {/* {instrumentList} */}
+                    <Box className={classes.sampleInstrument} p={1}>
+                      Clap
+                    </Box>
+                    <Box className={classes.sampleInstrument} p={1}>
+                      Saxophone
+                    </Box>
+                    <Box className={classes.sampleInstrument} p={1}>
+                      Heavy Gutar
+                    </Box>
+                    <Box className={classes.sampleInstrument} p={1}>
+                      Drums
+                    </Box>
+                    <Box className={classes.sampleInstrument} p={1}>
+                      Snare
+                    </Box>
+                  </Box>
+                    </div>
+                </div>
+            )
+          })}
+        </div>
+      }
+      
     </div>
   )
 };

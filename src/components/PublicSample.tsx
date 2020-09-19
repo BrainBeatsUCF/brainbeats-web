@@ -1,11 +1,16 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
-import MusicContext from '../util/contexts/music/MusicContext';
-import PublicSampleData from '../data/PublicSample.json';
+import axios from 'axios';
 
 interface PublicSampleProps {
   setAudioGlobal: any,
+}
+
+interface SampleObject {
+  name: string
+  id: string,
+  imageUrl: string,
 }
 
 const useStyles = makeStyles(() => ({
@@ -41,21 +46,52 @@ const useStyles = makeStyles(() => ({
 }));
 
 const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
-  const musicProvider = React.useContext(MusicContext);
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
-  const samples = PublicSampleData;
+  const [samples, setSamples] = useState([] as SampleObject[]);
+
+  const sampleArray = [] as SampleObject[];
+  let userEmail = localStorage.getItem('userEmail');
+  const url = "https://brain-beats-server-docker.azurewebsites.net/";
+
+  const loadData = async () => {
+    // Todo: change this api to sample apis
+    let sampleResponse = await axios.post(url + 'api/user/get_owned_beats', {
+        email: userEmail
+    });
+
+    console.log(sampleResponse.data);
+    // let userResponse = await axios.post(url + 'api/user/read_user', {
+    //   email: userEmail
+    // });
+
+    // console.log(userResponse);
+
+    sampleResponse.data.forEach((item: any) => {
+      console.log(item);
+      const newSample = 
+      {
+        "id": item.id,
+        "imageUrl": item.properties['image'][0]['value'],
+        "name": item.properties['name'][0]['value'],
+        // "instrumentList": instrumentListArray
+      };
+      
+      sampleArray.push(newSample);
+    });
+    setSamples(sampleArray);
+  }
 
   useEffect(() => {
-    setLoading(false);
+    const getData = async () => {
+      await loadData();
+      setLoading(false);
+    };
+    getData();
   }, []);
-
-  if (loading) return (<div>loading...</div>);
 
   const playSample = (id: string) => {
     props.setAudioGlobal(id);
-    musicProvider.setId(id);
-    console.log(musicProvider.getCurrentId());
   };
 
   return (
@@ -67,16 +103,19 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
         </div>
         <hr></hr>
       </div>
-      <div className={classes.scroll}>
-        {samples.map((sample, key) => {
-          return (
-            <div className={classes.card} key={key}>
-              <img alt='Public Sample Picture' className={classes.samplePicture} src={sample.picture} onClick={() => playSample(sample.id)}></img>
-              <div className={classes.sampleTitle}>{sample.title}</div>
-            </div>
-          )
-        })}
-      </div>
+      {loading ? <div>loading...</div> : 
+        <div className={classes.scroll}>
+          {samples.map((sample, key) => {
+            return (
+              <div className={classes.card} key={key}>
+                {/* Todo: discuss about sample picture */}
+                <img alt='Public Sample' className={classes.samplePicture} src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS-By0yPUMOuSRY2S6yxiA8-k6bTgraIUqUqbNvKN4E4z7N75iuC4bWj3aDNi_5SCEzrYQx34iu&usqp=CAc" onClick={() => playSample(sample.id)}></img>
+                <div className={classes.sampleTitle}>{sample.name}</div>
+              </div>
+            )
+          })}
+        </div>
+      }
     </div>
   )
 };
