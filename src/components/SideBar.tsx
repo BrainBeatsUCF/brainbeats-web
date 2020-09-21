@@ -14,7 +14,7 @@ import LogOutImage from '../images/LogoutImage.png'
 import Playlist from '../data/Playlist.json';
 import CreatePlaylistPopup from './CreatePlaylistPopup';
 
-import MusicContext from "../util/contexts/music/MusicContext";
+import { getSongIndex } from "./audio-player/music_index";
 
 interface SideBarProps {
   setAudioGlobal: any,
@@ -39,8 +39,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [audioId, setAudioId] = useState(props.id);
   const [playListPopup, setPlaylistPopup] = useState(false);
-
-  const musicContext = useContext(MusicContext);
   
   // Todo: get playlist from api
   let playlistsData = Playlist;
@@ -65,9 +63,9 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     console.log(`The audioId that will be parsed: ${audioId}`)
     var playListName = playlistsData.filter((playlist) => playlist.id == playlistId);
 
-    console.log(" add audioId: " + audioId + " to playlistId: " + playlistId);
-    console.log(`musicContext songId: ${musicContext.getSongId()}`)
-    console.log(`adding song: ${audioArray[musicContext.getSongId()].title} to playlistName: ${playListName[0].title}`)
+    //console.log(" add audioId: " + audioId + " to playlistId: " + playlistId);
+    console.log(`static class songId: ${getSongIndex}`)
+    console.log(`adding song static class: ${audioArray[getSongIndex()].title} to playlistName: ${playListName[0].title}`)
     console.log(audioArray)
     // console.log(` TestContext: ${AudioIndex.getId}`)
   }
@@ -103,8 +101,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   useEffect(() => {
     console.log(" props.id in SideBar: " + props.id);
     setAudioId(props.id);
-
-    if (!musicContext.emptyListCheck()) { musicContext.emptyList() }
 
     if (parseInt(props.id) >= 1 && parseInt(props.id) <= 6) {
       setAudioArray([

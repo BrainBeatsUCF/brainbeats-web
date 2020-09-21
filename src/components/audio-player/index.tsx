@@ -3,7 +3,8 @@ import AudioPlayer from "react-h5-audio-player";
 import 'react-h5-audio-player/lib/styles.css'
 import { makeStyles } from "@material-ui/core/styles";
 
-import MusicContext from '../../util/contexts/music/MusicContext';
+import { getSongIndex, setSongIndex} from './music_index';
+
 
 interface AudioObject {
     title: string,
@@ -54,20 +55,18 @@ const useStyles = makeStyles(() => ({
     }
   }));
 
+  const callback = (indexPlaying: number):void => {
+    setSongIndex(indexPlaying);
+    console.log(`getting info: ${getSongIndex()}`);
+    console.log(`onPlay through the callback function.`);
+  }
+
   const BrainBeatsAudioPlayer: React.FC<AudioPlayerProps> = ({...props}) => {
     const classes = useStyles();
     const audioLength = props.audioObjectArray.length;
     const [indexPlaying, setIndexPlaying] = React.useState(0);
-
-    const musicContext = useContext(MusicContext);
-
-    /*
-    for (let i = 0; i < props.audioObjectArray.length; i++){
-        console.log(`${i} : ${props.audioObjectArray[i].title}`);
-    } */
   
     const playForward = () => {
-      console.log('play forward symbolic link please.')
       let newIndex: number;
       if (indexPlaying === audioLength - 1) {
         newIndex = 0;
@@ -75,11 +74,6 @@ const useStyles = makeStyles(() => ({
         newIndex = indexPlaying + 1;
       }
       setIndexPlaying(newIndex);
-      /*
-      musicContext.setSongId(indexPlaying)
-      console.log(`playForward: ${musicContext.getSongId()}`)
-      console.log(`index_plaing: ${indexPlaying}`)
-      console.log(`adding song (inside audioplayer): ${props.audioObjectArray[indexPlaying].title}`) */
       return newIndex;
     }
   
@@ -91,11 +85,6 @@ const useStyles = makeStyles(() => ({
         newIndex = indexPlaying - 1;
       }
       setIndexPlaying(newIndex);
-      /*
-      musicContext.setSongId(indexPlaying);
-      console.log(`playBackward: ${musicContext.getSongId()}`)
-      console.log(`index_playing: ${indexPlaying}`)
-      console.log(`adding song (inside audioplayer): ${props.audioObjectArray[indexPlaying].title}`) */
     }
   
     return (
@@ -111,7 +100,7 @@ const useStyles = makeStyles(() => ({
           onClickPrevious={playBackward}
           onClickNext={playForward}
           src={props.audioObjectArray[indexPlaying].audioUrl}
-          onPlay={e => {musicContext.setSongId(indexPlaying);  console.log(`onPlay from brainbeats audio player local dir ${indexPlaying}`)}}
+          onPlay={e => {callback(indexPlaying)}}
           onEnded={playForward}
           header={props.audioObjectArray[indexPlaying].title + ` by ` + props.audioObjectArray[indexPlaying].authorName}
           showSkipControls
