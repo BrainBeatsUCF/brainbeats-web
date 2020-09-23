@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import MusicContext from '../util/contexts/music/MusicContext';
 import axios from 'axios';
+import { MusicContext } from '../util/contexts/music';
 
 interface BeatProps {
   setAudioGlobal: any,
 }
 
-interface BeatObject {
+interface PlaylistObject {
   name: string
-  // instrumentList: string[],
   id: string,
   imageUrl: string,
 }
@@ -74,43 +73,35 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Beat: React.FC<BeatProps> = ({...props}) => {
+// Todo: only display playlist that has beats/samples
+const Playlist: React.FC<BeatProps> = ({...props}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
-  const [beats, setBeats] = useState([] as BeatObject[]);
-  const beatArray = [] as BeatObject[];
-  const musicProvider = React.useContext(MusicContext);
+  const musicProvider = useContext(MusicContext);
+
+  const [playlists, setPlaylists] = useState([] as PlaylistObject[]);
+  const playlistArray = [] as PlaylistObject[];
   let userEmail = localStorage.getItem('userEmail');
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
 
   const loadData = async () => {
-    let beatResponse = await axios.post(url + 'api/user/get_owned_beats', {
+    let playlistResponse = await axios.post(url + 'api/user/get_owned_playlists', {
         email: userEmail
     });
 
-    // let userResponse = await axios.post(url + 'api/user/read_user', {
-    //   email: userEmail
-    // });
+    playlistResponse.data.forEach((item: any) => {
+      console.log(item);
 
-    // console.log(userResponse);
-
-    beatResponse.data.forEach((item: any) => {
-
-      // const instrumentListArray = [] as String[];
-
-      // item.properties['instrumentList']
-
-      const newBeat = 
+      const newPlaylist = 
       {
         "id": item.id,
         "imageUrl": item.properties['image'][0]['value'],
         "name": item.properties['name'][0]['value'],
-        // "instrumentList": instrumentListArray
       };
       
-      beatArray.push(newBeat);
+      playlistArray.push(newPlaylist);
     });
-    setBeats(beatArray);
+    setPlaylists(playlistArray);
   }
 
   useEffect(() => {
@@ -121,57 +112,35 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
     getData();
   }, []);
 
-  const playBeat = (id:string) => {
+  const playPlaylist = (id:string) => {
     props.setAudioGlobal(id);
-    musicProvider.setAudioPlayingType('beat');
+    musicProvider.setId(id);
+    musicProvider.setAudioPlayingType('playlist');
+    // console.log(musicProvider.getCurrentId());
   };
 
   return (
     <div className={classes.componentContainer}>
       <div className={classes.header}>
         <div>
-          <span style={{marginRight: 10}}>My Beats</span>
+          <span style={{marginRight: 10}}>My Playlists</span>
           <input type="text" placeholder="Search.."></input>
         </div>
         <hr></hr>
       </div>
       {loading ? <div>loading...</div> : 
         <div className={classes.scroll}>
-          {beats.map((beat, key) => {
+          {playlists.map((playlist, key) => {
             return (
               // Todo: change playbeat(id) to playbeat(song.id)
-              <div className={classes.card} key={key} onClick={() => playBeat(beat.id)}>
-                <img alt='Song' className={classes.background} src={beat.imageUrl}></img>
+              <div className={classes.card} key={key} onClick={() => playPlaylist(playlist.id)}>
+                <img alt='Song' className={classes.background} src={playlist.imageUrl}></img>
                 <div className={classes.cardContent}>
                   <div className={classes.songType}>
                     {/* Vibing, Not a Phone in Sight */}
-                    {beat.name}
+                    {playlist.name}
                   </div>
-                  <Box className={classes.beatContainer}
-                    display="flex"
-                    flexWrap="wrap"
-                    alignContent="flex-start"
-                    p={1}
-                    m={1}
-                  >
-                    {/* {instrumentList} */}
-                    <Box className={classes.sampleInstrument} p={1}>
-                      Clap
-                    </Box>
-                    <Box className={classes.sampleInstrument} p={1}>
-                      Saxophone
-                    </Box>
-                    <Box className={classes.sampleInstrument} p={1}>
-                      Heavy Gutar
-                    </Box>
-                    <Box className={classes.sampleInstrument} p={1}>
-                      Drums
-                    </Box>
-                    <Box className={classes.sampleInstrument} p={1}>
-                      Snare
-                    </Box>
-                  </Box>
-                    </div>
+                </div>
                 </div>
             )
           })}
@@ -182,4 +151,4 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
   )
 };
 
-export default Beat;
+export default Playlist;

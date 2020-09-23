@@ -1,6 +1,7 @@
 export default class MusicContextProvider {
   private isPlaying: boolean = false;
   private id: string = "0";
+  private audioPlayingType: string = "";
   
   public getPlayingStatus(): boolean {
     return this.isPlaying;
@@ -20,5 +21,13 @@ export default class MusicContextProvider {
 
   public getCurrentId(): string {
     return this.id;
+  }
+  
+  public setAudioPlayingType(audioPlayingType: string) {
+    this.audioPlayingType = audioPlayingType;
+  }
+
+  public getAudioPlayingType(): string {
+   return this.audioPlayingType
   }
 }

@@ -68,7 +68,6 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
     // console.log(userResponse);
 
     sampleResponse.data.forEach((item: any) => {
-      console.log(item);
       const newSample = 
       {
         "id": item.id,

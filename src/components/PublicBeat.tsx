@@ -1,10 +1,17 @@
 import { makeStyles } from '@material-ui/core/styles';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { MusicContext } from '../util/contexts/music';
-import PublicBeatData from '../data/PublicBeat.json';
 
 interface PublicBeatProps {
   setAudioGlobal: any,
+}
+
+interface PublicBeatObject {
+  name: string
+  // instrumentList: string[],
+  id: string,
+  imageUrl: string,
 }
 
 const useStyles = makeStyles(() => ({
@@ -53,13 +60,55 @@ const useStyles = makeStyles(() => ({
 
 const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   const classes = useStyles();
+  const [loading, setLoading] = useState(true);
+  const [publicBeats, setPublicBeats] = useState([] as PublicBeatObject[]);
+  const publicBeatsArray = [] as PublicBeatObject[];
   const musicProvider = React.useContext(MusicContext);
-  let beats = PublicBeatData;
+  let userEmail = localStorage.getItem('userEmail');
+  const url = "https://brain-beats-server-docker.azurewebsites.net/";
+
+  const loadData = async () => {
+    let publicBeatsResponse = await axios.post(url + 'api/beat/get_all_beats', {
+        email: userEmail
+    });
+
+    // let userResponse = await axios.post(url + 'api/user/read_user', {
+    //   email: userEmail
+    // });
+
+    // console.log(userResponse);
+
+    publicBeatsResponse.data.forEach((item: any) => {
+
+      // const instrumentListArray = [] as String[];
+
+      // item.properties['instrumentList']
+
+      const newPublicBeat = 
+      {
+        "id": item.id,
+        "imageUrl": item.properties['image'][0]['value'],
+        "name": item.properties['name'][0]['value'],
+        // "instrumentList": instrumentListArray
+      };
+      
+      publicBeatsArray.push(newPublicBeat);
+    });
+    setPublicBeats(publicBeatsArray);
+  }
+
+  useEffect(() => {
+    const getData = async () => {
+      await loadData();
+      setLoading(false);
+    };
+    getData();
+  }, []);
 
   const playPublicBeat = (id:string) => {
     props.setAudioGlobal(id);
-    musicProvider.setId(id);
-    console.log(musicProvider.getCurrentId());
+    musicProvider.setAudioPlayingType('beat');
+    // console.log(musicProvider.getCurrentId());
   }
 
   return (
@@ -71,27 +120,29 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
         </div>
         <hr></hr>
       </div>
-      <div className={classes.scroll}>
-        {beats.map((beat, key) => {
-          return (
-            <div className={classes.card} key={key} onClick={() => playPublicBeat(beat.id)}>
-              <img alt='Public Beat Picture' className={classes.background} src={beat.background}></img>
-              <div className={classes.bottomLeftCorner}>
-                <img className={classes.beatPicture} src={beat.picture} alt="Beat Picture"></img>
-                <div>
-                  <div>{beat.title}</div>
-                  <div className={classes.playButtonAndBeatInfo}>
-                    <div>
-                      <div>{beat.type}</div>
-                      <div>{beat.duration}</div>
+      {loading ? <div>Loading...</div> : 
+        <div className={classes.scroll}>
+          {publicBeats.map((publicBeat, key) => {
+            return (
+              <div className={classes.card} key={key} onClick={() => playPublicBeat(publicBeat.id)}>
+                <img alt='Public Beat' className={classes.background} src={publicBeat.imageUrl}></img>
+                <div className={classes.bottomLeftCorner}>
+                  <img className={classes.beatPicture} src={publicBeat.imageUrl} alt="Beat Picture"></img>
+                  <div>
+                    <div>{publicBeat.name}</div>
+                    <div className={classes.playButtonAndBeatInfo}>
+                      <div>
+                        <div>Rock</div>
+                        <div>1:32</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+        }
     </div>
   );
 };

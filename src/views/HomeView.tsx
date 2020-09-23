@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Beat from '../components/Beat';
+import Playlist from '../components/Playlist';
 import PublicBeat from '../components/PublicBeat';
 import PublicSample from '../components/PublicSample';
 import Grid from '@material-ui/core/Grid';
@@ -64,6 +65,9 @@ const HomeView: React.FC = () => {
               </Grid>
               <Grid className={classes.scrollableView} item xs={12}>
                 <Beat setAudioGlobal={setAudioGlobal}/>
+                <Playlist setAudioGlobal={setAudioGlobal}/>
+
+                {/* Todo: Added public playlist */}
                 <PublicSample setAudioGlobal={setAudioGlobal}/>
                 <PublicBeat setAudioGlobal={setAudioGlobal}/>
               </Grid>
