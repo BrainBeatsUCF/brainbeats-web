@@ -7,27 +7,14 @@ import BeatButtonImage from '../images/beatButton.png';
 import ShareButtonImage from '../images/shareButton.png';
 import SampleButtonImage from '../images/sampleButton.png';
 import LogOutImage from '../images/LogoutImage.png'
-import Playlist from '../data/Playlist.json';
 import CreatePlaylistPopup from './CreatePlaylistPopup';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { MusicContext } from '../util/contexts/music';
-
-interface SideBarProps {
-  setAudioGlobal: any,
-  id: string
-}
-
-interface AudioObject {
-  imageUrl: string,
-  audioUrl: string
-  title: string,
-  authorName: string,
-}
+import { SideBarProps, AudioObject, PlaylistObject } from '../util/api/types';
 
 // Todo: Add icon when audio is successfully/finished added to playlist
-// Todo: handle playlist area responsiveness when it comes to less than 959
-// Todo: need to handle to distinguish whether user play sample/beat/ or playlist
+//      handle playlist area responsiveness when it comes to less than 959
 
 const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const classes = useStyles(useStyles);
@@ -37,14 +24,11 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const [audioId, setAudioId] = useState(props.id);
   const [playListPopup, setPlaylistPopup] = useState(false);
   const history = useHistory();
+  const [playlists, setPlaylists] = useState([] as PlaylistObject[]);
   const musicProvider = React.useContext(MusicContext);
 
-  const [beats, setBeats] = useState([]);
   let userEmail = localStorage.getItem('userEmail');
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
-  
-  // Todo: get playlist from api
-  let playlistsData = Playlist;
 
   const logout = () => {
     // call log out api
@@ -61,7 +45,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }
 
   const closeCreatePlaylistPopup = () => {
-    console.log("playListPopup in closeCreatePlaylistPopup: " + playListPopup);
     setPlaylistPopup(false);
   }
 
@@ -74,8 +57,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }
 
   const handleClick = (e: any) => {
-    // Todo: why is playlistpopup is false always in here
-    console.log("playListPopup in handleClick: " + playListPopup);
     if (wrapperRef !== null) {
       if (wrapperRef.current && wrapperRef.current.contains(e.target)) {
         // inside click
@@ -92,38 +73,42 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     setShowPlaylists(false);
   };
 
+  // Todo: handle this
+  const loadPlaylist = async () => {
+    let playlistArrayData = [] as PlaylistObject[];
+
+    const playlistResponse = await axios.post(url + 'api/user/get_owned_playlists', {
+      email: localStorage.getItem('userEmail')
+    });    
+
+    playlistResponse.data.forEach((item: any) => {
+      console.log(item.id);
+      console.log(item);
+      const newPlaylist = 
+      {
+        "imageUrl": item.properties['image'][0]['value'],
+        "isPrivate": item.properties['isPrivate'][0]['value'],
+        "name": item.properties['name'][0]['value'],
+        "email": localStorage.getItem('userEmail')!,
+        "id": item.id
+      };
+      
+      playlistArrayData.push(newPlaylist);
+    });
+
+    setPlaylists(playlistArrayData);
+  }
+
   const loadData = async () => {
-    console.log('props.id ' + props.id);
-    console.log(musicProvider.getAudioPlayingType());
     if (props.id === '0') {
-      console.log('id = 0');
       return;
     }
-     
-    // Play Beat Part
-    // const beatResponse = await axios.post(url + 'api/beat/read_beat', {
-    //   beatId: props.id
-    // });
-
-    // console.log(beatResponse.data);
-
-    // let audioArrayData = [] as AudioObject[];
-
-    // beatResponse.data.forEach((item: any) => {
-    //   const newAudio = 
-    //   {
-    //     "imageUrl": beatResponse.data[0].properties['image'][0]['value'],
-    //     "audioUrl": beatResponse.data[0].properties['audio'][0]['value'],
-    //     "title": beatResponse.data[0].properties['name'][0]['value'],
-    //     "authorName": "Hung Nguyen"
-    //   };
-      
-    //   audioArrayData.push(newAudio);
-    // });
-
-    // setAudioArray(audioArrayData);
 
     let audioArrayData = [] as AudioObject[];
+
+    // reset the data
+    setAudioArray([]);
+
     // Play Playlist Part
     if (musicProvider.getAudioPlayingType() === 'playlist') {
       const playlistResponse = await axios.post(url + 'api/playlist/read_playlist_beats', {
@@ -149,43 +134,46 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       beatResponse.data.forEach((item: any) => {
         const newAudio = 
         {
-          "imageUrl": beatResponse.data[0].properties['image'][0]['value'],
-          "audioUrl": beatResponse.data[0].properties['audio'][0]['value'],
-          "title": beatResponse.data[0].properties['name'][0]['value'],
+          "imageUrl": item.properties['image'][0]['value'],
+          "audioUrl": item.properties['audio'][0]['value'],
+          "title": item.properties['name'][0]['value'],
           "authorName": "Hung Nguyen"
         };
         audioArrayData.push(newAudio);
       });      
+    } else if (musicProvider.getAudioPlayingType() === 'sample') {
+      const sampleResponse = await axios.post(url + 'api/sample/read_sample', {
+        sampleId: props.id
+      });
+
+      sampleResponse.data.forEach((item: any) => {
+        const newAudio = 
+        {
+          // Todo: ask justin to add imageUrl to sample: item.properties['image'][0]['value'],
+          "imageUrl": '',
+          "audioUrl": item.properties['audio'][0]['value'],
+          "title": item.properties['name'][0]['value'],
+          "authorName": "Hung Nguyen"
+        };
+        audioArrayData.push(newAudio);
+      })
     }
-    // const playlistResponse = await axios.post(url + 'api/playlist/read_playlist_beats', {
-    //   playlistId: props.id
-    // });
-
-    // let audioArrayData = [] as AudioObject[];
-
-    // playlistResponse.data.forEach((item: any) => {
-    //   const newAudio = 
-    //   {
-    //     "imageUrl": item.properties['image'][0]['value'],
-    //     "audioUrl": item.properties['audio'][0]['value'],
-    //     "title": item.properties['name'][0]['value'],
-    //     "authorName": "Hung Nguyen"
-    //   };
-      
-    //   audioArrayData.push(newAudio);
-    // });
 
     setAudioArray(audioArrayData);
   }
+
+  useEffect(() => {
+    const getPlaylist = async () => {
+      await loadPlaylist();
+    };
+    getPlaylist();
+  }, [props.id]);
 
   useEffect(() => {
     const getData = async () => {
       await loadData();
     };
     getData();
-
-    // setBeat here
-    // setAudioArray
   }, [props.id]);
 
   // playListPopUp 
@@ -198,7 +186,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     };
   }, [playListPopup]);
 
-  let audioContent, userStat;  
+  let audioContent, userStat, isShowAddToPlaylist;  
 
   userStat = (
     <>
@@ -225,11 +213,16 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       </div>
     </>
   )
+
+  if (musicProvider.getAudioPlayingType() === 'playlist' || musicProvider.getAudioPlayingType() === 'beat' )
+    isShowAddToPlaylist = true;
+  else
+    isShowAddToPlaylist = false;
   
   if (audioArray.length > 0) {
     audioContent = (
       <>
-        <button className={classes.addPlaylistButton} onClick={showPlaylistArea}>Add to my playlists</button>
+        {isShowAddToPlaylist ? <button className={classes.addPlaylistButton} onClick={showPlaylistArea}>Add to my playlists</button> : ""}
 
         {/* Todo: How to figure out the audioId for next audio in a playlist */}
         {/* Maybe go back to brain beats audio package to export another function to get the current audioId */}
@@ -258,12 +251,12 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         </div>
 
         <div className={classes.playlists} ref={wrapperRef} style={{display: showPlaylists ? 'flex' : 'none'}}>
-          {/* Todo:  Loop through playlists testing data to populate playlist*/}
           <button onClick={openCreatePlaylistPopup}>Create a playlist</button>
-          {playlistsData.map((playlist, key) => {
+          {playlists.map((playlist, key) => {
             return (
+              // need to change props.id to getCurrentAudioPlaying from audio package
               <div className={classes.playlistTitle} key={key} onClick={() => {addToPlaylist(props.id, playlist.id)}}>
-                {key + 1}. {playlist.title}
+                {key + 1}. {playlist.name}
               </div>
             )
           })}

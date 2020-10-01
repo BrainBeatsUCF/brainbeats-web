@@ -102,7 +102,6 @@ const HomeView: React.FC = () => {
       setImageUrl(URL.createObjectURL(e.target.files[0]));
       setImageRaw(e.target.files[0]);
     }
-      
   }
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

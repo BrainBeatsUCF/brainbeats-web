@@ -13,12 +13,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 
-import { BackendContext } from '../util/api';
-import Api from '../util/api';
-import { UserContext } from '../util/contexts/user';
-
-import {useAuth0} from '@auth0/auth0-react';
-
 const schema = yup.object({
 	email: yup
 		.string()
@@ -47,20 +41,15 @@ const useStyles = makeStyles(theme => ({
 	},
 	submit: {
 	  margin: theme.spacing(3, 0, 2),
-	},
+  },
+  container: {
+    backgroundColor: 'black'
+  }
 }));
 
 const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 	const classes = useStyles();
   const history = useHistory();
-
-  const { loginWithRedirect } = useAuth0();
-
-  const api = React.useContext(BackendContext);
-  const user = React.useContext(UserContext);
-
-  // api.callGetEndpoint('weatherforecast', '').then((response) => console.log(response.data[0]));
-  console.log(api.getSavedPlaylists('nice', 'nice'));
 
   const handleLogin = async (
     // Todo: handle the login logic
@@ -88,8 +77,8 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
             <Formik
             validationSchema = {schema}
             initialValues={{
-              email: props.email || '',
-              password: props.password || '',
+              email: props.email || 'Your email',
+              password: props.password || 'Your password',
             }}
             onSubmit={async (data: LoginProps): Promise<void> => {
               handleLogin(data, history);
@@ -97,7 +86,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
             >
             {(): React.ReactElement => (
               <Form className={classes.form}>
-                <Card>
+                <Card className={classes.container}>
                   <CardContent>
                     <div>
                       <Field
@@ -126,24 +115,15 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                         Login
                       </Button>
                     </div>
-                    <div>
+                    {/* <div>
                       <Link href="#" variant="body2">
                         Find my account
                       </Link>
-                    </div>
+                    </div> */}
                     <div>
                       <Link href="register" variant="body2">
                         {"Create Account"}
                       </Link>
-                    </div>
-                    <div>
-                      <button onClick={() => (
-                        // save user to DB
-
-                        loginWithRedirect()
-                      )}>
-                      Log in with Auth0
-                      </button>
                     </div>
                   </CardContent>
                 </Card>

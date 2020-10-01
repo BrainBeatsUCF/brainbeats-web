@@ -17,3 +17,23 @@ export interface Song {
   userId: string,
   isPrivate: boolean,
 }
+
+export interface SideBarProps {
+  setAudioGlobal: any,
+  id: string
+}
+
+export interface AudioObject {
+  imageUrl: string,
+  audioUrl: string
+  title: string,
+  authorName: string,
+}
+
+export interface PlaylistObject {
+  id: string,
+  imageUrl: string,
+  isPrivate: string,
+  name: string,
+  email: string,
+}

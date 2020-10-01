@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import MusicContext from '../util/contexts/music/MusicContext';
 
 interface PublicSampleProps {
   setAudioGlobal: any,
@@ -49,6 +50,7 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [samples, setSamples] = useState([] as SampleObject[]);
+  const musicProvider = React.useContext(MusicContext);
 
   const sampleArray = [] as SampleObject[];
   let userEmail = localStorage.getItem('userEmail');
@@ -56,11 +58,10 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
 
   const loadData = async () => {
     // Todo: change this api to sample apis
-    let sampleResponse = await axios.post(url + 'api/user/get_owned_beats', {
+    let sampleResponse = await axios.post(url + 'api/user/get_owned_samples', {
         email: userEmail
     });
 
-    console.log(sampleResponse.data);
     // let userResponse = await axios.post(url + 'api/user/read_user', {
     //   email: userEmail
     // });
@@ -71,9 +72,9 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
       const newSample = 
       {
         "id": item.id,
-        "imageUrl": item.properties['image'][0]['value'],
+        // Todo: ask justin to add imageUrl to sample: item.properties['image'][0]['value'],
+        "imageUrl": "", 
         "name": item.properties['name'][0]['value'],
-        // "instrumentList": instrumentListArray
       };
       
       sampleArray.push(newSample);
@@ -91,6 +92,7 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
 
   const playSample = (id: string) => {
     props.setAudioGlobal(id);
+    musicProvider.setAudioPlayingType('sample');
   };
 
   return (

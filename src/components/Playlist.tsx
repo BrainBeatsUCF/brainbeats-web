@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
-import Box from '@material-ui/core/Box';
 import axios from 'axios';
 import { MusicContext } from '../util/contexts/music';
 
@@ -90,8 +89,6 @@ const Playlist: React.FC<BeatProps> = ({...props}) => {
     });
 
     playlistResponse.data.forEach((item: any) => {
-      console.log(item);
-
       const newPlaylist = 
       {
         "id": item.id,
@@ -116,7 +113,6 @@ const Playlist: React.FC<BeatProps> = ({...props}) => {
     props.setAudioGlobal(id);
     musicProvider.setId(id);
     musicProvider.setAudioPlayingType('playlist');
-    // console.log(musicProvider.getCurrentId());
   };
 
   return (
