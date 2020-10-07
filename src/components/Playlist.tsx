@@ -84,20 +84,41 @@ const Playlist: React.FC<BeatProps> = ({...props}) => {
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
 
   const loadData = async () => {
-    let playlistResponse = await axios.post(url + 'api/user/get_owned_playlists', {
-        email: userEmail
+    // Todo: fix cors and un-comment
+    // let playlistResponse = await axios.post(url + 'api/user/get_owned_playlists', {
+    //     email: userEmail
+    // });
+    
+    // playlistResponse.data.forEach((item: any) => {
+    //   const newPlaylist = 
+    //   {
+    //     "id": item.id,
+    //     "imageUrl": item.properties['image'][0]['value'],
+    //     "name": item.properties['name'][0]['value'],
+    //   };
+      
+    //   playlistArray.push(newPlaylist);
+    // });
+
+    // testing, remove when cors resolve
+    playlistArray.push({
+      "id": "1",
+      "imageUrl": "",
+      "name": "playlist 1",
     });
 
-    playlistResponse.data.forEach((item: any) => {
-      const newPlaylist = 
-      {
-        "id": item.id,
-        "imageUrl": item.properties['image'][0]['value'],
-        "name": item.properties['name'][0]['value'],
-      };
-      
-      playlistArray.push(newPlaylist);
+    playlistArray.push({
+      "id": "2",
+      "imageUrl": "",
+      "name": "playlist 2",
     });
+
+    playlistArray.push({
+      "id": "3",
+      "imageUrl": "",
+      "name": "playlist 3",
+    });
+
     setPlaylists(playlistArray);
   }
 
