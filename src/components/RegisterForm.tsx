@@ -25,25 +25,25 @@ const schema = yup.object({
   lastName: yup
   .string()
   .required(),
-	// password: yup
-	// 	.string()
-  //   .required(),
-  // confirmPassword: yup
-	// 	.string()
-  //   .required()
-  //   .when('password', {
-  //     is: (val) => (val && val.length),
-  //     then: yup.string().oneOf(
-  //       [yup.ref('password')],
-  //       'Password confirmation does not match.',
-  //     ),
-  //   }),
+	password: yup
+		.string()
+    .required(),
+  confirmPassword: yup
+		.string()
+    .required()
+    .when('password', {
+      is: (val) => (val && val.length),
+      then: yup.string().oneOf(
+        [yup.ref('password')],
+        'Password confirmation does not match.',
+      ),
+    }),
 });
 
 interface RegisterProps {
 	email?: string;
-  // password?: string;
-  // confirmPassword?: string;
+  password?: string;
+  confirmPassword?: string;
   firstName?: string;
   lastName?: string;
 }
@@ -70,20 +70,49 @@ const useStyles = makeStyles(theme => ({
 const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
   const classes = useStyles();
   const history = useHistory();
+  const [isSuccessful, setIsSuccessful] = React.useState(false);
 
   const handleRegister = async (data: RegisterProps,
     history: History<LocationState>): Promise<void> => {
   
     // console.log(data);
-  
-    // send user object to register api to backend
-    const response = await axios.post('https://brain-beats-server.azurewebsites.net/api/user/create', data);
+    const config = {
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    }
+
+    // const formData = new FormData();
+
+
+
+    // formData.append('email', data.email!);
+    // formData.append('password', data.password!);
+    // formData.append('firstName', data.firstName!);
+    // formData.append('lastName', data.lastName!);
+
+    const registerData = {
+      'email': data.email!,
+      'password': data.password!,
+      'firstName': data.firstName!,
+      'lastName': data.lastName!,
+    }
+
+    console.log(registerData);
+
+    // const response = await axios.post('https://brain-beats-server-docker.azurewebsites.net/api/user/create_user', registerData, config);
+    axios.post('https://brain-beats-server-docker.azurewebsites.net/api/user/create_user', registerData, config)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err)
+    });
 
     // console.log(response);
-  
-    // save user object with token
-  
-    history.push("/home");
+
+    // if response is successful
+    // setIsSuccessful(true);
   };
   
 	return (
@@ -102,8 +131,8 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
             validationSchema = {schema}
             initialValues={{
               email: props.email || 'Your email',
-              // password: props.password || 'Your password',
-              // confirmPassword: props.confirmPassword || 'Your password',
+              password: props.password || 'Your password',
+              confirmPassword: props.confirmPassword || 'Your password',
               firstName: props.firstName || 'Your first name',
               lastName: props.lastName || 'Your last name'
             }}
@@ -123,7 +152,7 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
                       type="email"
                       />
                     </div>
-                    {/* <div>
+                    <div>
                       <Field
                       label="Password"
                       name="password"
@@ -138,7 +167,7 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
                       component={TextFormField}
                       type="password"
                       />
-                    </div> */}
+                    </div>
                     <div>
                       <Field
                       label="First Name"
@@ -153,6 +182,7 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
                       component={TextFormField}
                       />
                     </div>
+                    {isSuccessful ? <>You have successfully created an account with us.</> : <></>}
                     <div>
                       <Button 
                         type="submit"

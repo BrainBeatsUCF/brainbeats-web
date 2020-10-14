@@ -12,6 +12,9 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import axios from 'axios';
+
+// Todo: log user out after an hour after they log in because the access token is expired in one hour
 
 const schema = yup.object({
 	email: yup
@@ -50,16 +53,52 @@ const useStyles = makeStyles(theme => ({
 const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 	const classes = useStyles();
   const history = useHistory();
+  let userEmail = localStorage.getItem('userEmail');
 
   const handleLogin = async (
     // Todo: handle the login logic
     data: LoginProps,
     history: History<LocationState>): Promise<void> => {
-      // call api, if success, then save userEmail to local storage
-      if (data.email != null) {
-        localStorage.setItem('userEmail', data.email);
+      const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
       }
-      history.push('/');
+
+      const loginData = {
+        'email': data.email!,
+        'password': data.password!,
+      }
+
+      console.log(loginData);
+
+      axios.post('https://brain-beats-server-docker.azurewebsites.net/api/user/login_user', loginData, config)
+      .then((res) => {
+        if (res.data.error === 'access_denied') {
+          console.log('access denied');
+          // handle wrong account
+        } else {
+          console.log(res);
+          console.log(res.data.access_token);
+          localStorage.setItem('accessToken', res.data.access_token);
+          localStorage.setItem('userEmail', loginData.email);
+
+          // not a good way, what if user log in, then quit brower, and go into home page, then this set time out is not executing
+          // setTimeout(() => {
+          //   localStorage.setItem('accessToken', 'expired');
+          //   console.log('expired access token: ' + localStorage.getItem('accessToken'));
+          //   console.log('hello world');
+          //   history.push('/login');
+          // }, 3000);
+          history.push('/');
+        }
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+      
   };
 
 	return (

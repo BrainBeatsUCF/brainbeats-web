@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import MusicContext from '../util/contexts/music/MusicContext';
 
-interface PublicSampleProps {
+interface SampleProps {
   setAudioGlobal: any,
 }
 
@@ -46,7 +46,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
+const Sample: React.FC<SampleProps> = ({...props}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [samples, setSamples] = useState([] as SampleObject[]);
@@ -58,8 +58,29 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
 
   const loadData = async () => {
     // Todo: change this api to sample apis
-    let sampleResponse = await axios.post(url + 'api/user/get_owned_samples', {
-        email: userEmail
+    axios.post(url + 'api/user/get_owned_samples', 
+    {
+      email: userEmail
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    }).then((res) => {
+      res.data.forEach((item: any) => {
+        const newSample = 
+        {
+          "id": item.id,
+          // Todo: ask justin to add imageUrl to sample: item.properties['image'][0]['value'],
+          "imageUrl": "", 
+          "name": item.properties['name'][0]['value'],
+        };
+        
+        sampleArray.push(newSample);
+      });
+      setSamples(sampleArray);
+    }).catch((err) => {
+      console.log(err);
     });
 
     // let userResponse = await axios.post(url + 'api/user/read_user', {
@@ -68,18 +89,7 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
 
     // console.log(userResponse);
 
-    sampleResponse.data.forEach((item: any) => {
-      const newSample = 
-      {
-        "id": item.id,
-        // Todo: ask justin to add imageUrl to sample: item.properties['image'][0]['value'],
-        "imageUrl": "", 
-        "name": item.properties['name'][0]['value'],
-      };
-      
-      sampleArray.push(newSample);
-    });
-    setSamples(sampleArray);
+    
   }
 
   useEffect(() => {
@@ -99,7 +109,7 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
     <div className={classes.componentContainer}>
       <div className={classes.header}>
         <div>
-          <span style={{marginRight: 10}}>Public Samples</span>
+          <span style={{marginRight: 10}}>My Samples</span>
           <input type="text" placeholder="Search.."></input>
         </div>
         <hr></hr>
@@ -121,4 +131,4 @@ const PublicSample: React.FC<PublicSampleProps> = ({...props}) => {
   )
 };
 
-export default PublicSample;
+export default Sample;

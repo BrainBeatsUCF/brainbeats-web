@@ -68,33 +68,37 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
 
   const loadData = async () => {
-    let publicBeatsResponse = await axios.post(url + 'api/beat/get_all_beats', {
-        email: userEmail
+    axios.post(url + 'api/beat/get_all_beats', 
+    {
+      email: userEmail
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    }).then((res) => {
+      res.data.forEach((item: any) => {
+
+        // const instrumentListArray = [] as String[];
+  
+        // item.properties['instrumentList']
+  
+        const newPublicBeat = 
+        {
+          "id": item.id,
+          "imageUrl": item.properties['image'][0]['value'],
+          "name": item.properties['name'][0]['value'],
+          // "instrumentList": instrumentListArray
+        };
+        
+        publicBeatsArray.push(newPublicBeat);
+      });
+      setPublicBeats(publicBeatsArray);
+    }).catch((err) => {
+      console.log(err);
     });
 
-    // let userResponse = await axios.post(url + 'api/user/read_user', {
-    //   email: userEmail
-    // });
-
-    // console.log(userResponse);
-
-    publicBeatsResponse.data.forEach((item: any) => {
-
-      // const instrumentListArray = [] as String[];
-
-      // item.properties['instrumentList']
-
-      const newPublicBeat = 
-      {
-        "id": item.id,
-        "imageUrl": item.properties['image'][0]['value'],
-        "name": item.properties['name'][0]['value'],
-        // "instrumentList": instrumentListArray
-      };
-      
-      publicBeatsArray.push(newPublicBeat);
-    });
-    setPublicBeats(publicBeatsArray);
+    
   }
 
   useEffect(() => {

@@ -83,49 +83,29 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const loadPlaylist = async () => {
     let playlistArrayData = [] as PlaylistObject[];
 
-    // Todo: un-comment when cors is fixed
-    // const playlistResponse = await axios.post(url + 'api/user/get_owned_playlists', {
-    //   email: localStorage.getItem('userEmail')
-    // });    
+    const playlistResponse = await axios.post(url + 'api/user/get_owned_playlists', 
+    {
+      email: localStorage.getItem('userEmail')
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    });    
 
-    // playlistResponse.data.forEach((item: any) => {
-    //   console.log(item.id);
-    //   console.log(item);
-    //   const newPlaylist = 
-    //   {
-    //     "imageUrl": item.properties['image'][0]['value'],
-    //     "isPrivate": item.properties['isPrivate'][0]['value'],
-    //     "name": item.properties['name'][0]['value'],
-    //     "email": localStorage.getItem('userEmail')!,
-    //     "id": item.id
-    //   };
+    playlistResponse.data.forEach((item: any) => {
+      console.log(item.id);
+      console.log(item);
+      const newPlaylist = 
+      {
+        "imageUrl": item.properties['image'][0]['value'],
+        "isPrivate": item.properties['isPrivate'][0]['value'],
+        "name": item.properties['name'][0]['value'],
+        "email": localStorage.getItem('userEmail')!,
+        "id": item.id
+      };
       
-    //   playlistArrayData.push(newPlaylist);
-    // });
-
-    // testing, remove when cors resolve
-    playlistArrayData.push({
-      "imageUrl": "",
-      "isPrivate": "false",
-      "name": "playlist 1",
-      "email": "testing",
-      "id": "1"
-    });
-
-    playlistArrayData.push({
-      "imageUrl": "",
-      "isPrivate": "false",
-      "name": "playlist 2",
-      "email": "testing",
-      "id": "2"
-    });
-
-    playlistArrayData.push({
-      "imageUrl": "",
-      "isPrivate": "false",
-      "name": "playlist 3",
-      "email": "testing",
-      "id": "3"
+      playlistArrayData.push(newPlaylist);
     });
 
     setPlaylists(playlistArrayData);
@@ -143,52 +123,43 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
 
     // Play Playlist Part
     if (musicProvider.getAudioPlayingType() === 'playlist') {
-      // Todo: undo when cors is resolve
-      // const playlistResponse = await axios.post(url + 'api/playlist/read_playlist_beats', {
-      //   playlistId: props.id
-      // });    
+      const playlistResponse = await axios.post(url + 'api/playlist/read_playlist_beats', 
+      {
+        playlistId: props.id
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });    
   
-      // playlistResponse.data.forEach((item: any) => {
-      //   const newAudio = 
-      //   {
-      //     "imageUrl": item.properties['image'][0]['value'],
-      //     "audioUrl": item.properties['audio'][0]['value'],
-      //     "title": item.properties['name'][0]['value'],
-      //     "authorName": "Hung Nguyen"
-      //   };
+      playlistResponse.data.forEach((item: any) => {
+        const newAudio = 
+        {
+          "imageUrl": item.properties['image'][0]['value'],
+          "audioUrl": item.properties['beat'][0]['value'],
+          "title": item.properties['name'][0]['value'],
+          "authorName": "Hung Nguyen"
+        };
         
-      // remove when corse is solved
-      //   audioArrayData.push(newAudio);
-      // });
-
-      audioArrayData.push({
-        "imageUrl": "",
-        "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-        "title": "Beat 1",
-        "authorName": "Hung Nguyen"
-      });
-      audioArrayData.push({
-        "imageUrl": "",
-        "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-        "title": "Beat 2",
-        "authorName": "Hung Nguyen"
-      });
-      audioArrayData.push({
-        "imageUrl": "",
-        "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-        "title": "Beat 3",
-        "authorName": "Hung Nguyen"
+        audioArrayData.push(newAudio);
       });
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
       const beatResponse = await axios.post(url + 'api/beat/read_beat', {
         beatId: props.id
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
       });
   
       beatResponse.data.forEach((item: any) => {
+        console.log(item);
         const newAudio = 
         {
           "imageUrl": item.properties['image'][0]['value'],
-          "audioUrl": item.properties['audio'][0]['value'],
+          "audioUrl": item.properties['beat'][0]['value'],
           "title": item.properties['name'][0]['value'],
           "authorName": "Hung Nguyen"
         };
@@ -197,6 +168,11 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     } else if (musicProvider.getAudioPlayingType() === 'sample') {
       const sampleResponse = await axios.post(url + 'api/sample/read_sample', {
         sampleId: props.id
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
       });
 
       sampleResponse.data.forEach((item: any) => {

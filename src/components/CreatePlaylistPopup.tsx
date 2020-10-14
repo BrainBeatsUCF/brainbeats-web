@@ -91,14 +91,16 @@ const CreatePlaylistPopup: React.FC<CreatePlaylistPopupProps> = ({...props}) => 
     const formData = new FormData();
     const config = {
       headers: {
-          'content-type': 'multipart/form-data'
+          'content-type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
       }
     }
 
+    console.log(typeof imageRaw);
+
     formData.append('email', localStorage.getItem('userEmail')!);
     formData.append('name', name);
-    // formData.append('image', imageRaw);
-    formData.append('image', "https://www.google.com/search?q=marsh+mallow+pic&sxsrf=ALeKk03iRCGQeCe25pZ5uSeS_pxL1899Fg:1601417792456&tbm=isch&source=iu&ictx=1&fir=wEBY1HaQPO7T6M%252Cchcf76kQ4Dsl0M%252C_&vet=1&usg=AI4_-kTQC1VcNh4xYVrQdI8a-OmOZEfUGQ&sa=X&ved=2ahUKEwi2wZ-Vso_sAhWOg-AKHfs1CrAQ9QF6BAgKEFY#imgrc=wEBY1HaQPO7T6M");
+    formData.append('image', imageRaw);
     formData.append('isPrivate', isPrivate);
 
     console.log(formData.get('email'));
@@ -107,9 +109,12 @@ const CreatePlaylistPopup: React.FC<CreatePlaylistPopupProps> = ({...props}) => 
     console.log(formData.get('isPrivate'));
 
     // call api with formData
-    const response = await axios.post(url + 'api/playlist/create_playlist', formData, config); 
-
-    console.log(response);
+    axios.post(url + 'api/playlist/create_playlist', formData, config)
+    .then((res) => {
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    }); 
 
     props.closeCreatePlaylistPopup();
   }

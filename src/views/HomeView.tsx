@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Beat from '../components/Beat';
 import Playlist from '../components/Playlist';
 import PublicBeat from '../components/PublicBeat';
-import PublicSample from '../components/PublicSample';
+import Sample from '../components/Sample';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import SideBar from '../components/SideBar';
@@ -51,7 +51,7 @@ const HomeView: React.FC = () => {
     setId(audioId);
   };
 
-  if (userEmail == null) {
+  if (userEmail == null || localStorage.getItem('accessToken') == "expired") {
     history.push('/login');
   }
 
@@ -68,7 +68,7 @@ const HomeView: React.FC = () => {
                 <Playlist setAudioGlobal={setAudioGlobal}/>
 
                 {/* Todo: Added public playlist */}
-                <PublicSample setAudioGlobal={setAudioGlobal}/>
+                <Sample setAudioGlobal={setAudioGlobal}/>
                 <PublicBeat setAudioGlobal={setAudioGlobal}/>
               </Grid>
             </Grid>
