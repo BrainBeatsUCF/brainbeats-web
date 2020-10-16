@@ -57,9 +57,23 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     setShowPlaylists(true);
   }
 
-  const addToPlaylist = (audioId: string, playlistId: string) => {
-    console.log("add audioId: " + playingIndex + "to playlistId: " + playlistId);
+  const addToPlaylist = (beatId: string, playlistId: string) => {
+    console.log("add beatId: " + beatId + " to playlistId: " + playlistId);
     console.log("current audio id playing: " + playingIndex);
+    axios.post(url + 'api/playlist/update_playlist_add_beat', 
+    {
+      playlistId: playlistId,
+      beatId: beatId,
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    }).then((res) => {
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 
   const handleClick = (e: any) => {
@@ -92,10 +106,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     });    
-
+    console.log('testing');
     playlistResponse.data.forEach((item: any) => {
-      console.log(item.id);
-      console.log(item);
       const newPlaylist = 
       {
         "imageUrl": item.properties['image'][0]['value'],
@@ -134,8 +146,10 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       });    
   
       playlistResponse.data.forEach((item: any) => {
+        console.log(item);
         const newAudio = 
         {
+          "id": item.id,
           "imageUrl": item.properties['image'][0]['value'],
           "audioUrl": item.properties['beat'][0]['value'],
           "title": item.properties['name'][0]['value'],
@@ -158,6 +172,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         console.log(item);
         const newAudio = 
         {
+          "id": item.id,
           "imageUrl": item.properties['image'][0]['value'],
           "audioUrl": item.properties['beat'][0]['value'],
           "title": item.properties['name'][0]['value'],
@@ -179,6 +194,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         const newAudio = 
         {
           // Todo: ask justin to add imageUrl to sample: item.properties['image'][0]['value'],
+          "id": item.id,
           "imageUrl": '',
           "audioUrl": item.properties['audio'][0]['value'],
           "title": item.properties['name'][0]['value'],
@@ -285,7 +301,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           {playlists.map((playlist, key) => {
             return (
               // need to change props.id to getCurrentAudioPlaying from audio package
-              <div className={classes.playlistTitle} key={key} onClick={() => {addToPlaylist(props.id, playlist.id)}}>
+              <div className={classes.playlistTitle} key={key} onClick={() => {addToPlaylist(audioArray[playingIndex].id, playlist.id)}}>
                 {key + 1}. {playlist.name}
               </div>
             )

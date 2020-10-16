@@ -95,16 +95,31 @@ const Playlist: React.FC<BeatProps> = ({...props}) => {
     });
     
     // Todo: only display playlist with have one or more songs
-    playlistResponse.data.forEach((item: any) => {
+    playlistResponse.data.forEach(async (item: any) => {
+      console.log(item);
       const newPlaylist = 
       {
         "id": item.id,
         "imageUrl": item.properties['image'][0]['value'],
         "name": item.properties['name'][0]['value'],
       };
-      
+      // const playlistReadResponse = await axios.post(url + 'api/playlist/read_playlist_beats', 
+      // {
+      //   playlistId: item.id
+      // },
+      // {
+      //   headers: {
+      //     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      //   }
+      // });
+      // console.log(playlistReadResponse);
+      // if (playlistReadResponse.data.length > 0) {
+      //   console.log("Yeaaaaa");
+        
+      // }
       playlistArray.push(newPlaylist);
     });
+    console.log(playlistArray);
     setPlaylists(playlistArray);
   }
 

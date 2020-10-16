@@ -28,6 +28,7 @@ export interface AudioObject {
   audioUrl: string
   title: string,
   authorName: string,
+  id: string,
 }
 
 export interface PlaylistObject {

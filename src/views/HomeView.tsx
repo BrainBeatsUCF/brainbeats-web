@@ -7,7 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import SideBar from '../components/SideBar';
 import NavBar from '../components/NavBar';
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -45,17 +46,36 @@ const HomeView: React.FC = () => {
   const [id, setId] = useState("0");
   let history = useHistory();
   let userEmail = localStorage.getItem('userEmail');
+  let jwt = localStorage.getItem('accessToken');
+  let expired: boolean = false;
 
   const setAudioGlobal = (audioId: string) => {
     console.log('audioId in home: ' + audioId);
     setId(audioId);
   };
 
-  if (userEmail == null || localStorage.getItem('accessToken') == "expired") {
+  if (jwt != null) {
+    let jwtDecoded: any = jwt_decode(jwt);
+
+    console.log(jwtDecoded);
+    console.log(Date.now() / 1000);
+
+    if (Date.now() / 1000 >= jwtDecoded.exp) {
+      console.log("EXPIRED ACCESS TOKEN");
+      expired = true;
+    } else {
+      console.log("ACCESS TOKEN NOT EXPIRED");
+    }
+  }
+  
+
+  if (userEmail == null) {
     history.push('/login');
   }
 
   return (
+    <>
+    {expired ? <Redirect to='login' /> : 
     <div className={classes.root}>
         <Grid container>
           <Grid item xs={12} md={9}>
@@ -78,6 +98,9 @@ const HomeView: React.FC = () => {
           </Grid>
         </Grid>
       </div>
+      
+  }
+  </>
   );
 };
     
