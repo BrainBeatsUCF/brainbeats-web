@@ -37,10 +37,14 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     justifyContent: 'space-around',
     height: '38px',
-    width: '100%',
-    '@media (max-width: 960px)': {
-      width: '100%'
-    }
+    margin: 'auto',
+    width: '50%',
+    textAlign: 'center',
+    padding: '10px',
+    // width: '100%',
+    // '@media (max-width: 960px)': {
+    //   width: '100%'
+    // }
   },
   statValues: {
     display: 'flex',

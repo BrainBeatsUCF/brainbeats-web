@@ -94,6 +94,8 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
+      console.log(res.data.length);
+      musicProvider.setNumBeats(res.data.length);
       res.data.forEach((item: any) => {
 
         // const instrumentListArray = [] as String[];
@@ -141,7 +143,6 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
         <div className={classes.scroll}>
           {beats.map((beat, key) => {
             return (
-              // Todo: change playbeat(id) to playbeat(song.id)
               <div className={classes.card} key={key} onClick={() => playBeat(beat.id)}>
                 <img alt='Song' className={classes.background} src={beat.imageUrl}></img>
                 <div className={classes.cardContent}>

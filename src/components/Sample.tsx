@@ -67,12 +67,13 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
+      musicProvider.setNumSamples(res.data.length);
       res.data.forEach((item: any) => {
+        console.log(item);
         const newSample = 
         {
           "id": item.id,
-          // Todo: ask justin to add imageUrl to sample: item.properties['image'][0]['value'],
-          "imageUrl": "", 
+          "imageUrl": item.properties['image'][0]['value'], 
           "name": item.properties['name'][0]['value'],
         };
         
@@ -120,7 +121,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
             return (
               <div className={classes.card} key={key}>
                 {/* Todo: discuss about sample picture */}
-                <img alt='Public Sample' className={classes.samplePicture} src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS-By0yPUMOuSRY2S6yxiA8-k6bTgraIUqUqbNvKN4E4z7N75iuC4bWj3aDNi_5SCEzrYQx34iu&usqp=CAc" onClick={() => playSample(sample.id)}></img>
+                <img alt='Public Sample' className={classes.samplePicture} src={sample.imageUrl} onClick={() => playSample(sample.id)}></img>
                 <div className={classes.sampleTitle}>{sample.name}</div>
               </div>
             )

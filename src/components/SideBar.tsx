@@ -13,8 +13,9 @@ import axios from 'axios';
 import { MusicContext } from '../util/contexts/music';
 import { SideBarProps, AudioObject, PlaylistObject } from '../util/api/types';
 
-// Todo: Add icon when audio is successfully/finished added to playlist
-//      handle playlist area responsiveness when it comes to less than 959
+// Todo: 1. Add icon when audio is successfully/finished added to playlist
+//       2. handle playlist area responsiveness when it comes to less than 959
+//       3. numbeats, samples, share sometimes are not updated even when the beats/sample/playlist are already loaded
 
 const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const classes = useStyles(useStyles);
@@ -26,6 +27,10 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const history = useHistory();
   const [playlists, setPlaylists] = useState([] as PlaylistObject[]);
   const musicProvider = React.useContext(MusicContext);
+
+  const [numBeats, setNumBeats] = useState(0);
+  const [numSamples, setNumSamples] = useState(0);
+  const [numShares, setNumShares] = useState(0);
 
   let userEmail = localStorage.getItem('userEmail');
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
@@ -153,6 +158,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           "imageUrl": item.properties['image'][0]['value'],
           "audioUrl": item.properties['beat'][0]['value'],
           "title": item.properties['name'][0]['value'],
+
+          // Todo: ask for api to get author name from a beat/sample
           "authorName": "Hung Nguyen"
         };
         
@@ -176,6 +183,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           "imageUrl": item.properties['image'][0]['value'],
           "audioUrl": item.properties['beat'][0]['value'],
           "title": item.properties['name'][0]['value'],
+
+          // Todo: ask for api to get author name from a beat/sample
           "authorName": "Hung Nguyen"
         };
         audioArrayData.push(newAudio);
@@ -193,11 +202,12 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       sampleResponse.data.forEach((item: any) => {
         const newAudio = 
         {
-          // Todo: ask justin to add imageUrl to sample: item.properties['image'][0]['value'],
           "id": item.id,
-          "imageUrl": '',
+          "imageUrl": item.properties['image'][0]['value'],
           "audioUrl": item.properties['audio'][0]['value'],
           "title": item.properties['name'][0]['value'],
+
+          // Todo: ask for api to get author name from a beat/sample
           "authorName": "Hung Nguyen"
         };
         audioArrayData.push(newAudio);
@@ -231,6 +241,12 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     };
   }, [playListPopup]);
 
+  useEffect(() => {
+    setNumBeats(musicProvider.getNumBeats());
+    setNumSamples(musicProvider.getNumSamples());
+    setNumShares(musicProvider.getNumShares());
+  }, [musicProvider.getNumBeats(), musicProvider.getNumSamples(), musicProvider.getNumSamples()]);
+
   let audioContent, userStat, isShowAddToPlaylist;  
 
   userStat = (
@@ -239,21 +255,21 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         <img className={classes.statPicture} alt='Beat Icon' src={BeatButtonImage}></img>
         <div className={classes.statValues}>
           <h4>Beats</h4>
-          <h4>23</h4>
+          <h4>{numBeats}</h4>
         </div>
       </div>
       <div className={classes.statElement}>
         <img className={classes.statPicture} alt='Sample Icon' src={SampleButtonImage}></img>
         <div className={classes.statValues}>
           <h4>Samples</h4>
-          <h4>15</h4>
+          <h4>{numSamples}</h4>
         </div>
       </div>
       <div className={classes.statElement}>
         <img className={classes.statPicture} alt='Share Icon' src={ShareButtonImage}></img>
         <div className={classes.statValues}>
           <h4>Shares</h4>
-          <h4>135</h4>
+          <h4>{numShares}</h4>
         </div>
       </div>
     </>
@@ -268,10 +284,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     audioContent = (
       <>
         {isShowAddToPlaylist ? <button className={classes.addPlaylistButton} onClick={showPlaylistArea}>Add to my playlists</button> : ""}
-
-        {/* Todo: How to figure out the audioId for next audio in a playlist */}
-        {/* Maybe go back to brain beats audio package to export another function to get the current audioId */}
-        {/* <BrainBeatsAudioPlayer audioObjectArray={audioArray}/> */}
         <BrainBeatsAudioPlayer audioObjectArray={audioArray} setPlayingIndexAudioPackage={setPlayingIndexAudioPackage}/>
       </>
     );
@@ -284,7 +296,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       <div className={classes.userInfo}>
         <div style={{textAlign: 'right'}}>
           <img onClick={() => {
-            // handle log out logic
+            // Todo: handle log out logic
             logout();
           }} alt='Logout' src={LogOutImage}></img>
         </div>
@@ -300,7 +312,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           <button onClick={openCreatePlaylistPopup}>Create a playlist</button>
           {playlists.map((playlist, key) => {
             return (
-              // need to change props.id to getCurrentAudioPlaying from audio package
               <div className={classes.playlistTitle} key={key} onClick={() => {addToPlaylist(audioArray[playingIndex].id, playlist.id)}}>
                 {key + 1}. {playlist.name}
               </div>

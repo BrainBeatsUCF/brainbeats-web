@@ -10,10 +10,6 @@ const api: Api = new Api();
 const musicContextProvider: MusicContextProvider = new MusicContextProvider();
 const userContextProvider: UserContextProvider = new UserContextProvider();
 
-// Todo: rename /home to /
-// if not authenticated, redirect to /login
-
-
 ReactDOM.render(
     <BackendContext.Provider value={api}>
       <MusicContext.Provider value={musicContextProvider}>

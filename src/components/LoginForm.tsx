@@ -82,14 +82,6 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
           console.log(res.data.access_token);
           localStorage.setItem('accessToken', res.data.access_token);
           localStorage.setItem('userEmail', loginData.email);
-
-          // not a good way, what if user log in, then quit brower, and go into home page, then this set time out is not executing
-          // setTimeout(() => {
-          //   localStorage.setItem('accessToken', 'expired');
-          //   console.log('expired access token: ' + localStorage.getItem('accessToken'));
-          //   console.log('hello world');
-          //   history.push('/login');
-          // }, 3000);
           history.push('/');
         }
         console.log(res);
