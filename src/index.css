@@ -20,3 +20,7 @@ code {
 .MuiInputBase-input {
   color: white !important;
 }
+
+.Mui-disabled {
+  color: white !important;
+}

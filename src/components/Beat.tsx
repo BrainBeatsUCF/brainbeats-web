@@ -81,11 +81,10 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
   const beatArray = [] as BeatObject[];
   const musicProvider = React.useContext(MusicContext);
   let userEmail = localStorage.getItem('userEmail');
-  const url = "https://brain-beats-server-docker.azurewebsites.net/";
+  const url = "https://brain-beats-server-docker.azurewebsites.net";
 
   const loadData = async () => {
-    console.log(localStorage.getItem('accessToken'));
-    axios.post(url + 'api/user/get_owned_beats', 
+    axios.post(url + '/api/user/get_owned_beats', 
     {
       email: userEmail
     }, 
@@ -94,9 +93,9 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
-      console.log(res.data.length);
       musicProvider.setNumBeats(res.data.length);
       res.data.forEach((item: any) => {
+        console.log(item);
 
         // const instrumentListArray = [] as String[];
   

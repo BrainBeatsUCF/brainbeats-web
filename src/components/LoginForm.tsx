@@ -14,7 +14,8 @@ import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import axios from 'axios';
 
-// Todo: log user out after an hour after they log in because the access token is expired in one hour
+// Todo: Add loading icon when click login
+//       Show error if account is incorrect
 
 const schema = yup.object({
 	email: yup
@@ -53,12 +54,16 @@ const useStyles = makeStyles(theme => ({
 const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 	const classes = useStyles();
   const history = useHistory();
-  let userEmail = localStorage.getItem('userEmail');
+  const [loading, setLoading] = React.useState(false);
+  const [warningMessage, setWarningMessage] = React.useState(false);
+  const url = 'https://brain-beats-server-docker.azurewebsites.net';
 
   const handleLogin = async (
     // Todo: handle the login logic
     data: LoginProps,
     history: History<LocationState>): Promise<void> => {
+      setLoading(true);
+      setWarningMessage(false);
       const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -72,7 +77,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 
       console.log(loginData);
 
-      axios.post('https://brain-beats-server-docker.azurewebsites.net/api/user/login_user', loginData, config)
+      axios.post(url + '/api/user/login_user', loginData, config)
       .then((res) => {
         if (res.data.error === 'access_denied') {
           console.log('access denied');
@@ -82,15 +87,19 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
           console.log(res.data.access_token);
           localStorage.setItem('accessToken', res.data.access_token);
           localStorage.setItem('userEmail', loginData.email);
+          
           history.push('/');
         }
-        console.log(res);
+
+        setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        let errObj = JSON.parse(JSON.stringify(err));
+        if (errObj.message === 'Request failed with status code 401') {
+          setWarningMessage(true);
+        }
+        setLoading(false);
       });
-
-      
   };
 
 	return (
@@ -116,7 +125,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
             }}
             >
             {(): React.ReactElement => (
-              <Form className={classes.form}>
+              <Form autoComplete="off" className={classes.form}>
                 <Card className={classes.container}>
                   <CardContent>
                     <div>
@@ -135,6 +144,8 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                       type="password"
                       />
                     </div>
+                    {loading ? <p style={{color: 'white'}}>Loading... </p> : ""}
+                    {warningMessage ? <p style={{color: 'red'}}>Your email or password is incorrect.</p> : ""}
                     <div>
                       <Button 
                         type="submit"
@@ -152,7 +163,11 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                       </Link>
                     </div> */}
                     <div>
-                      <Link href="register" variant="body2">
+                      <Link onClick={(e: any) => {
+                        e.preventDefault();
+                        console.log('testing');
+                        window.open('https://ucfbrainbeats.b2clogin.com/ucfbrainbeats.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_signup&client_id=037bbefc-958e-489d-ba61-8c0823284010&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fbrain-beats-server-docker.azurewebsites.net%2F.auth%2Flogin%2Faad%2Fcallback&scope=openid&response_type=id_token&prompt=login');
+                      }} href="" variant="body2">
                         {"Create Account"}
                       </Link>
                     </div>

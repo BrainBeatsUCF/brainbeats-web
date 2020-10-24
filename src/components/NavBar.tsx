@@ -4,18 +4,18 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import CreatePlaylistPopup from './CreatePlaylistPopup';
 import { Button } from '@material-ui/core';
+import HomeImage from '../images/HomeImage.png';
 
 const useStyles = makeStyles(() => ({
   navbar: {
     padding: 0,
     margin: 0,
-    backgroundColor: '#1a1919',
   },
   navbarElement: {
-    // padding: '15px',
     listStyle: 'none',
     display: 'inline-block',
     backgroundColor: '#003585',
+    marginRight: '5px'
   },
   active: {
     backgroundColor: '#003585'
@@ -23,6 +23,10 @@ const useStyles = makeStyles(() => ({
   tab: {
     color: '#fff',
     textDecoration: 'none',
+  },
+  homeTab: {
+    display: 'flex',
+    flexDirection: 'row',
   }
 }));
 
@@ -44,7 +48,16 @@ const NavBar: React.FC = () => {
       <li className={clsx(classes.navbarElement, classes.active)}>
         <Button>
           <Link to="/" className={classes.tab}>
-            HOME
+            <div className={classes.homeTab}>
+              <div style={{paddingRight: '15px'}}>
+              HOME
+              </div>
+              <div>
+                <img style={{width: '16px', height: '16px'}} src={HomeImage}></img>
+              </div>
+            </div>
+            
+            
           </Link>
         </Button>
       </li>

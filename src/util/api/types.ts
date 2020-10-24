@@ -19,7 +19,6 @@ export interface Song {
 }
 
 export interface SideBarProps {
-  setAudioGlobal: any,
   id: string
 }
 

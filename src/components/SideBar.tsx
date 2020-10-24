@@ -14,8 +14,7 @@ import { MusicContext } from '../util/contexts/music';
 import { SideBarProps, AudioObject, PlaylistObject } from '../util/api/types';
 
 // Todo: 1. Add icon when audio is successfully/finished added to playlist
-//       2. handle playlist area responsiveness when it comes to less than 959
-//       3. numbeats, samples, share sometimes are not updated even when the beats/sample/playlist are already loaded
+//       2. numbeats, samples, share sometimes are not updated even when the beats/sample/playlist are already loaded
 
 const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const classes = useStyles(useStyles);
@@ -27,13 +26,16 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const history = useHistory();
   const [playlists, setPlaylists] = useState([] as PlaylistObject[]);
   const musicProvider = React.useContext(MusicContext);
+  let userEmail = localStorage.getItem('userEmail');
 
   const [numBeats, setNumBeats] = useState(0);
   const [numSamples, setNumSamples] = useState(0);
   const [numShares, setNumShares] = useState(0);
 
-  let userEmail = localStorage.getItem('userEmail');
-  const url = "https://brain-beats-server-docker.azurewebsites.net/";
+  // Todo: call /api/user/read_user to get the userPicture
+  const [userPicture, setUserPicture] = useState("");
+
+  const url = "https://brain-beats-server-docker.azurewebsites.net";
 
   // Audio Package
   const setPlayingIndexAudioPackage = (playingIndexAudioPackage: number) => {
@@ -41,13 +43,16 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   };
 
   const logout = () => {
-    // call log out api
+    // Todo: call log out api
 
-      // remove local storage
-      localStorage.removeItem('userEmail');
+    // remove local storage
+    localStorage.removeItem('userEmail');
 
-      // push to login
-      history.push('login');
+    // remove access token
+    localStorage.removeItem('accessToken');
+
+    // push to login
+    history.push('login');
   }
 
   const openCreatePlaylistPopup = () => {
@@ -65,8 +70,9 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const addToPlaylist = (beatId: string, playlistId: string) => {
     console.log("add beatId: " + beatId + " to playlistId: " + playlistId);
     console.log("current audio id playing: " + playingIndex);
-    axios.post(url + 'api/playlist/update_playlist_add_beat', 
+    axios.post(url + '/api/playlist/update_playlist_add_beat', 
     {
+      email: userEmail,
       playlistId: playlistId,
       beatId: beatId,
     },
@@ -102,7 +108,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const loadPlaylist = async () => {
     let playlistArrayData = [] as PlaylistObject[];
 
-    const playlistResponse = await axios.post(url + 'api/user/get_owned_playlists', 
+    axios.post(url + '/api/user/get_owned_playlists', 
     {
       email: localStorage.getItem('userEmail')
     },
@@ -110,22 +116,24 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
+    }).then((res) => {
+      res.data.forEach((item: any) => {
+        const newPlaylist = 
+        {
+          "imageUrl": item.properties['image'][0]['value'],
+          "isPrivate": item.properties['isPrivate'][0]['value'],
+          "name": item.properties['name'][0]['value'],
+          "email": localStorage.getItem('userEmail')!,
+          "id": item.id
+        };
+        
+        playlistArrayData.push(newPlaylist);
+      });
+  
+      setPlaylists(playlistArrayData);
+    }).catch((err) => {
+      console.log(err);
     });    
-    console.log('testing');
-    playlistResponse.data.forEach((item: any) => {
-      const newPlaylist = 
-      {
-        "imageUrl": item.properties['image'][0]['value'],
-        "isPrivate": item.properties['isPrivate'][0]['value'],
-        "name": item.properties['name'][0]['value'],
-        "email": localStorage.getItem('userEmail')!,
-        "id": item.id
-      };
-      
-      playlistArrayData.push(newPlaylist);
-    });
-
-    setPlaylists(playlistArrayData);
   }
 
   const loadData = async () => {
@@ -140,9 +148,10 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
 
     // Play Playlist Part
     if (musicProvider.getAudioPlayingType() === 'playlist') {
-      const playlistResponse = await axios.post(url + 'api/playlist/read_playlist_beats', 
+      const playlistResponse = await axios.post(url + '/api/playlist/read_playlist_beats', 
       {
-        playlistId: props.id
+        email: userEmail,
+        id: props.id
       },
       {
         headers: {
@@ -156,7 +165,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         {
           "id": item.id,
           "imageUrl": item.properties['image'][0]['value'],
-          "audioUrl": item.properties['beat'][0]['value'],
+          "audioUrl": item.properties['audio'][0]['value'],
           "title": item.properties['name'][0]['value'],
 
           // Todo: ask for api to get author name from a beat/sample
@@ -166,8 +175,10 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         audioArrayData.push(newAudio);
       });
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
-      const beatResponse = await axios.post(url + 'api/beat/read_beat', {
-        beatId: props.id
+      console.log(`props.id: ${props.id}`);
+      const beatResponse = await axios.post(url + '/api/beat/read_beat', {
+        email: userEmail,
+        id: props.id
       },
       {
         headers: {
@@ -181,7 +192,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         {
           "id": item.id,
           "imageUrl": item.properties['image'][0]['value'],
-          "audioUrl": item.properties['beat'][0]['value'],
+          "audioUrl": item.properties['audio'][0]['value'],
           "title": item.properties['name'][0]['value'],
 
           // Todo: ask for api to get author name from a beat/sample
@@ -190,8 +201,9 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         audioArrayData.push(newAudio);
       });      
     } else if (musicProvider.getAudioPlayingType() === 'sample') {
-      const sampleResponse = await axios.post(url + 'api/sample/read_sample', {
-        sampleId: props.id
+      const sampleResponse = await axios.post(url + '/api/sample/read_sample', {
+        email: userEmail,
+        id: props.id
       },
       {
         headers: {
@@ -245,7 +257,29 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     setNumBeats(musicProvider.getNumBeats());
     setNumSamples(musicProvider.getNumSamples());
     setNumShares(musicProvider.getNumShares());
-  }, [musicProvider.getNumBeats(), musicProvider.getNumSamples(), musicProvider.getNumSamples()]);
+  }, [musicProvider.getNumBeats(), musicProvider.getNumSamples(), musicProvider.getNumShares()]);
+
+  const loadUser = async () => {
+    const userResponse = await axios.post(url + '/api/user/read_user', {
+      email: userEmail,
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    });
+
+    console.log(userResponse.data[0].properties['image'][0]['value']);
+    setUserPicture(userResponse.data[0].properties['image'][0]['value']);
+  }
+
+  // Read user profile picture
+  useEffect(() => {
+    const getUserData = async () => {
+      await loadUser();
+    };
+    getUserData();
+  }, []);
 
   let audioContent, userStat, isShowAddToPlaylist;  
 
@@ -301,7 +335,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           }} alt='Logout' src={LogOutImage}></img>
         </div>
         <div className={classes.userPictureContainer}>
-          <Link to='user/profile'><img className={classes.userPicture} src="https://qph.fs.quoracdn.net/main-qimg-70d48d9e6d598aa364c13ef739b489d4" alt=""></img></Link>
+          <Link to='user/profile'><img className={classes.userPicture} src={userPicture} alt=""></img></Link>
         </div>
         
         <div className={classes.userStatContainer}>

@@ -19,12 +19,14 @@ const useStyles = makeStyles(() =>
     fixedLeftTop: {
       position: 'fixed',
       top: 0,
-      zIndex: 5
+      zIndex: 5,
+      paddingTop: '10px',
+      paddingLeft: '20px',
     },
     scrollableView: {
       paddingTop: 60,
       '@media (max-width: 960px)': {
-        marginBottom: 234
+        marginBottom: '234px'
       }
     },
     fixedTopRight: {
@@ -39,8 +41,6 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-// Todo: handle whether use clicks on play beat/sample/ or playling to call a right apis in sidebar
-
 const HomeView: React.FC = () => {
   const classes = useStyles();
   const [id, setId] = useState("0");
@@ -49,6 +49,8 @@ const HomeView: React.FC = () => {
   let jwt = localStorage.getItem('accessToken');
   let expired: boolean = false;
 
+  console.log(localStorage.getItem('accessToken'));
+
   const setAudioGlobal = (audioId: string) => {
     console.log('audioId in home: ' + audioId);
     setId(audioId);
@@ -56,18 +58,10 @@ const HomeView: React.FC = () => {
 
   if (jwt != null) {
     let jwtDecoded: any = jwt_decode(jwt);
-
-    console.log(jwtDecoded);
-    console.log(Date.now() / 1000);
-
     if (Date.now() / 1000 >= jwtDecoded.exp) {
-      console.log("EXPIRED ACCESS TOKEN");
       expired = true;
-    } else {
-      console.log("ACCESS TOKEN NOT EXPIRED");
     }
   }
-  
 
   if (userEmail == null) {
     history.push('/login');
@@ -75,32 +69,31 @@ const HomeView: React.FC = () => {
 
   return (
     <>
-    {expired ? <Redirect to='login' /> : 
-    <div className={classes.root}>
-        <Grid container>
-          <Grid item xs={12} md={9}>
-            <Grid container>
-              <Grid className={classes.fixedLeftTop} item xs={12}>
-                <NavBar />
-              </Grid>
-              <Grid className={classes.scrollableView} item xs={12}>
-                <Beat setAudioGlobal={setAudioGlobal}/>
-                <Playlist setAudioGlobal={setAudioGlobal}/>
+      {expired ? <Redirect to='login' /> : 
+        <div className={classes.root}>
+          <Grid container>
+            <Grid item xs={12} md={9}>
+              <Grid container>
+                <Grid className={classes.fixedLeftTop} item xs={12}>
+                  <NavBar />
+                </Grid>
+                <Grid className={classes.scrollableView} item xs={12}>
+                  <Beat setAudioGlobal={setAudioGlobal}/>
+                  <Playlist setAudioGlobal={setAudioGlobal}/>
 
-                {/* Todo: Added public playlist */}
-                <Sample setAudioGlobal={setAudioGlobal}/>
-                <PublicBeat setAudioGlobal={setAudioGlobal}/>
+                  {/* Todo: Added public sample/playlist */}
+                  <Sample setAudioGlobal={setAudioGlobal}/>
+                  <PublicBeat setAudioGlobal={setAudioGlobal}/>
+                </Grid>
               </Grid>
             </Grid>
+            <Grid className={classes.fixedTopRight} item xs={12} md={3}>
+              <SideBar id={id}/>
+            </Grid>
           </Grid>
-          <Grid className={classes.fixedTopRight} item xs={12} md={3}>
-            <SideBar id={id} setAudioGlobal={setAudioGlobal}/>
-          </Grid>
-        </Grid>
-      </div>
-      
-  }
-  </>
+        </div>
+      }
+    </>
   );
 };
     

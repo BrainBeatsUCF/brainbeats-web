@@ -69,7 +69,6 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
     }).then((res) => {
       musicProvider.setNumSamples(res.data.length);
       res.data.forEach((item: any) => {
-        console.log(item);
         const newSample = 
         {
           "id": item.id,
