@@ -1,3 +1,5 @@
+import { BeatObject } from '../../api/types';
+
 export default class MusicContextProvider {
   private isPlaying: boolean = false;
   private id: string = "0";
@@ -5,6 +7,7 @@ export default class MusicContextProvider {
   private numBeats: number = 0;
   private numSamples: number = 0;
   private numShares: number = 0;
+  private originalBeatArray = [] as BeatObject[];
   
   public getPlayingStatus(): boolean {
     return this.isPlaying;
@@ -56,5 +59,13 @@ export default class MusicContextProvider {
 
   public getNumShares(): number {
     return this.numShares;
+  }
+
+  public setOriginalBeatArray(originalBeatArray: BeatObject[]) {
+    this.originalBeatArray = originalBeatArray;
+  }
+
+  public getOriginalBeatArray() {
+    return this.originalBeatArray;
   }
 }

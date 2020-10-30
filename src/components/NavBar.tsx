@@ -15,7 +15,8 @@ const useStyles = makeStyles(() => ({
     listStyle: 'none',
     display: 'inline-block',
     backgroundColor: '#003585',
-    marginRight: '5px'
+    marginRight: '5px',
+    borderRadius: '10px'
   },
   active: {
     backgroundColor: '#003585'

@@ -10,6 +10,7 @@ const LogoutButton: React.FC = () => {
 
       // remove local storage
       localStorage.removeItem('userEmail');
+      localStorage.removeItem('accessToken');
 
       // push to login
       history.push('login');

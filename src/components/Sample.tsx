@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import MusicContext from '../util/contexts/music/MusicContext';
+import clsx from 'clsx';
 
 interface SampleProps {
   setAudioGlobal: any,
@@ -23,16 +24,20 @@ const useStyles = makeStyles(() => ({
     margin: 0,
   },
   scroll: {
-    overflow: 'auto',
     whiteSpace: 'nowrap',
+    height: '193px',
+    overflowY: 'hidden',
+    overflowX: 'scroll',
   },
   card: {
     borderRadius: '10px',
     display: 'inline-block',
     textAlign: 'center',
-    width: '200px',
-    height: '150px',
-    textDecoration: 'none',
+    margin: '20px',
+    position: 'relative',
+    cursor: 'pointer',
+    minWidth: '150px',
+    minHeight: '150px'
   },
   samplePicture: {
     width: '150px',
@@ -44,6 +49,22 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
+  title: {
+    margin: 0,
+    padding: 0,
+    fontWeight: 'bold',
+    fontSize: '1.4em',
+    marginRight: '10px',
+  },
+  formInput: {
+    marginRight: '10px'
+  },
+  formElement: {
+    borderRadius: '10px',
+    backgroundColor: 'rgb(59, 55, 61)',
+    fontSize: '0.8em',
+    color: 'white'
+  }
 }));
 
 const Sample: React.FC<SampleProps> = ({...props}) => {
@@ -108,13 +129,18 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
   return (
     <div className={classes.componentContainer}>
       <div className={classes.header}>
-        <div>
-          <span style={{marginRight: 10}}>My Samples</span>
-          <input type="text" placeholder="Search.."></input>
+        <div style={{display: 'flex', flexDirection: 'row', marginLeft: '10px', alignSelf: 'flex-end'}}>
+          <h4 className={classes.title}>My Samples</h4>
+          <form style={{display: 'flex'}}>
+            <input className={clsx(classes.formInput, classes.formElement)} onChange={(e: any) => {
+            // setSearchName(e.target.value);
+            }} type="text" placeholder="Search.."></input>
+            <button className={classes.formElement}>Search</button>
+          </form>
         </div>
         <hr></hr>
       </div>
-      {loading ? <div>loading...</div> : 
+      {loading ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>Loading...</div> : 
         <div className={classes.scroll}>
           {samples.map((sample, key) => {
             return (

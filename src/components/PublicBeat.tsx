@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { MusicContext } from '../util/contexts/music';
+import clsx from 'clsx';
 
 interface PublicBeatProps {
   setAudioGlobal: any,
@@ -23,14 +24,18 @@ const useStyles = makeStyles(() => ({
     margin: 0,
   },
   scroll: {
-    overflow: 'auto',
     whiteSpace: 'nowrap',
+    height: '193px',
+    overflowY: 'hidden',
+    overflowX: 'scroll',
   },
   card: {
     position: 'relative',
     display: 'inline-block',
     margin: '20px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    minWidth: '200px',
+    minHeight: '150px'
   },
   background: {
     backgroundRepeat: 'no-repeat',
@@ -53,8 +58,21 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
   },
-  playButton: {
-    cursor: 'pointer'
+  title: {
+    margin: 0,
+    padding: 0,
+    fontWeight: 'bold',
+    fontSize: '1.4em',
+    marginRight: '10px',
+  },
+  formInput: {
+    marginRight: '10px'
+  },
+  formElement: {
+    borderRadius: '10px',
+    backgroundColor: 'rgb(59, 55, 61)',
+    fontSize: '0.8em',
+    color: 'white'
   }
 }));
 
@@ -118,20 +136,25 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   return (
     <div className={classes.componentContainer}>
       <div className={classes.header}>
-        <div>
-          <span style={{marginRight: 10}}>Public Beats</span>
-          <input type="text" placeholder="Search.."></input>
+        <div style={{display: 'flex', flexDirection: 'row', marginLeft: '10px', alignSelf: 'flex-end'}}>
+          <h4 className={classes.title}>Public Beats</h4>
+          <form style={{display: 'flex'}}>
+            <input className={clsx(classes.formInput, classes.formElement)} onChange={(e: any) => {
+            // setSearchName(e.target.value);
+            }} type="text" placeholder="Search.."></input>
+            <button className={classes.formElement}>Search</button>
+          </form>
         </div>
         <hr></hr>
       </div>
-      {loading ? <div>Loading...</div> : 
+      {loading ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>Loading...</div> : 
         <div className={classes.scroll}>
           {publicBeats.map((publicBeat, key) => {
             return (
               <div className={classes.card} key={key} onClick={() => playPublicBeat(publicBeat.id)}>
                 <img alt='Public Beat' className={classes.background} src={publicBeat.imageUrl}></img>
                 <div className={classes.bottomLeftCorner}>
-                  <img className={classes.beatPicture} src={publicBeat.imageUrl} alt="Beat Picture"></img>
+                  {/* <img className={classes.beatPicture} src={publicBeat.imageUrl} alt="Beat Picture"></img> */}
                   <div>
                     <div>{publicBeat.name}</div>
                     <div className={classes.playButtonAndBeatInfo}>

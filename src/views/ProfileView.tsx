@@ -78,8 +78,8 @@ const HomeView: React.FC = () => {
   const [email, setEmail] = useState('hn9581@gmail.com');
   const [firstName, setFirstname] = useState('Hung');
   const [lastName, setLastname] = useState('Nguyen');
-  const [imageUrl, setImageUrl] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR0AdkwPc3U4twT_LVngZb0XbcbTpJBqqBhZz-kKeTtdwVyS5FhE9DgW4MNrg&usqp=CAc');
-  const [imageRaw, setImageRaw] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR0AdkwPc3U4twT_LVngZb0XbcbTpJBqqBhZz-kKeTtdwVyS5FhE9DgW4MNrg&usqp=CAc');
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageRaw, setImageRaw] = useState('');
   let history = useHistory();
   let userEmail = localStorage.getItem('userEmail');
   const url = 'https://brain-beats-server-docker.azurewebsites.net';
@@ -162,6 +162,7 @@ const HomeView: React.FC = () => {
 
     console.log(userResponse.data[0].properties['image'][0]['value']);
     setUserPicture(userResponse.data[0].properties['image'][0]['value']);
+    setImageUrl(userResponse.data[0].properties['image'][0]['value']);
   }
 
   // Read user profile picture

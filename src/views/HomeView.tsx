@@ -13,7 +13,7 @@ import jwt_decode from "jwt-decode";
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      backgroundColor: '#262626',
+      backgroundColor: '#28252b',
       flexGrow: 1,
     },
     fixedLeftTop: {
@@ -37,9 +37,14 @@ const useStyles = makeStyles(() =>
         width: '100%',
         height: '100%'
       } 
+    },
+    leftContent: {
+      background: 'linear-gradient(to left, #383838, #28252b)',
     }
   }),
 );
+
+// Todo: add gradient
 
 const HomeView: React.FC = () => {
   const classes = useStyles();
@@ -71,7 +76,7 @@ const HomeView: React.FC = () => {
     <>
       {expired ? <Redirect to='login' /> : 
         <div className={classes.root}>
-          <Grid container>
+          <Grid container className={classes.leftContent}>
             <Grid item xs={12} md={9}>
               <Grid container>
                 <Grid className={classes.fixedLeftTop} item xs={12}>
@@ -87,6 +92,11 @@ const HomeView: React.FC = () => {
                 </Grid>
               </Grid>
             </Grid>
+
+            {/* Testing Gradient */}
+            {/* <Grid>
+              <div className={classes.overlaySection}></div>
+            </Grid> */}
             <Grid className={classes.fixedTopRight} item xs={12} md={3}>
               <SideBar id={id}/>
             </Grid>

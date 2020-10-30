@@ -168,7 +168,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           "audioUrl": item.properties['audio'][0]['value'],
           "title": item.properties['name'][0]['value'],
 
-          // Todo: ask for api to get author name from a beat/sample
+          // Todo: ask for api to get author name from a beat
           "authorName": "Hung Nguyen"
         };
         
@@ -328,7 +328,11 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   return (
     <div className={classes.sideBarContainer}>
       <div className={classes.userInfo}>
-        <div style={{textAlign: 'right'}}>
+        <div className={classes.logOut}>
+          <div style={{marginRight: '10px'}}>
+          Log out
+          </div>
+          
           <img onClick={() => {
             // Todo: handle log out logic
             logout();

@@ -37,3 +37,10 @@ export interface PlaylistObject {
   name: string,
   email: string,
 }
+
+export interface BeatObject {
+  name: string
+  // instrumentList: string[],
+  id: string,
+  imageUrl: string,
+}
