@@ -1,4 +1,4 @@
-import { BeatObject } from '../../api/types';
+import { BeatObject, PlaylistObject, PublicBeatObject, SampleObject } from '../../api/types';
 
 export default class MusicContextProvider {
   private isPlaying: boolean = false;
@@ -8,6 +8,10 @@ export default class MusicContextProvider {
   private numSamples: number = 0;
   private numShares: number = 0;
   private originalBeatArray = [] as BeatObject[];
+  private originalRecommendedBeatArray = [] as BeatObject[];
+  private originalPlaylistArray = [] as PlaylistObject[];
+  private originalPublicBeatArray = [] as PublicBeatObject[];
+  private originalSampleArray = [] as SampleObject[];
   
   public getPlayingStatus(): boolean {
     return this.isPlaying;
@@ -67,5 +71,37 @@ export default class MusicContextProvider {
 
   public getOriginalBeatArray() {
     return this.originalBeatArray;
+  }
+
+  public setOriginalRecommendedBeatArray(originaRecommendedlBeatArray: BeatObject[]) {
+    this.originalRecommendedBeatArray = originaRecommendedlBeatArray;
+  }
+
+  public getOriginalRecommendedBeatArray() {
+    return this.originalRecommendedBeatArray;
+  }
+
+  public setOriginalPlaylistArray(originalPlaylistArray: PlaylistObject[]) {
+    this.originalPlaylistArray = originalPlaylistArray;
+  }
+
+  public getOriginalPlaylistArray() {
+    return this.originalPlaylistArray;
+  }
+
+  public setOriginalPublicBeatArray(originalPublicBeatArray: PlaylistObject[]) {
+    this.originalPublicBeatArray = originalPublicBeatArray;
+  }
+
+  public getOriginalPublicBeatArray() {
+    return this.originalPublicBeatArray;
+  }
+
+  public setOriginalSampleArray(originalSampleArray: SampleObject[]) {
+    this.originalSampleArray = originalSampleArray;
+  }
+
+  public getOriginalSampleArray() {
+    return this.originalSampleArray;
   }
 }

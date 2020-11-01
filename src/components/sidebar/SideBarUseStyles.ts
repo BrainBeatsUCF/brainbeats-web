@@ -1,5 +1,4 @@
 import makeStyles from "@material-ui/styles/makeStyles";
-import { textAlign } from "@material-ui/system";
 
 const useStyles = makeStyles(() => ({
   fixedLeftBottom: {
@@ -123,7 +122,6 @@ const useStyles = makeStyles(() => ({
     },
   },
   userStatContainer: {
-    
     '@media (max-width: 959px)': {
       display: 'none'
     },
@@ -159,7 +157,6 @@ const useStyles = makeStyles(() => ({
       backgroundColor: 'rgb(208, 53, 30, 1)'
     },
     margin: '10px',
-    // marginRight: '10px'
   }
 }));
 

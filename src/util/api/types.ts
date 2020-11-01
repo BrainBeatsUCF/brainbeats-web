@@ -33,14 +33,60 @@ export interface AudioObject {
 export interface PlaylistObject {
   id: string,
   imageUrl: string,
-  isPrivate: string,
+  // isPrivate: string,
   name: string,
-  email: string,
+  // email: string,
+}
+
+export interface BeatProps {
+  setAudioGlobal: any,
 }
 
 export interface BeatObject {
   name: string
   // instrumentList: string[],
+  id: string,
+  imageUrl: string,
+}
+
+export interface RecommendedBeatProps {
+  setAudioGlobal: any,
+}
+
+export interface RecommendedBeatObject {
+  name: string
+  // instrumentList: string[],
+  id: string,
+  imageUrl: string,
+}
+
+export interface PublicBeatProps {
+  setAudioGlobal: any,
+}
+
+export interface PublicBeatObject {
+  name: string
+  // instrumentList: string[],
+  id: string,
+  imageUrl: string,
+}
+
+export interface PlaylistProps {
+  setAudioGlobal: any,
+}
+
+export interface PlaylistObject {
+  name: string
+  id: string,
+  imageUrl: string,
+}
+
+export interface SampleProps {
+  setAudioGlobal: any,
+}
+
+export interface SampleObject {
+  name: string
   id: string,
   imageUrl: string,
 }

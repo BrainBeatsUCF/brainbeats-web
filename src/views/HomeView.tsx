@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import Beat from '../components/Beat';
-import Playlist from '../components/Playlist';
-import PublicBeat from '../components/PublicBeat';
-import Sample from '../components/Sample';
+import Beat from '../components/beat/Beat';
+import Playlist from '../components/playlist/Playlist';
+import PublicBeat from '../components/publicbeat/PublicBeat';
+import Sample from '../components/sample/Sample';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import SideBar from '../components/SideBar';
+import SideBar from '../components/sidebar/SideBar';
 import NavBar from '../components/NavBar';
 import { useHistory, Redirect } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import RecommendedBeat from '../components/recommendedbeat/RecommendedBeat';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -39,7 +40,7 @@ const useStyles = makeStyles(() =>
       } 
     },
     leftContent: {
-      background: 'linear-gradient(to left, #383838, #28252b)',
+      background: 'linear-gradient(to left, rgba(40, 45, 43, 0.9) 60%, #28252b)',
     }
   }),
 );
@@ -85,10 +86,9 @@ const HomeView: React.FC = () => {
                 <Grid className={classes.scrollableView} item xs={12}>
                   <Beat setAudioGlobal={setAudioGlobal}/>
                   <Playlist setAudioGlobal={setAudioGlobal}/>
-
-                  {/* Todo: Added public sample/playlist */}
                   <Sample setAudioGlobal={setAudioGlobal}/>
                   <PublicBeat setAudioGlobal={setAudioGlobal}/>
+                  <RecommendedBeat setAudioGlobal={setAudioGlobal}/>
                 </Grid>
               </Grid>
             </Grid>

@@ -87,6 +87,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
           console.log(res.data.access_token);
           localStorage.setItem('accessToken', res.data.access_token);
           localStorage.setItem('userEmail', loginData.email);
+          localStorage.setItem('idToken', res.data.id_token);
           
           history.push('/');
         }

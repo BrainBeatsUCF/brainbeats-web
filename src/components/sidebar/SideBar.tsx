@@ -1,20 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import BrainBeatsAudioPlayer from '@brainbeatsucf/brainbeats-audio-player';
 import '@brainbeatsucf/brainbeats-audio-player/src/style.css';
-import { Link } from 'react-router-dom';
 import { useStyles } from './SideBarUseStyles';
-import BeatButtonImage from '../images/beatButton.png';
-import ShareButtonImage from '../images/shareButton.png';
-import SampleButtonImage from '../images/sampleButton.png';
-import LogOutImage from '../images/LogoutImage.png'
-import CreatePlaylistPopup from './CreatePlaylistPopup';
+import BeatButtonImage from '../../images/beatButton.png';
+import ShareButtonImage from '../../images/shareButton.png';
+import SampleButtonImage from '../../images/sampleButton.png';
+import LogOutImage from '../../images/LogoutImage.png'
+import CreatePlaylistPopup from '../CreatePlaylistPopup';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { MusicContext } from '../util/contexts/music';
-import { SideBarProps, AudioObject, PlaylistObject } from '../util/api/types';
+import { MusicContext } from '../../util/contexts/music';
+import { SideBarProps, AudioObject, PlaylistObject } from '../../util/api/types';
+import trianglify from 'trianglify';
+import { UserRequestImage } from '../../util/UserRequestImage';
 
 // Todo: 1. Add icon when audio is successfully/finished added to playlist
 //       2. numbeats, samples, share sometimes are not updated even when the beats/sample/playlist are already loaded
+
+interface trianglifyOptions {
+  height: number,
+  width: number,
+  cellSize: number,
+  seed: number | string | null,
+  xColors: string,
+}
+
+
 
 const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const classes = useStyles(useStyles);
@@ -26,7 +37,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const history = useHistory();
   const [playlists, setPlaylists] = useState([] as PlaylistObject[]);
   const musicProvider = React.useContext(MusicContext);
-  let userEmail = localStorage.getItem('userEmail');
+  const userEmail = localStorage.getItem('userEmail');
+  const idToken = localStorage.getItem('idToken');
 
   const [numBeats, setNumBeats] = useState(0);
   const [numSamples, setNumSamples] = useState(0);
@@ -36,6 +48,11 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const [userPicture, setUserPicture] = useState("");
 
   const url = "https://brain-beats-server-docker.azurewebsites.net";
+  
+
+  const RequestUserProfileImage = () => {
+    setUserPicture(UserRequestImage(userEmail, idToken));
+  }
 
   // Audio Package
   const setPlayingIndexAudioPackage = (playingIndexAudioPackage: number) => {
@@ -50,6 +67,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
 
     // remove access token
     localStorage.removeItem('accessToken');
+
+    localStorage.removeItem('idToken');
 
     // push to login
     history.push('login');
@@ -68,8 +87,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }
 
   const addToPlaylist = (beatId: string, playlistId: string) => {
-    console.log("add beatId: " + beatId + " to playlistId: " + playlistId);
-    console.log("current audio id playing: " + playingIndex);
     axios.post(url + '/api/playlist/update_playlist_add_beat', 
     {
       email: userEmail,
@@ -117,6 +134,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
+      console.log('res.data: ' + res.data);
       res.data.forEach((item: any) => {
         const newPlaylist = 
         {
@@ -241,6 +259,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       await loadData();
     };
     getData();
+    RequestUserProfileImage();
   }, [props.id]);
 
   // playListPopUp 
@@ -258,28 +277,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     setNumSamples(musicProvider.getNumSamples());
     setNumShares(musicProvider.getNumShares());
   }, [musicProvider.getNumBeats(), musicProvider.getNumSamples(), musicProvider.getNumShares()]);
-
-  const loadUser = async () => {
-    const userResponse = await axios.post(url + '/api/user/read_user', {
-      email: userEmail,
-    },
-    {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-      }
-    });
-
-    console.log(userResponse.data[0].properties['image'][0]['value']);
-    setUserPicture(userResponse.data[0].properties['image'][0]['value']);
-  }
-
-  // Read user profile picture
-  useEffect(() => {
-    const getUserData = async () => {
-      await loadUser();
-    };
-    getUserData();
-  }, []);
 
   let audioContent, userStat, isShowAddToPlaylist;  
 
@@ -339,7 +336,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           }} alt='Logout' src={LogOutImage}></img>
         </div>
         <div className={classes.userPictureContainer}>
-          <Link to='user/profile'><img className={classes.userPicture} src={userPicture} alt=""></img></Link>
+          <img className={classes.userPicture} src={userPicture} alt=""></img>
         </div>
         
         <div className={classes.userStatContainer}>

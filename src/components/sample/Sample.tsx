@@ -1,71 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import MusicContext from '../util/contexts/music/MusicContext';
+import MusicContext from '../../util/contexts/music/MusicContext';
 import clsx from 'clsx';
-
-interface SampleProps {
-  setAudioGlobal: any,
-}
-
-interface SampleObject {
-  name: string
-  id: string,
-  imageUrl: string,
-}
-
-const useStyles = makeStyles(() => ({
-  componentContainer: {
-    color: 'white',
-  },
-  header: {
-    paddingLeft: '20px',
-    margin: 0,
-  },
-  scroll: {
-    whiteSpace: 'nowrap',
-    height: '193px',
-    overflowY: 'hidden',
-    overflowX: 'scroll',
-  },
-  card: {
-    borderRadius: '10px',
-    display: 'inline-block',
-    textAlign: 'center',
-    margin: '20px',
-    position: 'relative',
-    cursor: 'pointer',
-    minWidth: '150px',
-    minHeight: '150px'
-  },
-  samplePicture: {
-    width: '150px',
-    height: '150px',
-    borderRadius: '50%',
-    cursor: 'pointer'
-  },
-  sampleTitle: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  title: {
-    margin: 0,
-    padding: 0,
-    fontWeight: 'bold',
-    fontSize: '1.4em',
-    marginRight: '10px',
-  },
-  formInput: {
-    marginRight: '10px'
-  },
-  formElement: {
-    borderRadius: '10px',
-    backgroundColor: 'rgb(59, 55, 61)',
-    fontSize: '0.8em',
-    color: 'white'
-  }
-}));
+import { SampleObject, SampleProps } from '../../util/api/types';
+import { useStyles } from './SampleUseStyles';
 
 const Sample: React.FC<SampleProps> = ({...props}) => {
   const classes = useStyles();
@@ -77,8 +16,11 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
   let userEmail = localStorage.getItem('userEmail');
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
 
+  const [searchName, setSearchName] = useState('Test Beat Private');
+  const [noBeatByName, setNoBeatByName] = useState(false);
+  const [searchNameCompleteValue, setSearchNameCompleteValue] = useState('');
+
   const loadData = async () => {
-    // Todo: change this api to sample apis
     axios.post(url + 'api/user/get_owned_samples', 
     {
       email: userEmail
@@ -99,18 +41,11 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
         
         sampleArray.push(newSample);
       });
+      musicProvider.setOriginalSampleArray(sampleArray);
       setSamples(sampleArray);
     }).catch((err) => {
       console.log(err);
     });
-
-    // let userResponse = await axios.post(url + 'api/user/read_user', {
-    //   email: userEmail
-    // });
-
-    // console.log(userResponse);
-
-    
   }
 
   useEffect(() => {
@@ -120,6 +55,30 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
     };
     getData();
   }, []);
+
+  const submitSearch = (e: any) => {
+    e.preventDefault();
+    setSearchNameCompleteValue(searchName);
+    if (searchName === '') {
+      setNoBeatByName(false);
+      setSamples(musicProvider.getOriginalSampleArray());
+    } else {
+      let sampleArrayByName = [] as SampleObject[];
+
+      musicProvider.getOriginalSampleArray().forEach((sample: SampleObject) => {
+        if (sample.name.toLowerCase() === searchName.toLowerCase()) {
+          sampleArrayByName.push(sample);
+        }
+      });
+      
+      if (sampleArrayByName.length === 0) {
+        setNoBeatByName(true);
+      } else {
+        setNoBeatByName(false);
+      }
+      setSamples(sampleArrayByName);
+    }    
+  }
 
   const playSample = (id: string) => {
     props.setAudioGlobal(id);
@@ -131,9 +90,9 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       <div className={classes.header}>
         <div style={{display: 'flex', flexDirection: 'row', marginLeft: '10px', alignSelf: 'flex-end'}}>
           <h4 className={classes.title}>My Samples</h4>
-          <form style={{display: 'flex'}}>
+          <form style={{display: 'flex'}} onSubmit={submitSearch}>
             <input className={clsx(classes.formInput, classes.formElement)} onChange={(e: any) => {
-            // setSearchName(e.target.value);
+            setSearchName(e.target.value);
             }} type="text" placeholder="Search.."></input>
             <button className={classes.formElement}>Search</button>
           </form>
@@ -142,15 +101,19 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       </div>
       {loading ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>Loading...</div> : 
         <div className={classes.scroll}>
-          {samples.map((sample, key) => {
-            return (
-              <div className={classes.card} key={key}>
-                {/* Todo: discuss about sample picture */}
-                <img alt='Public Sample' className={classes.samplePicture} src={sample.imageUrl} onClick={() => playSample(sample.id)}></img>
-                <div className={classes.sampleTitle}>{sample.name}</div>
-              </div>
-            )
-          })}
+          {noBeatByName ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>No samples with the name of {searchNameCompleteValue}</div> :
+            <>
+              {samples.map((sample, key) => {
+                return (
+                  <div className={classes.card} key={key}>
+                    {/* Todo: discuss about sample picture */}
+                    <img alt='Public Sample' className={classes.samplePicture} src={sample.imageUrl} onClick={() => playSample(sample.id)}></img>
+                    <div className={classes.sampleTitle}>{sample.name}</div>
+                  </div>
+                )
+              })}
+            </>
+          }
         </div>
       }
     </div>
