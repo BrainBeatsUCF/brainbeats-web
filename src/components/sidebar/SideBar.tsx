@@ -11,7 +11,6 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { MusicContext } from '../../util/contexts/music';
 import { SideBarProps, AudioObject, PlaylistObject } from '../../util/api/types';
-import trianglify from 'trianglify';
 import { UserRequestImage } from '../../util/UserRequestImage';
 
 // Todo: 1. Add icon when audio is successfully/finished added to playlist
@@ -134,7 +133,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
-      console.log('res.data: ' + res.data);
       res.data.forEach((item: any) => {
         const newPlaylist = 
         {
@@ -193,7 +191,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         audioArrayData.push(newAudio);
       });
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
-      console.log(`props.id: ${props.id}`);
       const beatResponse = await axios.post(url + '/api/beat/read_beat', {
         email: userEmail,
         id: props.id
@@ -205,7 +202,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       });
   
       beatResponse.data.forEach((item: any) => {
-        console.log(item);
         const newAudio = 
         {
           "id": item.id,
@@ -272,11 +268,11 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     };
   }, [playListPopup]);
 
-  useEffect(() => {
-    setNumBeats(musicProvider.getNumBeats());
-    setNumSamples(musicProvider.getNumSamples());
-    setNumShares(musicProvider.getNumShares());
-  }, [musicProvider.getNumBeats(), musicProvider.getNumSamples(), musicProvider.getNumShares()]);
+  // useEffect(() => {
+  //   setNumBeats(musicProvider.getNumBeats());
+  //   setNumSamples(musicProvider.getNumSamples());
+  //   setNumShares(musicProvider.getNumShares());
+  // }, [musicProvider.getNumBeats(), musicProvider.getNumSamples(), musicProvider.getNumShares()]);
 
   let audioContent, userStat, isShowAddToPlaylist;  
 
@@ -286,21 +282,21 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         <img className={classes.statPicture} alt='Beat Icon' src={BeatButtonImage}></img>
         <div className={classes.statValues}>
           <h4>Beats</h4>
-          <h4>{numBeats}</h4>
+          <h4>{props.numBeats}</h4>
         </div>
       </div>
       <div className={classes.statElement}>
         <img className={classes.statPicture} alt='Sample Icon' src={SampleButtonImage}></img>
         <div className={classes.statValues}>
           <h4>Samples</h4>
-          <h4>{numSamples}</h4>
+          <h4>{props.numSamples}</h4>
         </div>
       </div>
       <div className={classes.statElement}>
         <img className={classes.statPicture} alt='Share Icon' src={ShareButtonImage}></img>
         <div className={classes.statValues}>
           <h4>Shares</h4>
-          <h4>{numShares}</h4>
+          <h4>{props.numShares}</h4>
         </div>
       </div>
     </>

@@ -95,6 +95,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
         setLoading(false);
       })
       .catch((err) => {
+        // Todo: handle 500 error
         let errObj = JSON.parse(JSON.stringify(err));
         if (errObj.message === 'Request failed with status code 401') {
           setWarningMessage(true);

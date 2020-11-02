@@ -5,7 +5,7 @@ import MusicContext from '../../util/contexts/music/MusicContext';
 import axios from 'axios';
 import { BeatObject, BeatProps } from '../../util/api/types';
 import clsx from 'clsx';
-import { useStyles } from './BeatUseStyles';
+import { useStyles } from './useStyles';
 
 const Beat: React.FC<BeatProps> = ({...props}) => {
   const classes = useStyles();
@@ -43,6 +43,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
         beatArray.push(newBeat);
       });
       musicProvider.setOriginalBeatArray(beatArray);
+      props.setNumBeatsMethod(beatArray.length);
       setBeats(beatArray);
     }).catch((err) => {
       console.log(err);

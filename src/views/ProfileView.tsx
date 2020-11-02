@@ -78,7 +78,6 @@ const HomeView: React.FC = () => {
   const [email, setEmail] = useState('hn9581@gmail.com');
   const [firstName, setFirstname] = useState('Hung');
   const [lastName, setLastname] = useState('Nguyen');
-  const [imageUrl, setImageUrl] = useState('');
   const [imageRaw, setImageRaw] = useState('');
   let history = useHistory();
   let userEmail = localStorage.getItem('userEmail');
@@ -120,7 +119,7 @@ const HomeView: React.FC = () => {
     //raw file: e.target.files[0]
     console.log(e.target.files[0]);
     if (e.target.files.length > 0) {
-      setImageUrl(URL.createObjectURL(e.target.files[0]));
+      setUserPicture(URL.createObjectURL(e.target.files[0]));
       setImageRaw(e.target.files[0]);
     }
   }
@@ -130,13 +129,8 @@ const HomeView: React.FC = () => {
 
     const formData = new FormData();
 
-    
     formData.append('email', userEmail!);
     formData.append('image', imageRaw);
-    // formData.append('lastname', lastName);
-    // formData.append('firstname', firstName);
-    console.log(formData.get('email'));
-    console.log(formData.get('image'));
 
     axios.post(url + '/api/user/upload_profile_picture', formData,{
       headers: {
@@ -160,9 +154,7 @@ const HomeView: React.FC = () => {
       }
     });
 
-    console.log(userResponse.data[0].properties['image'][0]['value']);
     setUserPicture(userResponse.data[0].properties['image'][0]['value']);
-    setImageUrl(userResponse.data[0].properties['image'][0]['value']);
   }
 
   // Read user profile picture
@@ -171,7 +163,7 @@ const HomeView: React.FC = () => {
       await loadUser();
     };
     getUserData();
-  }, []);
+  });
 
   return (
     <>

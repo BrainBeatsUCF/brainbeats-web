@@ -22,14 +22,15 @@ const useStyles = makeStyles(() => ({
     margin: '20px',
     position: 'relative',
     cursor: 'pointer',
-    minWidth: '200px',
+    minWidth: '250px',
     minHeight: '150px',
   },
   background: {
     backgroundRepeat: 'no-repeat',
-    width: '200px',
+    width: '250px',
     height: '150px',
     opacity: 0.4,
+    borderRadius: '10px',
   },
   cardContent: {
     width: '100%',

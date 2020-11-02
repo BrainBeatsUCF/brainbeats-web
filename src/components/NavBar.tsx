@@ -54,7 +54,7 @@ const NavBar: React.FC = () => {
               HOME
               </div>
               <div>
-                <img style={{width: '16px', height: '16px'}} src={HomeImage}></img>
+                <img alt='Home Icon' style={{width: '16px', height: '16px'}} src={HomeImage}></img>
               </div>
             </div>
             

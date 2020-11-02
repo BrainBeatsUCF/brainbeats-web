@@ -89,7 +89,7 @@ export default class MusicContextProvider {
     return this.originalPlaylistArray;
   }
 
-  public setOriginalPublicBeatArray(originalPublicBeatArray: PlaylistObject[]) {
+  public setOriginalPublicBeatArray(originalPublicBeatArray: PublicBeatObject[]) {
     this.originalPublicBeatArray = originalPublicBeatArray;
   }
 

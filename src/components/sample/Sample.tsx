@@ -4,7 +4,7 @@ import axios from 'axios';
 import MusicContext from '../../util/contexts/music/MusicContext';
 import clsx from 'clsx';
 import { SampleObject, SampleProps } from '../../util/api/types';
-import { useStyles } from './SampleUseStyles';
+import { useStyles } from './useStyles';
 
 const Sample: React.FC<SampleProps> = ({...props}) => {
   const classes = useStyles();
@@ -42,6 +42,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
         sampleArray.push(newSample);
       });
       musicProvider.setOriginalSampleArray(sampleArray);
+      props.setNumSamplesMethod(sampleArray.length);
       setSamples(sampleArray);
     }).catch((err) => {
       console.log(err);
@@ -54,7 +55,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       setLoading(false);
     };
     getData();
-  }, []);
+  });
 
   const submitSearch = (e: any) => {
     e.preventDefault();

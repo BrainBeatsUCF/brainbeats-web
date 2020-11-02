@@ -1,10 +1,10 @@
 import makeStyles from "@material-ui/styles/makeStyles";
-
 const useStyles = makeStyles(() => ({
   componentContainer: {
     color: 'white',
   },
   header: {
+    alignItems: 'left',
     paddingLeft: '20px',
     margin: 0,
   },
@@ -15,33 +15,50 @@ const useStyles = makeStyles(() => ({
     overflowX: 'scroll',
   },
   card: {
-    position: 'relative',
+    borderRadius: '10px',
     display: 'inline-block',
+    textAlign: 'center',
     margin: '20px',
+    position: 'relative',
     cursor: 'pointer',
     minWidth: '200px',
-    minHeight: '150px'
+    minHeight: '153px',
   },
   background: {
     backgroundRepeat: 'no-repeat',
-    width: '200px',
+    width: '250px',
     height: '150px',
-    opacity: 0.4
+    opacity: 0.4,
+    borderRadius: '10px',
   },
-  bottomLeftCorner: {
+  cardContent: {
+    width: '100%',
+    height: '100%',
+  },
+  songType: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontWeight: 'bold',
+    width: '100%',
     position: 'absolute',
-    bottom: 0,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-end'
+    left: 0,
+    top: '50%',
+    fontSize: '13px'
   },
-  beatPicture: {
-    width: '75px',
-    height: '75px',
+  beatContainer: {
+    position: 'absolute',
+    margin: 0,
+    padding: 0,
+    bottom: 0
   },
-  playButtonAndBeatInfo: {
-    display: 'flex',
-    flexDirection: 'row',
+  sampleInstrument: {
+    borderRadius: '5px',
+    padding: '2px',
+    backgroundColor: 'grey',
+    margin: '5px',
+    opacity: 0.7,
+    fontSize: '10px'
   },
   title: {
     margin: 0,

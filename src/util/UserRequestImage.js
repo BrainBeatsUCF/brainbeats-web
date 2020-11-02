@@ -32,8 +32,7 @@ const AvailableColorSpace = [
 
 export const UserRequestImage = (userEmail, idToken) => {
   const convertToNumber = (userEmail) => {
-    const emailArray = [userEmail]
-    console.log('emailArray: ' + emailArray);
+    const emailArray = [...userEmail]
     const convertedNumber = emailArray
       .map(char => char.charCodeAt(0))
       .reduce((current, previous) => previous + current)

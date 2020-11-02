@@ -54,9 +54,9 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
     });
   }
 
-  useEffect(() => {
-    console.log(searchName);
-  }, [searchName]);
+  // useEffect(() => {
+  //   console.log(searchName);
+  // }, [searchName]);
 
   useEffect(() => {
     const getData = async () => {

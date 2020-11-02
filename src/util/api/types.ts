@@ -19,7 +19,10 @@ export interface Song {
 }
 
 export interface SideBarProps {
-  id: string
+  id: string,
+  numBeats: number,
+  numSamples: number,
+  numShares: number,
 }
 
 export interface AudioObject {
@@ -40,6 +43,7 @@ export interface PlaylistObject {
 
 export interface BeatProps {
   setAudioGlobal: any,
+  setNumBeatsMethod: any,
 }
 
 export interface BeatObject {
@@ -69,6 +73,9 @@ export interface PublicBeatObject {
   // instrumentList: string[],
   id: string,
   imageUrl: string,
+  like: boolean,
+  // isPlaying: boolean,
+  duration: string,
 }
 
 export interface PlaylistProps {
@@ -83,6 +90,7 @@ export interface PlaylistObject {
 
 export interface SampleProps {
   setAudioGlobal: any,
+  setNumSamplesMethod: any,
 }
 
 export interface SampleObject {

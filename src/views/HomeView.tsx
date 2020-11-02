@@ -45,23 +45,30 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-// Todo: add gradient
-
 const HomeView: React.FC = () => {
   const classes = useStyles();
   const [id, setId] = useState("0");
+  const [numBeats, setNumBeats] = useState(0);
+  const [numSamples, setNumSamples] = useState(0);
+  const [numShares, setNumShares] = useState(0);
   let history = useHistory();
   let userEmail = localStorage.getItem('userEmail');
   let jwt = localStorage.getItem('accessToken');
   let expired: boolean = false;
 
-  console.log(localStorage.getItem('accessToken'));
+  const setNumBeatsMethod = (numBeats: number) => {
+    setNumBeats(numBeats);
+  }
+
+  const setNumSamplesMethod = (numSamples: number) => {
+    setNumSamples(numSamples);
+  }
 
   const setAudioGlobal = (audioId: string) => {
-    console.log('audioId in home: ' + audioId);
     setId(audioId);
   };
 
+  // Todo: refresh access token using refresh token 
   if (jwt != null) {
     let jwtDecoded: any = jwt_decode(jwt);
     if (Date.now() / 1000 >= jwtDecoded.exp) {
@@ -84,9 +91,9 @@ const HomeView: React.FC = () => {
                   <NavBar />
                 </Grid>
                 <Grid className={classes.scrollableView} item xs={12}>
-                  <Beat setAudioGlobal={setAudioGlobal}/>
+                  <Beat setAudioGlobal={setAudioGlobal} setNumBeatsMethod={setNumBeatsMethod}/>
                   <Playlist setAudioGlobal={setAudioGlobal}/>
-                  <Sample setAudioGlobal={setAudioGlobal}/>
+                  <Sample setAudioGlobal={setAudioGlobal} setNumSamplesMethod={setNumSamplesMethod}/>
                   <PublicBeat setAudioGlobal={setAudioGlobal}/>
                   <RecommendedBeat setAudioGlobal={setAudioGlobal}/>
                 </Grid>
@@ -98,7 +105,7 @@ const HomeView: React.FC = () => {
               <div className={classes.overlaySection}></div>
             </Grid> */}
             <Grid className={classes.fixedTopRight} item xs={12} md={3}>
-              <SideBar id={id}/>
+              <SideBar id={id} numBeats={numBeats} numSamples={numSamples} numShares={numShares}/>
             </Grid>
           </Grid>
         </div>

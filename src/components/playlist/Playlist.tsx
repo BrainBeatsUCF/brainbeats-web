@@ -1,11 +1,10 @@
 import React, { useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MusicContext } from '../../util/contexts/music';
 import clsx from 'clsx';
 import { PlaylistObject, PlaylistProps } from '../../util/api/types';
-import { useStyles } from './PlaylistUseStyles';
+import { useStyles } from './useStyles';
 
 // Todo: only display playlist that has beats/samples
 const Playlist: React.FC<PlaylistProps> = ({...props}) => {
@@ -33,7 +32,6 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
       }
     }).then((res) => {
       res.data.forEach(async (item: any) => {
-        console.log(item);
         const newPlaylist = 
         {
           "id": item.id,
