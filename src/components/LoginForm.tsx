@@ -12,12 +12,10 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import axios from 'axios';
 
-import { BackendContext } from '../util/api';
-import Api from '../util/api';
-import { UserContext } from '../util/contexts/user';
-
-import {useAuth0} from '@auth0/auth0-react';
+// Todo: Add loading icon when click login
+//       Show error if account is incorrect
 
 const schema = yup.object({
 	email: yup
@@ -47,30 +45,63 @@ const useStyles = makeStyles(theme => ({
 	},
 	submit: {
 	  margin: theme.spacing(3, 0, 2),
-	},
+  },
+  container: {
+    backgroundColor: 'black'
+  }
 }));
 
 const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 	const classes = useStyles();
   const history = useHistory();
-
-  const { loginWithRedirect } = useAuth0();
-
-  const api = React.useContext(BackendContext);
-  const user = React.useContext(UserContext);
-
-  // api.callGetEndpoint('weatherforecast', '').then((response) => console.log(response.data[0]));
-  console.log(api.getSavedPlaylists('nice', 'nice'));
+  const [loading, setLoading] = React.useState(false);
+  const [warningMessage, setWarningMessage] = React.useState(false);
+  const url = 'https://brain-beats-server-docker.azurewebsites.net';
 
   const handleLogin = async (
     // Todo: handle the login logic
     data: LoginProps,
     history: History<LocationState>): Promise<void> => {
-      try {
-        history.replace('/');
-      } catch (e) {
-        alert(e.message);
+      setLoading(true);
+      setWarningMessage(false);
+      const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
       }
+
+      const loginData = {
+        'email': data.email!,
+        'password': data.password!,
+      }
+
+      console.log(loginData);
+
+      axios.post(url + '/api/user/login_user', loginData, config)
+      .then((res) => {
+        if (res.data.error === 'access_denied') {
+          console.log('access denied');
+          // handle wrong account
+        } else {
+          console.log(res);
+          console.log(res.data.access_token);
+          localStorage.setItem('accessToken', res.data.access_token);
+          localStorage.setItem('userEmail', loginData.email);
+          localStorage.setItem('idToken', res.data.id_token);
+          
+          history.push('/');
+        }
+
+        setLoading(false);
+      })
+      .catch((err) => {
+        // Todo: handle 500 error
+        let errObj = JSON.parse(JSON.stringify(err));
+        if (errObj.message === 'Request failed with status code 401') {
+          setWarningMessage(true);
+        }
+        setLoading(false);
+      });
   };
 
 	return (
@@ -88,16 +119,16 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
             <Formik
             validationSchema = {schema}
             initialValues={{
-              email: props.email || '',
-              password: props.password || '',
+              email: props.email || 'Your email',
+              password: props.password || 'Your password',
             }}
             onSubmit={async (data: LoginProps): Promise<void> => {
               handleLogin(data, history);
             }}
             >
             {(): React.ReactElement => (
-              <Form className={classes.form}>
-                <Card>
+              <Form autoComplete="off" className={classes.form}>
+                <Card className={classes.container}>
                   <CardContent>
                     <div>
                       <Field
@@ -115,6 +146,8 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                       type="password"
                       />
                     </div>
+                    {loading ? <p style={{color: 'white'}}>Loading... </p> : ""}
+                    {warningMessage ? <p style={{color: 'red'}}>Your email or password is incorrect.</p> : ""}
                     <div>
                       <Button 
                         type="submit"
@@ -126,24 +159,19 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                         Login
                       </Button>
                     </div>
-                    <div>
+                    {/* <div>
                       <Link href="#" variant="body2">
                         Find my account
                       </Link>
-                    </div>
+                    </div> */}
                     <div>
-                      <Link href="register" variant="body2">
+                      <Link onClick={(e: any) => {
+                        e.preventDefault();
+                        console.log('testing');
+                        window.open('https://ucfbrainbeats.b2clogin.com/ucfbrainbeats.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_signup&client_id=037bbefc-958e-489d-ba61-8c0823284010&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fbrain-beats-server-docker.azurewebsites.net%2F.auth%2Flogin%2Faad%2Fcallback&scope=openid&response_type=id_token&prompt=login');
+                      }} href="" variant="body2">
                         {"Create Account"}
                       </Link>
-                    </div>
-                    <div>
-                      <button onClick={() => (
-                        // save user to DB
-
-                        loginWithRedirect()
-                      )}>
-                      Log in with Auth0
-                      </button>
                     </div>
                   </CardContent>
                 </Card>

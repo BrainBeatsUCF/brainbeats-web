@@ -5,7 +5,7 @@ const useStyles = makeStyles(() => ({
     position: 'fixed',
     bottom: 0,
     width: '100%',
-    backgroundColor: '#1a1919',
+    backgroundColor: '#28252b',
   },
   userInfo: {
     width: '100%',
@@ -37,10 +37,10 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     justifyContent: 'space-around',
     height: '38px',
-    width: '100%',
-    '@media (max-width: 960px)': {
-      width: '100%'
-    }
+    margin: 'auto',
+    width: '50%',
+    textAlign: 'center',
+    padding: '10px',
   },
   statValues: {
     display: 'flex',
@@ -90,7 +90,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    background: '#1a1919',
+    background: '#28252b',
     color: 'white',
     '@media (max-width: 959px)': {
       position: 'fixed',
@@ -114,6 +114,7 @@ const useStyles = makeStyles(() => ({
   },
   userPictureContainer: {
     textAlign: 'center',
+    clear: 'both',
     '@media (max-width: 959px)': {
       position: 'absolute',
       left: 0,
@@ -121,7 +122,6 @@ const useStyles = makeStyles(() => ({
     },
   },
   userStatContainer: {
-    
     '@media (max-width: 959px)': {
       display: 'none'
     },
@@ -143,6 +143,20 @@ const useStyles = makeStyles(() => ({
   addPlaylistButton: {
     backgroundColor: 'red',
     borderRadius: '5px'
+  },
+  logOut: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: '100px',
+    float: 'right',
+    padding: '5px',
+    borderRadius: '10px',
+    '&:hover': {
+      backgroundColor: 'rgb(208, 53, 30, 1)'
+    },
+    margin: '10px',
   }
 }));
 
