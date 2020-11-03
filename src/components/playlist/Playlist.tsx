@@ -32,6 +32,7 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
       }
     }).then((res) => {
       res.data.forEach(async (item: any) => {
+        console.log(item);
         const newPlaylist = 
         {
           "id": item.id,
@@ -41,6 +42,11 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
         playlistArray.push(newPlaylist);
       });
       musicProvider.setOriginalPlaylistArray(playlistArray);
+      if (playlistArray.length === 0) {
+        setNoBeatByName(true);
+      } else {
+        setNoBeatByName(false);
+      }
       setPlaylists(playlistArray);
     }).catch((err) => {
       console.log(err);

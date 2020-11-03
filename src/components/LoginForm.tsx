@@ -13,6 +13,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import axios from 'axios';
+import { CircularProgress } from '@material-ui/core';
 
 // Todo: Add loading icon when click login
 //       Show error if account is incorrect
@@ -55,7 +56,8 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 	const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = React.useState(false);
-  const [warningMessage, setWarningMessage] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
+  const [warningMessage, setWarningMessage] = React.useState('');
   const url = 'https://brain-beats-server-docker.azurewebsites.net';
 
   const handleLogin = async (
@@ -63,7 +65,8 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
     data: LoginProps,
     history: History<LocationState>): Promise<void> => {
       setLoading(true);
-      setWarningMessage(false);
+      setWarningMessage('');
+      setIsError(false);
       const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -79,6 +82,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
 
       axios.post(url + '/api/user/login_user', loginData, config)
       .then((res) => {
+        console.log(res);
         if (res.data.error === 'access_denied') {
           console.log('access denied');
           // handle wrong account
@@ -88,18 +92,23 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
           localStorage.setItem('accessToken', res.data.access_token);
           localStorage.setItem('userEmail', loginData.email);
           localStorage.setItem('idToken', res.data.id_token);
-          
+          setLoading(false);
           history.push('/');
         }
 
-        setLoading(false);
+        
       })
       .catch((err) => {
+        
         // Todo: handle 500 error
         let errObj = JSON.parse(JSON.stringify(err));
+        console.log(errObj);
         if (errObj.message === 'Request failed with status code 401') {
-          setWarningMessage(true);
+          setWarningMessage("Your email or password is incorrect.");
+        } else if (errObj.message === 'Request failed with status code 500') {
+          setWarningMessage("Server error");
         }
+        setIsError(true);
         setLoading(false);
       });
   };
@@ -146,8 +155,9 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                       type="password"
                       />
                     </div>
-                    {loading ? <p style={{color: 'white'}}>Loading... </p> : ""}
-                    {warningMessage ? <p style={{color: 'red'}}>Your email or password is incorrect.</p> : ""}
+                    {/* {loading ? <p style={{color: 'white'}}>Loading... </p> : ""} */}
+                    {loading ? <CircularProgress /> : ""}
+                      {isError ? <p style={{color: 'red'}}>{warningMessage}</p> : ""}
                     <div>
                       <Button 
                         type="submit"

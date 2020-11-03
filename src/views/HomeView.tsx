@@ -56,6 +56,8 @@ const HomeView: React.FC = () => {
   let jwt = localStorage.getItem('accessToken');
   let expired: boolean = false;
 
+  console.log(jwt);
+
   const setNumBeatsMethod = (numBeats: number) => {
     setNumBeats(numBeats);
   }
@@ -72,12 +74,13 @@ const HomeView: React.FC = () => {
   if (jwt != null) {
     let jwtDecoded: any = jwt_decode(jwt);
     if (Date.now() / 1000 >= jwtDecoded.exp) {
+      console.log('expired');
       expired = true;
     }
   }
 
   if (userEmail == null) {
-    history.push('/login');
+    expired = true;
   }
 
   return (

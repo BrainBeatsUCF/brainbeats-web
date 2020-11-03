@@ -44,6 +44,11 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
       });
       musicProvider.setOriginalBeatArray(beatArray);
       props.setNumBeatsMethod(beatArray.length);
+      if (beatArray.length === 0) {
+        setNoBeatByName(true);
+      } else {
+        setNoBeatByName(false);
+      }
       setBeats(beatArray);
     }).catch((err) => {
       console.log(err);

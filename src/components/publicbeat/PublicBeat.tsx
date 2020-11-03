@@ -93,6 +93,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
         publicBeatArray.push(newPublicBeat);
       });
       musicProvider.setOriginalPublicBeatArray(publicBeatArray);
+      
       loadLikedBeats();
     }).catch((err) => {
       console.log(err);
