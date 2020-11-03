@@ -16,9 +16,9 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
   let userEmail = localStorage.getItem('userEmail');
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
 
-  const [searchName, setSearchName] = useState('Test Beat Private');
-  const [noBeatByName, setNoBeatByName] = useState(false);
-  const [searchNameCompleteValue, setSearchNameCompleteValue] = useState('');
+  const [searchName, setSearchName] = useState('');
+  const [isSampleEmpty, setIsSampleEmpty] = useState(false);
+  const [message, setMessage] = useState('');
 
   const loadData = async () => {
     axios.post(url + 'api/user/get_owned_samples', 
@@ -43,6 +43,12 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       });
       musicProvider.setOriginalSampleArray(sampleArray);
       props.setNumSamplesMethod(sampleArray.length);
+      if (sampleArray.length === 0) {
+        setMessage('You have 0 sample.');
+        setIsSampleEmpty(true);
+      } else {
+        setIsSampleEmpty(false);
+      }
       setSamples(sampleArray);
     }).catch((err) => {
       console.log(err);
@@ -55,17 +61,21 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       setLoading(false);
     };
     getData();
-  });
+  }, []);
 
   const submitSearch = (e: any) => {
     e.preventDefault();
-    setSearchNameCompleteValue(searchName);
     if (searchName === '') {
-      setNoBeatByName(false);
+      if (musicProvider.getOriginalSampleArray().length === 0) {
+        setMessage(`You have 0 sample.`);
+        setIsSampleEmpty(true);
+      } else {
+        setIsSampleEmpty(false);
+      }
       setSamples(musicProvider.getOriginalSampleArray());
     } else {
       let sampleArrayByName = [] as SampleObject[];
-
+      console.log('here');
       musicProvider.getOriginalSampleArray().forEach((sample: SampleObject) => {
         if (sample.name.toLowerCase() === searchName.toLowerCase()) {
           sampleArrayByName.push(sample);
@@ -73,9 +83,10 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       });
       
       if (sampleArrayByName.length === 0) {
-        setNoBeatByName(true);
+        setMessage(`You have 0 sample with the name ${searchName}`);
+        setIsSampleEmpty(true);
       } else {
-        setNoBeatByName(false);
+        setIsSampleEmpty(false);
       }
       setSamples(sampleArrayByName);
     }    
@@ -102,7 +113,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       </div>
       {loading ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>Loading...</div> : 
         <div className={classes.scroll}>
-          {noBeatByName ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>No samples with the name of {searchNameCompleteValue}</div> :
+          {isSampleEmpty ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>{message}</div> :
             <>
               {samples.map((sample, key) => {
                 return (

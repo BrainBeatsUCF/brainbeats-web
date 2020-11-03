@@ -17,8 +17,8 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
   const url = "https://brain-beats-server-docker.azurewebsites.net";
 
   const [searchName, setSearchName] = useState('');
-  const [noBeatByName, setNoBeatByName] = useState(false);
-  const [searchNameCompleteValue, setSearchNameCompleteValue] = useState('');
+  const [isRecommendedBeatEmpty, setisRecommendedBeatEmpty] = useState(false);
+  const [message, setMessage] = useState('');
 
   const loadData = async () => {
     axios.post(url + '/api/user/get_recommended_beats', 
@@ -44,9 +44,10 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
       });
       musicProvider.setOriginalRecommendedBeatArray(beatArray);
       if (beatArray.length === 0) {
-        setNoBeatByName(true);
+        setMessage('There is 0 recommended beat currently.');
+        setisRecommendedBeatEmpty(true);
       } else {
-        setNoBeatByName(false);
+        setisRecommendedBeatEmpty(false);
       }
       setBeats(beatArray);
     }).catch((err) => {
@@ -68,9 +69,13 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
 
   const submitSearch = (e: any) => {
     e.preventDefault();
-    setSearchNameCompleteValue(searchName);
     if (searchName === '') {
-      setNoBeatByName(false);
+      if (musicProvider.getOriginalRecommendedBeatArray().length === 0) {
+        setMessage(`There is 0 recommended beat currently.`);
+        setisRecommendedBeatEmpty(true);
+      } else {
+        setisRecommendedBeatEmpty(false);
+      }
       setBeats(musicProvider.getOriginalRecommendedBeatArray());
     } else {
       
@@ -83,9 +88,10 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
       });
 
       if (beatArrayByName.length === 0) {
-        setNoBeatByName(true);
+        setMessage(`You have 0 recommended beat with the name ${searchName}.`);
+        setisRecommendedBeatEmpty(true);
       } else {
-        setNoBeatByName(false);
+        setisRecommendedBeatEmpty(false);
       }
       setBeats(beatArrayByName);
     }    
@@ -112,7 +118,7 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
       </div>
         {loading ? <div  style={{paddingLeft: '20px', paddingBottom: '10px'}}>Loading...</div> : 
           <div className={classes.scroll}>
-            {noBeatByName ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>No recommended beats with the name of {searchNameCompleteValue}</div> :
+            {isRecommendedBeatEmpty ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>{message}</div> :
               <>
                 {beats.map((beat, key) => {
                   return (

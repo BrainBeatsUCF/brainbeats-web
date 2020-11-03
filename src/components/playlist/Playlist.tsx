@@ -17,9 +17,9 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
   let userEmail = localStorage.getItem('userEmail');
   const url = "https://brain-beats-server-docker.azurewebsites.net";
 
-  const [searchName, setSearchName] = useState('Test Beat Private');
-  const [noBeatByName, setNoBeatByName] = useState(false);
-  const [searchNameCompleteValue, setSearchNameCompleteValue] = useState('');
+  const [message, setMessage] = useState('');
+  const [searchName, setSearchName] = useState('');
+  const [isEmptyPlaylist, setIsPlaylistEmpty] = useState(false);
 
   const loadData = async () => {
     axios.post(url + '/api/user/get_owned_playlists', 
@@ -43,9 +43,10 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
       });
       musicProvider.setOriginalPlaylistArray(playlistArray);
       if (playlistArray.length === 0) {
-        setNoBeatByName(true);
+        setMessage('You have 0 playlist.');
+        setIsPlaylistEmpty(true);
       } else {
-        setNoBeatByName(false);
+        setIsPlaylistEmpty(false);
       }
       setPlaylists(playlistArray);
     }).catch((err) => {
@@ -63,9 +64,13 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
 
   const submitSearch = (e: any) => {
     e.preventDefault();
-    setSearchNameCompleteValue(searchName);
     if (searchName === '') {
-      setNoBeatByName(false);
+      if (musicProvider.getOriginalPlaylistArray().length === 0) {
+        setMessage('You have 0 playlist.');
+        setIsPlaylistEmpty(true);
+      } else {
+        setIsPlaylistEmpty(false);
+      }
       setPlaylists(musicProvider.getOriginalPlaylistArray());
     } else {
       let playlistArrayByName = [] as PlaylistObject[];
@@ -77,9 +82,10 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
       });
 
       if (playlistArrayByName.length === 0) {
-        setNoBeatByName(true);
+        setMessage(`You have 0 playlist with the name ${searchName}.`);
+        setIsPlaylistEmpty(true);
       } else {
-        setNoBeatByName(false);
+        setIsPlaylistEmpty(false);
       }
       setPlaylists(playlistArrayByName);
     }    
@@ -106,7 +112,7 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
       </div>
         {loading ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>Loading...</div> : 
           <div className={classes.scroll}>
-            {noBeatByName ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>No playlists with the name of {searchNameCompleteValue}</div> :
+            {isEmptyPlaylist ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>{message}</div> :
             <>
               {playlists.map((playlist, key) => {
                 return (
