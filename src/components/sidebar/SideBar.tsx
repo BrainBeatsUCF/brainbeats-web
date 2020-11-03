@@ -16,15 +16,9 @@ import { UserRequestImage } from '../../util/UserRequestImage';
 // Todo: 1. Add icon when audio is successfully/finished added to playlist
 //       2. numbeats, samples, share sometimes are not updated even when the beats/sample/playlist are already loaded
 
-interface trianglifyOptions {
-  height: number,
-  width: number,
-  cellSize: number,
-  seed: number | string | null,
-  xColors: string,
-}
 
-
+// Todo: handle next/back button for audio player for example: Beat/Sample/Public Beat component can go next beat
+// beats in playlist can go back/next
 
 const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const classes = useStyles(useStyles);
@@ -39,11 +33,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   const userEmail = localStorage.getItem('userEmail');
   const idToken = localStorage.getItem('idToken');
 
-  const [numBeats, setNumBeats] = useState(0);
-  const [numSamples, setNumSamples] = useState(0);
-  const [numShares, setNumShares] = useState(0);
-
-  // Todo: call /api/user/read_user to get the userPicture
   const [userPicture, setUserPicture] = useState("");
 
   const url = "https://brain-beats-server-docker.azurewebsites.net";
@@ -60,6 +49,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
 
   const logout = () => {
     // Todo: call log out api
+
+    console.log('logging out');
 
     // remove local storage
     localStorage.removeItem('userEmail');
@@ -321,15 +312,15 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   return (
     <div className={classes.sideBarContainer}>
       <div className={classes.userInfo}>
-        <div className={classes.logOut}>
+        <div className={classes.logOut} onClick={() => {
+            // Todo: handle log out logic
+            logout();
+          }} >
           <div style={{marginRight: '10px'}}>
           Log out
           </div>
           
-          <img onClick={() => {
-            // Todo: handle log out logic
-            logout();
-          }} alt='Logout' src={LogOutImage}></img>
+          <img alt='Logout' src={LogOutImage}></img>
         </div>
         <div className={classes.userPictureContainer}>
           <img className={classes.userPicture} src={userPicture} alt=""></img>
