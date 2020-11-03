@@ -84,7 +84,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
       });
 
       if (beatArrayByName.length === 0) {
-        setMessage(`You have 0 beat with the name ${searchName}`);
+        setMessage(`You have 0 beat with the name ${searchName}.`);
         setIsBeatEmpty(true);
       } else {
         setIsBeatEmpty(false);
