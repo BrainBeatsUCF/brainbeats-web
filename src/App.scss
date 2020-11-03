@@ -3,8 +3,25 @@
   pointer-events: none;
 }
 
-.rhap_theme-color, .rhap_background-color, .rhap_bar-color, .rhap_time-color, .rhap_font-family {
-  color: red !important;
+// .rhap_theme-color, .rhap_background-color, .rhap_bar-color, .rhap_time-color, .rhap_font-family {
+//   color: '#D0351E';
+// }
+
+.rhap_progress-indicator {
+  background-color: #D0351E
+}
+
+.rhap_time, .rhap_current-time, .rhap_header
+{
+  color: #D0351E;
+}
+
+.rhap_volume-indicator, .rhap_progress-indicator, .rhap_repeat-button, .rhap_volume-button {
+  color: darkred !important;
+}
+
+.rhap_volume-indicator {
+  background-color: darkred;
 }
 
 @media (prefers-reduced-motion: no-preference) {

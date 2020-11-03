@@ -32,6 +32,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
     }).then((res) => {
       musicProvider.setNumBeats(res.data.length);
       res.data.forEach((item: any) => {
+        console.log(item);
         const newBeat = 
         {
           "id": item.id,

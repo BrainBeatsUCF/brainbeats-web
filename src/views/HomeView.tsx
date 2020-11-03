@@ -76,6 +76,8 @@ const HomeView: React.FC = () => {
     if (Date.now() / 1000 >= jwtDecoded.exp) {
       console.log('expired');
       expired = true;
+
+      // Todo : Call API to refresh token
     }
   }
 

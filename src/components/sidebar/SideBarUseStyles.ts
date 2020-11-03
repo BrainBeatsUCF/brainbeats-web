@@ -141,7 +141,7 @@ const useStyles = makeStyles(() => ({
     padding: '5px',
   },
   addPlaylistButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#D0351E',
     borderRadius: '5px'
   },
   logOut: {
