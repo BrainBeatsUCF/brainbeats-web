@@ -14,8 +14,6 @@ import { SideBarProps, AudioObject, PlaylistObject } from '../../util/api/types'
 import { UserRequestImage } from '../../util/UserRequestImage';
 
 // Todo: 1. Add icon when audio is successfully/finished added to playlist
-//       2. numbeats, samples, share sometimes are not updated even when the beats/sample/playlist are already loaded
-
 
 // Todo: handle next/back button for audio player for example: Beat/Sample/Public Beat component can go next beat
 // beats in playlist can go back/next
