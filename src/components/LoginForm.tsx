@@ -92,7 +92,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
           localStorage.setItem('accessToken', res.data.access_token);
           localStorage.setItem('userEmail', loginData.email);
           localStorage.setItem('idToken', res.data.id_token);
-
+          localStorage.setItem('refreshToken', res.data.refresh_token);
           // Todo: set refresh token
 
           setLoading(false);
