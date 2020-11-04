@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from "@material-ui/styles";
-import { TextField } from '@material-ui/core';
+import { TextField, CircularProgress } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import axios from 'axios';
+import clsx from 'clsx';
 
 interface CreatePlaylistPopupProps {
   closeCreatePlaylistPopup: any
@@ -23,14 +24,19 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   inner: {
+    padding: '10px',
     position: 'absolute',
     left: '25%',
     right: '25%',
-    top: '25%',
-    bottom: '25%',
+    top: '15%',
     margin: 'auto',
     borderRadius: '20px',
     backgroundColor: '#787878'
+  },
+  header: {
+    marginTop: '10px',
+    marginBottom: '10px',
+    color: '#fff'
   },
   form: {
     display: 'flex',
@@ -57,28 +63,39 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignContent: 'center'
   },
+  formElement: {
+    paddingTop: '10px',
+    paddingBottom: '10px',
+    color: '#fff'
+  },
+  button: {
+    borderRadius: '10px',
+    color: 'black'
+  }
 }));
 
 const privateOptions = [
   {
-    userPrivateOption: 'false'
+    userPrivateOption: 'False'
   },
   {
-    userPrivateOption: 'true'
+    userPrivateOption: 'True'
   }
 ];
 
 const CreatePlaylistPopup: React.FC<CreatePlaylistPopupProps> = ({...props}) => {
   const classes = useStyles();
-  const [name, setName] = useState("My playlist");
-  const [isPrivate, setIsPrivate] = useState("false");
-  const [imageUrl, setImageUrl] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR0AdkwPc3U4twT_LVngZb0XbcbTpJBqqBhZz-kKeTtdwVyS5FhE9DgW4MNrg&usqp=CAc');
-  const [imageRaw, setImageRaw] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR0AdkwPc3U4twT_LVngZb0XbcbTpJBqqBhZz-kKeTtdwVyS5FhE9DgW4MNrg&usqp=CAc');
+  const [name, setName] = useState("");
+  const [isPrivate, setIsPrivate] = useState("");
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageRaw, setImageRaw] = useState('');
+  const [imageUrlEmpty, setImageUrlEmpty] = useState(true);
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
+  const [isUploading, setIsUploading] = useState(false);
+  const [isFieldMissing, setIsFieldMissing] = useState(false);
 
   const handleImageOnchange = (e: any) => {
-    //raw file: e.target.files[0]
-    console.log(e.target.files[0]);
+    setImageUrlEmpty(false);
     if (e.target.files.length > 0) {
       setImageUrl(URL.createObjectURL(e.target.files[0]));
       setImageRaw(e.target.files[0]);
@@ -87,7 +104,11 @@ const CreatePlaylistPopup: React.FC<CreatePlaylistPopupProps> = ({...props}) => 
 
   const createButton = async (e: any) => {
     e.preventDefault();
-    // Todo: await to finish creating and then remove pop up
+    if (name === '' || imageRaw === '' || isPrivate === '') {
+      setIsFieldMissing(true);
+      return;
+    }
+
     const formData = new FormData();
     const config = {
       headers: {
@@ -96,42 +117,34 @@ const CreatePlaylistPopup: React.FC<CreatePlaylistPopupProps> = ({...props}) => 
       }
     }
 
-    console.log(typeof imageRaw);
-
     formData.append('email', localStorage.getItem('userEmail')!);
     formData.append('name', name);
     formData.append('image', imageRaw);
     formData.append('isPrivate', isPrivate);
 
-    console.log(formData.get('email'));
-    console.log(formData.get('name'));
-    console.log(formData.get('image'));
-    console.log(formData.get('isPrivate'));
+    setIsUploading(true);
 
-    // call api with formData
     axios.post(url + 'api/playlist/create_playlist', formData, config)
     .then((res) => {
-      // Successfully create a playlist
-      // console.log(res);
+      setIsUploading(false);
+      props.closeCreatePlaylistPopup();
     }).catch((err) => {
       // console.log(err);
     }); 
-
-    props.closeCreatePlaylistPopup();
   }
 
   return (
     <div className={classes.container}>  
       <div className={classes.inner}>  
-        <h1>Create your playlist</h1>
+        <h1 className={classes.header}>Create your playlist</h1>
         <form className={classes.form}>
-          <TextField
+          <TextField className={classes.formElement}
             id="name"
             label="Name"
             value={name}
             onChange={e => setName(e.target.value)}
           />
-          <Autocomplete
+          <Autocomplete className={classes.formElement}
             id="user-private-option"
             onChange={(_, value: any) => {
               setIsPrivate(value['userPrivateOption']);
@@ -142,24 +155,29 @@ const CreatePlaylistPopup: React.FC<CreatePlaylistPopupProps> = ({...props}) => 
               <TextField {...params} label="Private" variant="outlined" fullWidth />
             )}
           />
-          <label htmlFor='upload-button'>
+          <label className={classes.formElement} htmlFor='upload-button'>
             <div className={classes.profilePictureContainer}>
-              <img className={classes.profilePicture} src={imageUrl} alt=""></img>
               <input
                 type="file"
                 id="upload-button"
                 accept="image/*"
                 onChange={handleImageOnchange}
-                style={{display: 'none'}}
               >
               </input>
-              <div className={classes.edit}>
-                <CameraAltIcon style={{fontSize: 25}}/>
-              </div>
+              {!imageUrlEmpty ? <>
+                <img className={classes.profilePicture} src={imageUrl} alt=""></img> 
+                <div className={classes.edit}>
+                  <CameraAltIcon style={{fontSize: 25}}/>
+                </div>
+                </>
+                : ""
+              }
+              {isUploading ? <CircularProgress /> : ""} 
             </div>
           </label>
-          <button onClick={props.closeCreatePlaylistPopup}>Cancel</button>  
-          <button onClick={createButton}>Create</button>  
+          {isFieldMissing ? <div style={{color: 'red', display: 'block', width: '100%', marginTop: '5px', marginBottom: '5px'}}>Please complete all the fields</div> : ""}
+          <button className={clsx(classes.formElement, classes.button)} onClick={props.closeCreatePlaylistPopup}>Cancel</button>  
+          <button className={clsx(classes.formElement, classes.button)} onClick={createButton}>Create</button>  
         </form>  
         
       </div>  
