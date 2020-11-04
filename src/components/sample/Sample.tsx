@@ -51,7 +51,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       }
       setSamples(sampleArray);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -75,7 +75,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       setSamples(musicProvider.getOriginalSampleArray());
     } else {
       let sampleArrayByName = [] as SampleObject[];
-      console.log('here');
+
       musicProvider.getOriginalSampleArray().forEach((sample: SampleObject) => {
         if (sample.name.toLowerCase() === searchName.toLowerCase()) {
           sampleArrayByName.push(sample);

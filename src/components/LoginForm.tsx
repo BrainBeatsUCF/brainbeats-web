@@ -78,22 +78,15 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
         'password': data.password!,
       }
 
-      console.log(loginData);
-
       axios.post(url + '/api/user/login_user', loginData, config)
       .then((res) => {
-        console.log(res);
         if (res.data.error === 'access_denied') {
-          console.log('access denied');
           // handle wrong account
         } else {
-          console.log(res);
-          console.log(res.data.access_token);
           localStorage.setItem('accessToken', res.data.access_token);
           localStorage.setItem('userEmail', loginData.email);
           localStorage.setItem('idToken', res.data.id_token);
-
-          // Todo: set refresh token
+          localStorage.setItem('refreshToken', res.data.refresh_token);
 
           setLoading(false);
           history.push('/');
@@ -102,10 +95,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
         
       })
       .catch((err) => {
-        
-        // Todo: handle 500 error
         let errObj = JSON.parse(JSON.stringify(err));
-        console.log(errObj);
         if (errObj.message === 'Request failed with status code 401') {
           setWarningMessage("Your email or password is incorrect.");
         } else if (errObj.message === 'Request failed with status code 500') {
@@ -180,7 +170,6 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                     <div>
                       <Link onClick={(e: any) => {
                         e.preventDefault();
-                        console.log('testing');
                         window.open('https://ucfbrainbeats.b2clogin.com/ucfbrainbeats.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_signup&client_id=037bbefc-958e-489d-ba61-8c0823284010&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fbrain-beats-server-docker.azurewebsites.net%2F.auth%2Flogin%2Faad%2Fcallback&scope=openid&response_type=id_token&prompt=login');
                       }} href="" variant="body2">
                         {"Create Account"}

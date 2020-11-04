@@ -49,16 +49,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
 
   const logout = () => {
     // Todo: call log out api
-
-    console.log('logging out');
-
-    // remove local storage
-    localStorage.removeItem('userEmail');
-
-    // remove access token
-    localStorage.removeItem('accessToken');
-
-    localStorage.removeItem('idToken');
+    localStorage.clear();
 
     // push to login
     history.push('login');
@@ -88,9 +79,9 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
-      console.log(res);
+      // console.log(res);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -139,7 +130,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   
       setPlaylists(playlistArrayData);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });    
   }
 
@@ -154,6 +145,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     setAudioArray([]);
 
     // Play Playlist Part
+    // Todo: Handle owner for beats in playlist 
     if (musicProvider.getAudioPlayingType() === 'playlist') {
       const playlistResponse = await axios.post(url + '/api/playlist/read_playlist_beats', 
       {
@@ -167,19 +159,30 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       });    
   
       playlistResponse.data.forEach((item: any) => {
-        console.log(item);
-        const newAudio = 
+        axios.post(url + '/api/user/read_user', {
+          email: userEmail,
+          id: props.id
+        },
         {
-          "id": item.id,
-          "imageUrl": item.properties['image'][0]['value'],
-          "audioUrl": item.properties['audio'][0]['value'],
-          "title": item.properties['name'][0]['value'],
-
-          // Todo: ask for api to get author name from a beat
-          "authorName": "Hung Nguyen"
-        };
-        
-        audioArrayData.push(newAudio);
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        }).then((res) => {
+          const newAudio = 
+          {
+            "id": item.id,
+            "imageUrl": item.properties['image'][0]['value'],
+            "audioUrl": item.properties['audio'][0]['value'],
+            "title": item.properties['name'][0]['value'],
+            "authorName": 'Unknown Author'
+          };
+          if (res.data[0].properties['name'][0]['value'])
+            newAudio['authorName'] = res.data[0].properties['name'][0]['value'];
+          audioArrayData.push(newAudio);
+          setAudioArray(audioArrayData);
+        }).catch((err) => {
+          // console.log(err);
+        });
       });
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
       const beatResponse = await axios.post(url + '/api/beat/read_beat', {
@@ -193,17 +196,30 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       });
   
       beatResponse.data.forEach((item: any) => {
-        const newAudio = 
+        axios.post(url + '/api/user/read_user', {
+          email: userEmail,
+          id: props.id
+        },
         {
-          "id": item.id,
-          "imageUrl": item.properties['image'][0]['value'],
-          "audioUrl": item.properties['audio'][0]['value'],
-          "title": item.properties['name'][0]['value'],
-
-          // Todo: ask for api to get author name from a beat/sample
-          "authorName": "Hung Nguyen"
-        };
-        audioArrayData.push(newAudio);
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        }).then((res) => {
+          const newAudio = 
+          {
+            "id": item.id,
+            "imageUrl": item.properties['image'][0]['value'],
+            "audioUrl": item.properties['audio'][0]['value'],
+            "title": item.properties['name'][0]['value'],
+            "authorName": 'Unknown Author'
+          };
+          if (res.data[0].properties['name'][0]['value'])
+            newAudio['authorName'] = res.data[0].properties['name'][0]['value'];
+          audioArrayData.push(newAudio);
+          setAudioArray(audioArrayData);
+        }).catch((err) => {
+          // console.log(err);
+        });
       });      
     } else if (musicProvider.getAudioPlayingType() === 'sample') {
       const sampleResponse = await axios.post(url + '/api/sample/read_sample', {
@@ -217,21 +233,32 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       });
 
       sampleResponse.data.forEach((item: any) => {
-        const newAudio = 
+        axios.post(url + '/api/user/read_user', {
+          email: userEmail,
+          id: props.id
+        },
         {
-          "id": item.id,
-          "imageUrl": item.properties['image'][0]['value'],
-          "audioUrl": item.properties['audio'][0]['value'],
-          "title": item.properties['name'][0]['value'],
-
-          // Todo: ask for api to get author name from a beat/sample
-          "authorName": "Hung Nguyen"
-        };
-        audioArrayData.push(newAudio);
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        }).then((res) => {
+          const newAudio = 
+          {
+            "id": item.id,
+            "imageUrl": item.properties['image'][0]['value'],
+            "audioUrl": item.properties['audio'][0]['value'],
+            "title": item.properties['name'][0]['value'],
+            "authorName": 'Unknown Author'
+          };
+          if (res.data[0].properties['name'][0]['value'])
+            newAudio['authorName'] = res.data[0].properties['name'][0]['value'];
+          audioArrayData.push(newAudio);
+          setAudioArray(audioArrayData);
+        }).catch((err) => {
+          // console.log(err);
+        });
       })
     }
-
-    setAudioArray(audioArrayData);
   }
 
   useEffect(() => {
@@ -258,12 +285,6 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       document.removeEventListener("mousedown", handleClick);
     };
   }, [playListPopup]);
-
-  // useEffect(() => {
-  //   setNumBeats(musicProvider.getNumBeats());
-  //   setNumSamples(musicProvider.getNumSamples());
-  //   setNumShares(musicProvider.getNumShares());
-  // }, [musicProvider.getNumBeats(), musicProvider.getNumSamples(), musicProvider.getNumShares()]);
 
   let audioContent, userStat, isShowAddToPlaylist;  
 

@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     margin: 0,
     padding: 0,
-    bottom: 0
+    bottom: 5
   },
   sampleInstrument: {
     borderRadius: '5px',

@@ -98,15 +98,13 @@ const RegisterForm: React.FC<RegisterProps> = ({ ...props }) => {
       'lastName': data.lastName!,
     }
 
-    console.log(registerData);
-
     // const response = await axios.post('https://brain-beats-server-docker.azurewebsites.net/api/user/create_user', registerData, config);
     axios.post('https://brain-beats-server-docker.azurewebsites.net/api/user/create_user', registerData, config)
     .then((res) => {
-      console.log(res);
+      // console.log(res);
     })
     .catch((err) => {
-      console.log(err)
+      // console.log(err)
     });
 
     // console.log(response);
