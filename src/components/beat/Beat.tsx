@@ -52,7 +52,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
       }
       setBeats(beatArray);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 

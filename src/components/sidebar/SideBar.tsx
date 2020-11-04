@@ -81,7 +81,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     }).then((res) => {
       // console.log(res);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -130,7 +130,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   
       setPlaylists(playlistArrayData);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });    
   }
 
@@ -181,7 +181,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           audioArrayData.push(newAudio);
           setAudioArray(audioArrayData);
         }).catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
       });
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
@@ -218,7 +218,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           audioArrayData.push(newAudio);
           setAudioArray(audioArrayData);
         }).catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
       });      
     } else if (musicProvider.getAudioPlayingType() === 'sample') {
@@ -255,7 +255,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           audioArrayData.push(newAudio);
           setAudioArray(audioArrayData);
         }).catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
       })
     }

@@ -81,7 +81,6 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
       axios.post(url + '/api/user/login_user', loginData, config)
       .then((res) => {
         if (res.data.error === 'access_denied') {
-          console.log('access denied');
           // handle wrong account
         } else {
           localStorage.setItem('accessToken', res.data.access_token);

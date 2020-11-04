@@ -92,12 +92,10 @@ const HomeView: React.FC = () => {
       };
       axios.post(url + '/api/user/refresh_token', data, config)
       .then((res) => {
-        console.log('requesting new access token');
-        console.log('prev access token: ' + localStorage.getItem('accessToken'));
+        // Requesting new access token
         localStorage.setItem('accessToken', res.data.access_token);
-        console.log('prev access token: ' + localStorage.getItem('accessToken'));
       }).catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     }
   }

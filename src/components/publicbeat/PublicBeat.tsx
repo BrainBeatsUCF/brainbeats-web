@@ -68,7 +68,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       }
       setPublicBeats(publicBeatArray);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -100,7 +100,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       
       loadLikedBeats();
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -167,7 +167,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
     .then((res) => {
       // console.log(res);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -191,7 +191,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
     .then((res) => {
       // console.log(res);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 

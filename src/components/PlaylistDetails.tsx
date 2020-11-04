@@ -51,9 +51,9 @@ const PlaylistDetails: React.FC<Props> = (props) => {
       .then(() => {
         setLoading(false);
       })
-      .catch(err => console.log(err));
-  
-      console.log(props.playlistId);
+      .catch(err => {
+        // console.log(err)
+      });
     }
     
   });

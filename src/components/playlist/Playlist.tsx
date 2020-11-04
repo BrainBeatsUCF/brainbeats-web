@@ -49,7 +49,7 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
       }
       setPlaylists(playlistArray);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 

@@ -51,7 +51,7 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
       }
       setBeats(beatArray);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 

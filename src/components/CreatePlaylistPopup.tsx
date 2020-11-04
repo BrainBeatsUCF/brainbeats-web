@@ -111,9 +111,10 @@ const CreatePlaylistPopup: React.FC<CreatePlaylistPopupProps> = ({...props}) => 
     // call api with formData
     axios.post(url + 'api/playlist/create_playlist', formData, config)
     .then((res) => {
-      console.log(res);
+      // Successfully create a playlist
+      // console.log(res);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     }); 
 
     props.closeCreatePlaylistPopup();
