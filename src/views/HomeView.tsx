@@ -46,6 +46,10 @@ const useStyles = makeStyles(() =>
   }),
 );
 
+// Todo:  Match play/pause button for public beats
+//        Match gradient with desktop
+//        Allow beat/sample/publicbeat to play next or previous like playlist
+
 const HomeView: React.FC = () => {
   const classes = useStyles();
   const [id, setId] = useState("0");
@@ -71,6 +75,8 @@ const HomeView: React.FC = () => {
     setId(audioId);
   };
 
+  // Todo: tomorrow: run one hour and test to see if new access token console is printed, if so
+  //     in catch err api, call the function again
   if (jwt != null) {
     let jwtDecoded: any = jwt_decode(jwt);
     if (Date.now() / 1000 >= jwtDecoded.exp) {
@@ -86,7 +92,10 @@ const HomeView: React.FC = () => {
       };
       axios.post(url + '/api/user/refresh_token', data, config)
       .then((res) => {
+        console.log('requesting new access token');
+        console.log('prev access token: ' + localStorage.getItem('accessToken'));
         localStorage.setItem('accessToken', res.data.access_token);
+        console.log('prev access token: ' + localStorage.getItem('accessToken'));
       }).catch((err) => {
         console.log(err);
       });

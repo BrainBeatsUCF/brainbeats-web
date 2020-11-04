@@ -165,7 +165,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
 
     axios.post(url + '/api/user/like_vertex', data, config)
     .then((res) => {
-      console.log(res);
+      // console.log(res);
     }).catch((err) => {
       console.log(err);
     });
@@ -189,7 +189,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
 
     axios.post(url + '/api/user/unlike_vertex', data, config)
     .then((res) => {
-      console.log(res);
+      // console.log(res);
     }).catch((err) => {
       console.log(err);
     });
