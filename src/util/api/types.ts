@@ -47,10 +47,15 @@ export interface BeatProps {
 }
 
 export interface BeatObject {
-  name: string
-  // instrumentList: string[],
-  id: string,
+  // name: string
+  // // instrumentList: string[],
+  // id: string,
+  // imageUrl: string,
   imageUrl: string,
+  audioUrl: string
+  title: string,
+  authorName: string,
+  id: string,
 }
 
 export interface RecommendedBeatProps {
@@ -58,10 +63,11 @@ export interface RecommendedBeatProps {
 }
 
 export interface RecommendedBeatObject {
-  name: string
-  // instrumentList: string[],
-  id: string,
   imageUrl: string,
+  audioUrl: string
+  title: string,
+  authorName: string,
+  id: string,
 }
 
 export interface PublicBeatProps {

@@ -91,7 +91,7 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
   }
 
   const playPlaylist = (id:string) => {
-    props.setAudioGlobal(id);
+    props.setAudioGlobal(id + '*' + Date.now());
     musicProvider.setAudioPlayingType('playlist');
   };
 

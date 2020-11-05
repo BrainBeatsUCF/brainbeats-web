@@ -56,6 +56,7 @@ const HomeView: React.FC = () => {
   const [numBeats, setNumBeats] = useState(0);
   const [numSamples, setNumSamples] = useState(0);
   const [numShares, setNumShares] = useState(0);
+  const [refresh, setRefresh] = useState(0);
   const url = "https://brain-beats-server-docker.azurewebsites.net";
   let userEmail = localStorage.getItem('userEmail');
   let jwt = localStorage.getItem('accessToken');
@@ -72,6 +73,7 @@ const HomeView: React.FC = () => {
   }
 
   const setAudioGlobal = (audioId: string) => {
+    console.log('setting new audio: ' + audioId);
     setId(audioId);
   };
 
@@ -124,11 +126,6 @@ const HomeView: React.FC = () => {
                 </Grid>
               </Grid>
             </Grid>
-
-            {/* Testing Gradient */}
-            {/* <Grid>
-              <div className={classes.overlaySection}></div>
-            </Grid> */}
             <Grid className={classes.fixedTopRight} item xs={12} md={3}>
               <SideBar id={id} numBeats={numBeats} numSamples={numSamples} numShares={numShares}/>
             </Grid>

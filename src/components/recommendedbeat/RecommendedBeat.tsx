@@ -36,8 +36,9 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
         {
           "id": item.id,
           "imageUrl": item.properties['image'][0]['value'],
-          "name": item.properties['name'][0]['value'],
-          // "instrumentList": instrumentListArray
+          "title": item.properties['name'][0]['value'],
+          "audioUrl": item.properties['audio'][0]['value'],
+          "authorName": 'Unknown Author'
         };
         
         beatArray.push(newBeat);
@@ -82,7 +83,7 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
       let beatArrayByName = [] as RecommendedBeatObject[];
 
       musicProvider.getOriginalRecommendedBeatArray().forEach((beat: RecommendedBeatObject) => {
-        if (beat.name.toLowerCase() === searchName.toLowerCase()) {
+        if (beat.title.toLowerCase() === searchName.toLowerCase()) {
           beatArrayByName.push(beat);
         }
       });
@@ -127,7 +128,7 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
                       <div className={classes.cardContent}>
                         <div className={classes.songType}>
                           {/* Vibing, Not a Phone in Sight */}
-                          {beat.name}
+                          {beat.title}
                         </div>
                         <Box className={classes.beatContainer}
                           display="flex"

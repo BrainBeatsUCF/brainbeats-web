@@ -10,7 +10,7 @@ import CreatePlaylistPopup from '../CreatePlaylistPopup';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { MusicContext } from '../../util/contexts/music';
-import { SideBarProps, AudioObject, PlaylistObject } from '../../util/api/types';
+import { SideBarProps, AudioObject, PlaylistObject, BeatObject } from '../../util/api/types';
 import { UserRequestImage } from '../../util/UserRequestImage';
 
 // Todo: 1. Add icon when audio is successfully/finished added to playlist
@@ -19,6 +19,9 @@ import { UserRequestImage } from '../../util/UserRequestImage';
 // beats in playlist can go back/next
 
 const SideBar: React.FC<SideBarProps> = ({...props}) => {
+
+  console.log('re-render');
+
   const classes = useStyles(useStyles);
   const [audioArray, setAudioArray] = useState([] as AudioObject[]);
   const [showPlaylists, setShowPlaylists] = useState(false);
@@ -66,6 +69,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }
 
   const addToPlaylist = (beatId: string, playlistId: string) => {
+    console.log('beatId: ' + beatId);
+    console.log('playlistId: ' + playlistId);
     axios.post(url + '/api/playlist/update_playlist_add_beat', 
     {
       email: userEmail,
@@ -133,6 +138,17 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }
 
   const loadData = async () => {
+    console.log('new id');
+    // console.log('id:' + props.id);
+    // //testing
+    let currentId = props.id.substring(0, props.id.indexOf('*'));
+
+    // console.log('currentId:' + currentId);
+    // return;
+
+
+    
+
     if (props.id === '0') {
       return;
     }
@@ -144,11 +160,13 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
 
     // Play Playlist Part
     // Todo: Handle owner for beats in playlist 
+
+    // TODO: why playlist refresh, but not beat
     if (musicProvider.getAudioPlayingType() === 'playlist') {
       const playlistResponse = await axios.post(url + '/api/playlist/read_playlist_beats', 
       {
         email: userEmail,
-        id: props.id
+        id: currentId
       },
       {
         headers: {
@@ -156,73 +174,113 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         }
       });    
   
-      playlistResponse.data.forEach((item: any) => {
-        axios.post(url + '/api/user/read_user', {
-          email: userEmail,
-          id: props.id
-        },
+      playlistResponse.data.forEach(async (item: any) => {
+        // await axios.post(url + '/api/user/read_user', {
+        //   email: userEmail,
+        //   id: currentId
+        // },
+        // {
+        //   headers: {
+        //     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        //   }
+        // }).then((res) => {
+        //   const newAudio = 
+        //   {
+        //     "id": item.id,
+        //     "imageUrl": item.properties['image'][0]['value'],
+        //     "audioUrl": item.properties['audio'][0]['value'],
+        //     "title": item.properties['name'][0]['value'],
+        //     "authorName": 'Unknown Author'
+        //   };
+        //   if (res.data[0].properties['name'][0]['value'])
+        //     newAudio['authorName'] = res.data[0].properties['name'][0]['value'];
+        //   audioArrayData.push(newAudio);
+        //   console.log(audioArrayData);
+        //   console.log('testing 186');
+        //   setAudioArray(audioArrayData);  
+        // }).catch((err) => {
+        //   // console.log(err);
+        // });
+        const newAudio = 
         {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-          }
-        }).then((res) => {
-          const newAudio = 
-          {
-            "id": item.id,
-            "imageUrl": item.properties['image'][0]['value'],
-            "audioUrl": item.properties['audio'][0]['value'],
-            "title": item.properties['name'][0]['value'],
-            "authorName": 'Unknown Author'
-          };
-          if (res.data[0].properties['name'][0]['value'])
-            newAudio['authorName'] = res.data[0].properties['name'][0]['value'];
-          audioArrayData.push(newAudio);
-          setAudioArray(audioArrayData);
-        }).catch((err) => {
-          // console.log(err);
-        });
+          "id": item.id,
+          "imageUrl": item.properties['image'][0]['value'],
+          "audioUrl": item.properties['audio'][0]['value'],
+          "title": item.properties['name'][0]['value'],
+          "authorName": 'Unknown Author'
+        };
+
+        audioArrayData.push(newAudio);
       });
+      console.log(audioArrayData);
+
+      setAudioArray(audioArrayData);  
+      
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
-      const beatResponse = await axios.post(url + '/api/beat/read_beat', {
-        email: userEmail,
-        id: props.id
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      });
+      // const beatResponse = await axios.post(url + '/api/beat/read_beat', {
+      //   email: userEmail,
+      //   id: currentId
+      // },
+      // {
+      //   headers: {
+      //     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      //   }
+      // });
   
-      beatResponse.data.forEach((item: any) => {
-        axios.post(url + '/api/user/read_user', {
-          email: userEmail,
-          id: props.id
-        },
+      // beatResponse.data.forEach((item: any) => {
+      //   // axios.post(url + '/api/user/read_user', {
+      //   //   email: userEmail,
+      //   //   id: currentId
+      //   // },
+      //   // {
+      //   //   headers: {
+      //   //     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      //   //   }
+      //   // }).then((res) => {
+      //   //   const newAudio = 
+      //   //   {
+      //   //     "id": item.id,
+      //   //     "imageUrl": item.properties['image'][0]['value'],
+      //   //     "audioUrl": item.properties['audio'][0]['value'],
+      //   //     "title": item.properties['name'][0]['value'],
+      //   //     "authorName": 'Unknown Author'
+      //   //   };
+      //   //   if (res.data[0].properties['name'][0]['value'])
+      //   //     newAudio['authorName'] = res.data[0].properties['name'][0]['value'];
+      //   //   audioArrayData.push(newAudio);
+      //   //   setAudioArray(audioArrayData);
+      //   // }).catch((err) => {
+      //   //   // console.log(err);
+      //   // });
+        
+      // });    
+
+      // console.log(musicProvider.getOriginalBeatArray());
+      // console.log('audioArrayData: ' + audioArrayData);
+      musicProvider.getOriginalBeatArray().forEach((beat: BeatObject) => {
+        console.log(beat);
+        const newAudio = 
         {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-          }
-        }).then((res) => {
-          const newAudio = 
-          {
-            "id": item.id,
-            "imageUrl": item.properties['image'][0]['value'],
-            "audioUrl": item.properties['audio'][0]['value'],
-            "title": item.properties['name'][0]['value'],
-            "authorName": 'Unknown Author'
-          };
-          if (res.data[0].properties['name'][0]['value'])
-            newAudio['authorName'] = res.data[0].properties['name'][0]['value'];
-          audioArrayData.push(newAudio);
-          setAudioArray(audioArrayData);
-        }).catch((err) => {
-          // console.log(err);
-        });
-      });      
+          "id": beat.id,
+          "imageUrl": beat.imageUrl,
+          "audioUrl": beat.audioUrl,
+          "title": beat.title,
+          "authorName": beat.authorName
+        };
+        audioArrayData.push(newAudio);
+      });
+
+      console.log(audioArrayData);
+      // let newAudioArrayData = [] as AudioObject[];
+
+      // newAudioArrayData = audioArrayData.slice(musicProvider.getStartingPlayingIndex()).concat(audioArrayData.slice(0, musicProvider.getStartingPlayingIndex()));
+      
+      // setAudioArray(newAudioArrayData);
+      setAudioArray(audioArrayData);
     } else if (musicProvider.getAudioPlayingType() === 'sample') {
       const sampleResponse = await axios.post(url + '/api/sample/read_sample', {
         email: userEmail,
-        id: props.id
+        id: currentId
       },
       {
         headers: {
@@ -233,7 +291,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       sampleResponse.data.forEach((item: any) => {
         axios.post(url + '/api/user/read_user', {
           email: userEmail,
-          id: props.id
+          id: currentId
         },
         {
           headers: {
@@ -283,6 +341,14 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       document.removeEventListener("mousedown", handleClick);
     };
   }, [playListPopup]);
+
+  useEffect(() => {
+    const getData = async () => {
+      await loadData();
+    };
+    getData();
+    RequestUserProfileImage();
+  }, [props.id]);
 
   let audioContent, userStat, isShowAddToPlaylist;  
 

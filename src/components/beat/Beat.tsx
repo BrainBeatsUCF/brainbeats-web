@@ -36,8 +36,9 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
         {
           "id": item.id,
           "imageUrl": item.properties['image'][0]['value'],
-          "name": item.properties['name'][0]['value'],
-          // "instrumentList": instrumentListArray
+          "title": item.properties['name'][0]['value'],
+          "audioUrl": item.properties['audio'][0]['value'],
+          "authorName": 'Unknown Author'
         };
         
         beatArray.push(newBeat);
@@ -78,7 +79,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
       let beatArrayByName = [] as BeatObject[];
 
       musicProvider.getOriginalBeatArray().forEach((beat: BeatObject) => {
-        if (beat.name.toLowerCase() === searchName.toLowerCase()) {
+        if (beat.title.toLowerCase() === searchName.toLowerCase()) {
           beatArrayByName.push(beat);
         }
       });
@@ -93,8 +94,10 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
     }    
   }
 
-  const playBeat = (id:string) => {
-    props.setAudioGlobal(id);
+  const playBeat = (id:string, startingPlayingIndex: number) => {
+    console.log('playing new beat');
+    props.setAudioGlobal(id + '*' + Date.now());
+    musicProvider.setStartingPlayingIndex(startingPlayingIndex);
     musicProvider.setAudioPlayingType('beat');
   };
 
@@ -118,12 +121,12 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
               <>
                 {beats.map((beat, key) => {
                   return (
-                    <div className={classes.card} key={key} onClick={() => playBeat(beat.id)}>
+                    <div className={classes.card} key={key} onClick={() => playBeat(beat.id, key)}>
                       <img alt='Beat' className={classes.background} src={beat.imageUrl}></img>
                       <div className={classes.cardContent}>
                         <div className={classes.songType}>
                           {/* Vibing, Not a Phone in Sight */}
-                          {beat.name}
+                          {beat.title}
                         </div>
                         <Box className={classes.beatContainer}
                           display="flex"

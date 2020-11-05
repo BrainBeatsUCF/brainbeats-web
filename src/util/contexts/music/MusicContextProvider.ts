@@ -7,12 +7,21 @@ export default class MusicContextProvider {
   private numBeats: number = 0;
   private numSamples: number = 0;
   private numShares: number = 0;
+  private startingPlayingIndex: number= 0;
   private originalBeatArray = [] as BeatObject[];
   private originalRecommendedBeatArray = [] as BeatObject[];
   private originalPlaylistArray = [] as PlaylistObject[];
   private originalPublicBeatArray = [] as PublicBeatObject[];
   private originalSampleArray = [] as SampleObject[];
-  
+
+  public setStartingPlayingIndex(startingPlayingIndex: number) {
+    this.startingPlayingIndex = startingPlayingIndex;
+  }
+
+  public getStartingPlayingIndex(): number {
+    return this.startingPlayingIndex;
+  }
+   
   public getPlayingStatus(): boolean {
     return this.isPlaying;
   }
