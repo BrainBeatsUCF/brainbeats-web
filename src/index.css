@@ -24,3 +24,16 @@ code {
 .Mui-disabled {
   color: white !important;
 }
+
+::-webkit-scrollbar-thumb {
+  background-color: #e4e4e4f2;
+  border: 2px solid #555;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+  margin-left: 10px;
+  padding-left: 10px;
+}
