@@ -13,6 +13,7 @@ const useStyles = makeStyles(() => ({
     height: '193px',
     overflowY: 'hidden',
     overflowX: 'scroll',
+    marginLeft: '20px',
   },
   card: {
     position: 'relative',
