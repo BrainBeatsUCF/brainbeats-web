@@ -3,6 +3,13 @@ FROM node:10
 # Remove node_modules from current directory.
 RUN rm -rf node_modules
 
+ARG apikey="c821d8b780a5b719de0140374619879929e34521"
+
+# Copy .npmrc
+RUN touch /root/.npmrc
+
+RUN echo //npm.pkg.github.com/:_authToken=${apikey} > /root/.npmrc
+
 RUN npm install -g serve
 
 WORKDIR /app
