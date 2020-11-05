@@ -7,9 +7,10 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import SideBar from '../components/sidebar/SideBar';
 import NavBar from '../components/NavBar';
-import { useHistory, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import RecommendedBeat from '../components/recommendedbeat/RecommendedBeat';
+import axios from 'axios';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -45,16 +46,22 @@ const useStyles = makeStyles(() =>
   }),
 );
 
+// Todo:  Match play/pause button for public beats
+//        Match gradient with desktop
+//        Allow beat/sample/publicbeat to play next or previous like playlist
+
 const HomeView: React.FC = () => {
   const classes = useStyles();
   const [id, setId] = useState("0");
   const [numBeats, setNumBeats] = useState(0);
   const [numSamples, setNumSamples] = useState(0);
   const [numShares, setNumShares] = useState(0);
-  let history = useHistory();
+  const url = "https://brain-beats-server-docker.azurewebsites.net";
   let userEmail = localStorage.getItem('userEmail');
   let jwt = localStorage.getItem('accessToken');
   let expired: boolean = false;
+
+  // console.log(jwt);
 
   const setNumBeatsMethod = (numBeats: number) => {
     setNumBeats(numBeats);
@@ -68,16 +75,34 @@ const HomeView: React.FC = () => {
     setId(audioId);
   };
 
-  // Todo: refresh access token using refresh token 
+  // Todo: tomorrow: run one hour and test to see if new access token console is printed, if so
+  //     in catch err api, call the function again
   if (jwt != null) {
     let jwtDecoded: any = jwt_decode(jwt);
     if (Date.now() / 1000 >= jwtDecoded.exp) {
-      expired = true;
+      // Call API to refresh token
+      const data = {
+        refreshToken: localStorage.getItem('refreshToken')
+      };
+      
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      };
+      axios.post(url + '/api/user/refresh_token', data, config)
+      .then((res) => {
+        // Requesting new access token
+        localStorage.setItem('accessToken', res.data.access_token);
+      }).catch((err) => {
+        // console.log(err);
+      });
     }
   }
 
-  if (userEmail == null) {
-    history.push('/login');
+  // handle expired/logged out users
+  if (userEmail == null || userEmail === undefined) {
+    expired = true;
   }
 
   return (

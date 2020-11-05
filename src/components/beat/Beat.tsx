@@ -16,9 +16,9 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
   let userEmail = localStorage.getItem('userEmail');
   const url = "https://brain-beats-server-docker.azurewebsites.net";
 
+  const [message, setMessage] = useState('');
   const [searchName, setSearchName] = useState('');
-  const [noBeatByName, setNoBeatByName] = useState(false);
-  const [searchNameCompleteValue, setSearchNameCompleteValue] = useState('');
+  const [isEmptyBeat, setIsBeatEmpty] = useState(false);
 
   const loadData = async () => {
     axios.post(url + '/api/user/get_owned_beats', 
@@ -44,9 +44,15 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
       });
       musicProvider.setOriginalBeatArray(beatArray);
       props.setNumBeatsMethod(beatArray.length);
+      if (beatArray.length === 0) {
+        setMessage('You have 0 beat.');
+        setIsBeatEmpty(true);
+      } else {
+        setIsBeatEmpty(false);
+      }
       setBeats(beatArray);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -60,12 +66,15 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
 
   const submitSearch = (e: any) => {
     e.preventDefault();
-    setSearchNameCompleteValue(searchName);
     if (searchName === '') {
-      setNoBeatByName(false);
+      if (musicProvider.getOriginalBeatArray().length === 0) {
+        setMessage(`You have 0 beat.`);
+        setIsBeatEmpty(true);
+      } else {
+        setIsBeatEmpty(false);
+      }
       setBeats(musicProvider.getOriginalBeatArray());
     } else {
-      
       let beatArrayByName = [] as BeatObject[];
 
       musicProvider.getOriginalBeatArray().forEach((beat: BeatObject) => {
@@ -75,9 +84,10 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
       });
 
       if (beatArrayByName.length === 0) {
-        setNoBeatByName(true);
+        setMessage(`You have 0 beat with the name ${searchName}.`);
+        setIsBeatEmpty(true);
       } else {
-        setNoBeatByName(false);
+        setIsBeatEmpty(false);
       }
       setBeats(beatArrayByName);
     }    
@@ -104,7 +114,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
       </div>
         {loading ? <div  style={{paddingLeft: '20px', paddingBottom: '10px'}}>Loading...</div> : 
           <div className={classes.scroll}>
-            {noBeatByName ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>No beats with the name of {searchNameCompleteValue}</div> :
+            {isEmptyBeat ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>{message}</div> :
               <>
                 {beats.map((beat, key) => {
                   return (

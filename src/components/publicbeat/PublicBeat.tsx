@@ -25,9 +25,9 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   let userEmail = localStorage.getItem('userEmail');
   const url = "https://brain-beats-server-docker.azurewebsites.net/";
 
-  const [searchName, setSearchName] = useState('Test Beat Private');
-  const [noBeatByName, setNoBeatByName] = useState(false);
-  const [searchNameCompleteValue, setSearchNameCompleteValue] = useState('');
+  const [searchName, setSearchName] = useState('');
+  const [isPublicBeatEmpty, setIsPublicBeatEmpty] = useState(false);
+  const [message, setMessage] = useState('');
 
   const loadLikedBeats = async () => {
     // call api to get liked beat
@@ -60,12 +60,16 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
           publicBeatArray[index]['like'] = true;
         }
       });
+      if (publicBeatArray.length === 0) {
+        setMessage('There is 0 public beat.');
+        setIsPublicBeatEmpty(true);
+      } else {
+        setIsPublicBeatEmpty(false);
+      }
       setPublicBeats(publicBeatArray);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
-
-    
   }
 
   const loadData = async () => {
@@ -93,9 +97,10 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
         publicBeatArray.push(newPublicBeat);
       });
       musicProvider.setOriginalPublicBeatArray(publicBeatArray);
+      
       loadLikedBeats();
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -109,9 +114,13 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
 
   const submitSearch = (e: any) => {
     e.preventDefault();
-    setSearchNameCompleteValue(searchName);
     if (searchName === '') {
-      setNoBeatByName(false);
+      if (musicProvider.getOriginalPublicBeatArray().length === 0) {
+        setMessage(`There is 0 public beat.`);
+        setIsPublicBeatEmpty(true);
+      } else {
+        setIsPublicBeatEmpty(false);
+      }
       setPublicBeats(musicProvider.getOriginalPublicBeatArray());
     } else {
       let publicBeatArrayByName = [] as PublicBeatObject[];
@@ -123,9 +132,10 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       })
 
       if (publicBeatArrayByName.length === 0) {
-        setNoBeatByName(true);
+        setMessage(`There is 0 public beat with the name ${searchName}.`);
+        setIsPublicBeatEmpty(true);
       } else {
-        setNoBeatByName(false);
+        setIsPublicBeatEmpty(false);
       }
 
       setPublicBeats(publicBeatArrayByName);
@@ -155,9 +165,9 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
 
     axios.post(url + '/api/user/like_vertex', data, config)
     .then((res) => {
-      console.log(res);
+      // console.log(res);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -179,9 +189,9 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
 
     axios.post(url + '/api/user/unlike_vertex', data, config)
     .then((res) => {
-      console.log(res);
+      // console.log(res);
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   }
 
@@ -201,7 +211,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       </div>
       {loading ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>Loading...</div> : 
         <div className={classes.scroll}>
-          {noBeatByName ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>No public beats with the name of {searchNameCompleteValue}</div> :
+          {isPublicBeatEmpty ? <div style={{paddingLeft: '20px', paddingBottom: '10px'}}>{message}</div> :
             <>
               {publicBeats.map((publicBeat, key) => {
                 return (
