@@ -12,6 +12,7 @@ import axios from 'axios';
 import { MusicContext } from '../../util/contexts/music';
 import { SideBarProps, AudioObject, PlaylistObject } from '../../util/api/types';
 import { UserRequestImage } from '../../util/UserRequestImage';
+import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
 // Todo: 1. Add icon when audio is successfully/finished added to playlist
 
@@ -66,6 +67,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   }
 
   const addToPlaylist = (beatId: string, playlistId: string) => {
+    ValidateAndRegenerateAccessToken();
     axios.post(url + '/api/playlist/update_playlist_add_beat', 
     {
       email: userEmail,
@@ -102,6 +104,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
 
   // Todo: handle this
   const loadPlaylist = async () => {
+    ValidateAndRegenerateAccessToken();
     let playlistArrayData = [] as PlaylistObject[];
 
     axios.post(url + '/api/user/get_owned_playlists', 
@@ -145,6 +148,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
     // Play Playlist Part
     // Todo: Handle owner for beats in playlist 
     if (musicProvider.getAudioPlayingType() === 'playlist') {
+      ValidateAndRegenerateAccessToken();
       const playlistResponse = await axios.post(url + '/api/playlist/read_playlist_beats', 
       {
         email: userEmail,
@@ -183,6 +187,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         });
       });
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
+      ValidateAndRegenerateAccessToken();
+
       const beatResponse = await axios.post(url + '/api/beat/read_beat', {
         email: userEmail,
         id: props.id
@@ -220,6 +226,7 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
         });
       });      
     } else if (musicProvider.getAudioPlayingType() === 'sample') {
+      ValidateAndRegenerateAccessToken();
       const sampleResponse = await axios.post(url + '/api/sample/read_sample', {
         email: userEmail,
         id: props.id
@@ -231,6 +238,8 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
       });
 
       sampleResponse.data.forEach((item: any) => {
+        ValidateAndRegenerateAccessToken();
+
         axios.post(url + '/api/user/read_user', {
           email: userEmail,
           id: props.id

@@ -5,6 +5,7 @@ import MusicContext from '../../util/contexts/music/MusicContext';
 import clsx from 'clsx';
 import { SampleObject, SampleProps } from '../../util/api/types';
 import { useStyles } from './useStyles';
+import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
 const Sample: React.FC<SampleProps> = ({...props}) => {
   const classes = useStyles();
@@ -21,6 +22,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
   const [message, setMessage] = useState('');
 
   const loadData = async () => {
+    ValidateAndRegenerateAccessToken();
     axios.post(url + 'api/user/get_owned_samples', 
     {
       email: userEmail

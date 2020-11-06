@@ -5,6 +5,7 @@ import { MusicContext } from '../../util/contexts/music';
 import clsx from 'clsx';
 import { PlaylistObject, PlaylistProps } from '../../util/api/types';
 import { useStyles } from './useStyles';
+import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
 // Todo: only display playlist that has beats/samples
 const Playlist: React.FC<PlaylistProps> = ({...props}) => {
@@ -22,6 +23,7 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
   const [isEmptyPlaylist, setIsPlaylistEmpty] = useState(false);
 
   const loadData = async () => {
+    ValidateAndRegenerateAccessToken();
     axios.post(url + '/api/user/get_owned_playlists', 
     {
       email: userEmail
