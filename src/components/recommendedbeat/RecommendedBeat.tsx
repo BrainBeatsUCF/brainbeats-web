@@ -6,6 +6,7 @@ import axios from 'axios';
 import { RecommendedBeatObject, RecommendedBeatProps } from '../../util/api/types';
 import clsx from 'clsx';
 import { useStyles } from './useStyles';
+import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
 const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
   const classes = useStyles();
@@ -21,6 +22,7 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
   const [message, setMessage] = useState('');
 
   const loadData = async () => {
+    ValidateAndRegenerateAccessToken();
     axios.post(url + '/api/user/get_recommended_beats', 
     {
       email: userEmail
@@ -37,7 +39,7 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
           "id": item.id,
           "imageUrl": item.properties['image'][0]['value'],
           "name": item.properties['name'][0]['value'],
-          // "instrumentList": instrumentListArray
+          "instrumentList": item.properties['instrumentList'][0]['value'],
         };
         
         beatArray.push(newBeat);
@@ -54,10 +56,6 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
       // console.log(err);
     });
   }
-
-  // useEffect(() => {
-  //   console.log(searchName);
-  // }, [searchName]);
 
   useEffect(() => {
     const getData = async () => {
@@ -136,22 +134,9 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
                           p={1}
                           m={1}
                         >
-                          {/* {instrumentList} */}
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Clap
-                          </Box>
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Saxophone
-                          </Box>
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Heavy Gutar
-                          </Box>
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Drums
-                          </Box>
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Snare
-                          </Box>
+                          {
+                            JSON.parse(beat.instrumentList).map((item: string, index: number) => <Box key={index} className={classes.sampleInstrument} p={1}>{item}</Box>)
+                          }
                         </Box>
                           </div>
                       </div>

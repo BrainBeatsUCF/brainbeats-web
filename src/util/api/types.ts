@@ -48,7 +48,7 @@ export interface BeatProps {
 
 export interface BeatObject {
   name: string
-  // instrumentList: string[],
+  instrumentList: string,
   id: string,
   imageUrl: string,
 }
@@ -59,7 +59,7 @@ export interface RecommendedBeatProps {
 
 export interface RecommendedBeatObject {
   name: string
-  // instrumentList: string[],
+  instrumentList: string,
   id: string,
   imageUrl: string,
 }
@@ -70,11 +70,10 @@ export interface PublicBeatProps {
 
 export interface PublicBeatObject {
   name: string
-  // instrumentList: string[],
+  instrumentList: string,
   id: string,
   imageUrl: string,
   like: boolean,
-  // isPlaying: boolean,
   duration: string,
 }
 

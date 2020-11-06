@@ -11,6 +11,7 @@ import { Redirect } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import RecommendedBeat from '../components/recommendedbeat/RecommendedBeat';
 import axios from 'axios';
+import { ValidateAndRegenerateAccessToken } from '../util/ValidateRegenerateAccessToken';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -77,28 +78,7 @@ const HomeView: React.FC = () => {
 
   // Todo: tomorrow: run one hour and test to see if new access token console is printed, if so
   //     in catch err api, call the function again
-  if (jwt != null) {
-    let jwtDecoded: any = jwt_decode(jwt);
-    if (Date.now() / 1000 >= jwtDecoded.exp) {
-      // Call API to refresh token
-      const data = {
-        refreshToken: localStorage.getItem('refreshToken')
-      };
-      
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      };
-      axios.post(url + '/api/user/refresh_token', data, config)
-      .then((res) => {
-        // Requesting new access token
-        localStorage.setItem('accessToken', res.data.access_token);
-      }).catch((err) => {
-        // console.log(err);
-      });
-    }
-  }
+  ValidateAndRegenerateAccessToken();
 
   // handle expired/logged out users
   if (userEmail == null || userEmail === undefined) {

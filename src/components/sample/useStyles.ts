@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
   },
   scroll: {
     whiteSpace: 'nowrap',
-    height: '193px',
+    height: '210px',
     overflowY: 'hidden',
     overflowX: 'scroll',
     marginLeft: '20px',
