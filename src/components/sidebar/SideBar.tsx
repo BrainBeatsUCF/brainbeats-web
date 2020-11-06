@@ -159,9 +159,10 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
       });    
-  
-      playlistResponse.data.forEach((item: any) => {
-        axios.post(url + '/api/user/read_user', {
+
+      for (let beat of playlistResponse.data) {
+
+        const readUserResponse = await axios.post(url + '/api/user/read_user', {
           email: userEmail,
           id: props.id
         },
@@ -169,23 +170,20 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
           }
-        }).then((res) => {
-          const newAudio = 
-          {
-            "id": item.id,
-            "imageUrl": item.properties['image'][0]['value'],
-            "audioUrl": item.properties['audio'][0]['value'],
-            "title": item.properties['name'][0]['value'],
-            "authorName": 'Unknown Author'
-          };
-          if (res.data[0].properties['name'][0]['value'])
-            newAudio['authorName'] = res.data[0].properties['name'][0]['value'];
-          audioArrayData.push(newAudio);
-          setAudioArray(audioArrayData);
-        }).catch((err) => {
-          // console.log(err);
         });
-      });
+        const newAudio = 
+        {
+          "id": beat.id,
+          "imageUrl": beat.properties['image'][0]['value'],
+          "audioUrl": beat.properties['audio'][0]['value'],
+          "title": beat.properties['name'][0]['value'],
+          "authorName": 'Unknown Author'
+        };
+        if (readUserResponse.data[0].properties['name'][0]['value'])
+          newAudio['authorName'] = readUserResponse.data[0].properties['name'][0]['value'];
+        audioArrayData.push(newAudio);
+      };
+      setAudioArray(audioArrayData);
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
       ValidateAndRegenerateAccessToken();
 
