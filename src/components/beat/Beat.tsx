@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { useStyles } from './useStyles';
 import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
+// All your beats created
 const Beat: React.FC<BeatProps> = ({...props}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,6 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
-      musicProvider.setNumBeats(res.data.length);
       res.data.forEach((item: any) => {
         const newBeat = 
         {

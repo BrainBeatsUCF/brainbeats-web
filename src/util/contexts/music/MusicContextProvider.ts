@@ -41,30 +41,6 @@ export default class MusicContextProvider {
    return this.audioPlayingType;
   }
 
-  public setNumBeats(numBeats: number) {
-    this.numBeats = numBeats;
-  }
-
-  public getNumBeats(): number {
-    return this.numBeats;
-  }
-
-  public setNumSamples(numSamples: number) {
-    this.numSamples = numSamples;
-  }
-
-  public getNumSamples(): number {
-    return this.numSamples;
-  }
-
-  public setNumShares(numShares: number) {
-    this.numShares = numShares;
-  }
-
-  public getNumShares(): number {
-    return this.numShares;
-  }
-
   public setOriginalBeatArray(originalBeatArray: BeatObject[]) {
     this.originalBeatArray = originalBeatArray;
   }
