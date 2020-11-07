@@ -8,7 +8,6 @@ import { useStyles } from './useStyles';
 import RedHeartButton from '../../images/redHeartButton.png';
 import WhiteHeartButton from '../../images/whiteHeartButton.png';
 import PlayButton from '../../images/playButton.png';
-import { Box } from '@material-ui/core';
 import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 // import PauseButton from '../../images/pauseButton.png';
 

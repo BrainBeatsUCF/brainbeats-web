@@ -32,7 +32,6 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
-      musicProvider.setNumBeats(res.data.length);
       res.data.forEach((item: any) => {
         const newBeat = 
         {

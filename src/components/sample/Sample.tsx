@@ -7,6 +7,7 @@ import { SampleObject, SampleProps } from '../../util/api/types';
 import { useStyles } from './useStyles';
 import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
+// All the public samples, both yours and others
 const Sample: React.FC<SampleProps> = ({...props}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
 
   const loadData = async () => {
     ValidateAndRegenerateAccessToken();
-    axios.post(url + 'api/user/get_owned_samples', 
+    axios.post(url + 'api/sample/get_all_samples', 
     {
       email: userEmail
     },
@@ -32,7 +33,6 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
-      musicProvider.setNumSamples(res.data.length);
       res.data.forEach((item: any) => {
         const newSample = 
         {
@@ -44,7 +44,6 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
         sampleArray.push(newSample);
       });
       musicProvider.setOriginalSampleArray(sampleArray);
-      props.setNumSamplesMethod(sampleArray.length);
       if (sampleArray.length === 0) {
         setMessage('You have 0 sample.');
         setIsSampleEmpty(true);
@@ -57,9 +56,27 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
     });
   }
 
+  const loadNumSample = async () => {
+    ValidateAndRegenerateAccessToken();
+    axios.post(url + 'api/user/get_owned_samples', 
+    {
+      email: userEmail
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    }).then((res) => {
+      props.setNumSamplesMethod(res.data.length);
+    }).catch((err) => {
+      // console.log(err);
+    });
+  }
+
   useEffect(() => {
     const getData = async () => {
       await loadData();
+      await loadNumSample();
       setLoading(false);
     };
     getData();
