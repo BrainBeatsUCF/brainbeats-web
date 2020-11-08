@@ -58,6 +58,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
 
   const loadNumSample = async () => {
     ValidateAndRegenerateAccessToken();
+    let numPublicSample: number = 0;
     axios.post(url + 'api/user/get_owned_samples', 
     {
       email: userEmail
@@ -67,7 +68,13 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
+      res.data.forEach((sample: any) => {
+        if (sample.properties['isPrivate'][0]['value'].toLowerCase() === 'true') {
+          numPublicSample++;
+        }
+      });
       props.setNumSamplesMethod(res.data.length);
+      props.setNumPublicSamplesMethod(numPublicSample);
     }).catch((err) => {
       // console.log(err);
     });

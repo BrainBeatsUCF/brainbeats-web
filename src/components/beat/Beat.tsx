@@ -24,6 +24,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
 
   const loadData = async () => {
     ValidateAndRegenerateAccessToken();
+    let numPublicBeat: number = 0;
     axios.post(url + '/api/user/get_owned_beats', 
     {
       email: userEmail
@@ -41,11 +42,13 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
           "name": item.properties['name'][0]['value'],
           "instrumentList": item.properties['instrumentList'][0]['value'],
         };
-        
+        if (item.properties['isPrivate'][0]['value'].toLowerCase() === 'true')
+          numPublicBeat++;
         beatArray.push(newBeat);
       });
       musicProvider.setOriginalBeatArray(beatArray);
       props.setNumBeatsMethod(beatArray.length);
+      props.setNumPublicBeatsMethod(numPublicBeat);
       if (beatArray.length === 0) {
         setMessage('You have 0 beat.');
         setIsBeatEmpty(true);

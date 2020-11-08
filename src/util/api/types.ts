@@ -44,6 +44,7 @@ export interface PlaylistObject {
 export interface BeatProps {
   setAudioGlobal: any,
   setNumBeatsMethod: any,
+  setNumPublicBeatsMethod: any,
 }
 
 export interface BeatObject {
@@ -90,6 +91,7 @@ export interface PlaylistObject {
 export interface SampleProps {
   setAudioGlobal: any,
   setNumSamplesMethod: any,
+  setNumPublicSamplesMethod: any,
 }
 
 export interface SampleObject {

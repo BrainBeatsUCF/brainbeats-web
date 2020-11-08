@@ -62,7 +62,7 @@ const HomeView: React.FC = () => {
   let jwt = localStorage.getItem('accessToken');
   let expired: boolean = false;
 
-  // console.log(jwt);
+  console.log(jwt);
 
   const setNumBeatsMethod = (numBeats: number) => {
     setNumBeats(numBeats);
@@ -75,6 +75,14 @@ const HomeView: React.FC = () => {
   const setAudioGlobal = (audioId: string) => {
     setId(audioId);
   };
+
+  const setNumPublicSamplesMethod = (numPublicSamples: number) => {
+    setNumShares(numShares => numShares + numPublicSamples);
+  }
+
+  const setNumPublicBeatsMethod = (numPublicBeats: number) => {
+    setNumShares(numShares => numShares + numPublicBeats);
+  }
 
   // Todo: tomorrow: run one hour and test to see if new access token console is printed, if so
   //     in catch err api, call the function again
@@ -96,9 +104,9 @@ const HomeView: React.FC = () => {
                   <NavBar />
                 </Grid>
                 <Grid className={classes.scrollableView} item xs={12}>
-                  <Beat setAudioGlobal={setAudioGlobal} setNumBeatsMethod={setNumBeatsMethod}/>
+                  <Beat setNumPublicBeatsMethod={setNumPublicBeatsMethod} setAudioGlobal={setAudioGlobal} setNumBeatsMethod={setNumBeatsMethod}/>
                   <Playlist setAudioGlobal={setAudioGlobal}/>
-                  <Sample setAudioGlobal={setAudioGlobal} setNumSamplesMethod={setNumSamplesMethod}/>
+                  <Sample setNumPublicSamplesMethod={setNumPublicSamplesMethod} setAudioGlobal={setAudioGlobal} setNumSamplesMethod={setNumSamplesMethod}/>
                   <PublicBeat setAudioGlobal={setAudioGlobal}/>
                   <RecommendedBeat setAudioGlobal={setAudioGlobal}/>
                 </Grid>
