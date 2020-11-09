@@ -324,7 +324,9 @@ const SideBar: React.FC<SideBarProps> = ({...props}) => {
   else
     isShowAddToPlaylist = false;
   
+  console.log(`current audioArray: ${audioArray}`)
   if (audioArray.length > 0) {
+    console.dir(audioArray, { depth: null })
     audioContent = (
       <>
         {isShowAddToPlaylist ? <button className={classes.addPlaylistButton} onClick={showPlaylistArea}>Add to my playlists</button> : ""}
