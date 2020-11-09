@@ -112,11 +112,6 @@ const HomeView: React.FC = () => {
                 </Grid>
               </Grid>
             </Grid>
-
-            {/* Testing Gradient */}
-            {/* <Grid>
-              <div className={classes.overlaySection}></div>
-            </Grid> */}
             <Grid className={classes.fixedTopRight} item xs={12} md={3}>
               <SideBar id={id} numBeats={numBeats} numSamples={numSamples} numShares={numShares}/>
             </Grid>
