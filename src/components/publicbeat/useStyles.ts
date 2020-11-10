@@ -21,6 +21,11 @@ const useStyles = makeStyles(() => ({
     margin: '20px',
     minWidth: '250px',
     minHeight: '150px',
+    '&:hover': {
+      border: 'solid 2px rgba(101, 101, 101, 0.6)',
+      borderRadius: '15px',
+      transition: 'border 0.8s',
+    }
   },
   background: {
     backgroundRepeat: 'no-repeat',
