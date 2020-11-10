@@ -59,10 +59,7 @@ const HomeView: React.FC = () => {
   const [numShares, setNumShares] = useState(0);
   const url = "https://brain-beats-server-docker.azurewebsites.net";
   let userEmail = localStorage.getItem('userEmail');
-  let jwt = localStorage.getItem('accessToken');
   let expired: boolean = false;
-
-  console.log(jwt);
 
   const setNumBeatsMethod = (numBeats: number) => {
     setNumBeats(numBeats);
