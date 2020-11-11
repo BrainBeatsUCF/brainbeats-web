@@ -79,7 +79,7 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
       let beatArrayByName = [] as RecommendedBeatObject[];
 
       musicProvider.getOriginalRecommendedBeatArray().forEach((beat: RecommendedBeatObject) => {
-        if (beat.name.toLowerCase() === searchName.toLowerCase()) {
+        if (beat.name.toLowerCase().includes(searchName.toLowerCase())) {
           beatArrayByName.push(beat);
         }
       });

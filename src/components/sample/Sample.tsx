@@ -103,7 +103,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       let sampleArrayByName = [] as SampleObject[];
 
       musicProvider.getOriginalSampleArray().forEach((sample: SampleObject) => {
-        if (sample.name.toLowerCase() === searchName.toLowerCase()) {
+        if (sample.name.toLowerCase().includes(searchName.toLowerCase())) {
           sampleArrayByName.push(sample);
         }
       });
@@ -127,7 +127,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
     <div className={classes.componentContainer}>
       <div className={classes.header}>
         <div style={{display: 'flex', flexDirection: 'row', marginLeft: '10px', alignSelf: 'flex-end'}}>
-          <h4 className={classes.title}>My Samples</h4>
+          <h4 className={classes.title}>Public Samples</h4>
           <form style={{display: 'flex'}} onSubmit={submitSearch}>
             <input className={clsx(classes.formInput, classes.formElement)} onChange={(e: any) => {
             setSearchName(e.target.value);

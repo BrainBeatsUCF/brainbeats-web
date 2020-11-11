@@ -127,7 +127,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       let publicBeatArrayByName = [] as PublicBeatObject[];
 
       musicProvider.getOriginalPublicBeatArray().forEach((publicBeat: PublicBeatObject) => {
-        if (publicBeat.name.toLowerCase() === searchName.toLowerCase()) {
+        if (publicBeat.name.toLowerCase().includes(searchName.toLowerCase())) {
           publicBeatArrayByName.push(publicBeat);
         }
       })
