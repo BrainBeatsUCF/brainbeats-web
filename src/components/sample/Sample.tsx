@@ -103,7 +103,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       let sampleArrayByName = [] as SampleObject[];
 
       musicProvider.getOriginalSampleArray().forEach((sample: SampleObject) => {
-        if (sample.name.toLowerCase() === searchName.toLowerCase()) {
+        if (sample.name.toLowerCase().includes(searchName.toLowerCase())) {
           sampleArrayByName.push(sample);
         }
       });
