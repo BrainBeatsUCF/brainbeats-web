@@ -44,11 +44,12 @@ export interface PlaylistObject {
 export interface BeatProps {
   setAudioGlobal: any,
   setNumBeatsMethod: any,
+  setNumPublicBeatsMethod: any,
 }
 
 export interface BeatObject {
   name: string
-  // instrumentList: string[],
+  instrumentList: string,
   id: string,
   imageUrl: string,
 }
@@ -59,7 +60,7 @@ export interface RecommendedBeatProps {
 
 export interface RecommendedBeatObject {
   name: string
-  // instrumentList: string[],
+  instrumentList: string,
   id: string,
   imageUrl: string,
 }
@@ -70,11 +71,10 @@ export interface PublicBeatProps {
 
 export interface PublicBeatObject {
   name: string
-  // instrumentList: string[],
+  instrumentList: string,
   id: string,
   imageUrl: string,
   like: boolean,
-  // isPlaying: boolean,
   duration: string,
 }
 
@@ -91,6 +91,7 @@ export interface PlaylistObject {
 export interface SampleProps {
   setAudioGlobal: any,
   setNumSamplesMethod: any,
+  setNumPublicSamplesMethod: any,
 }
 
 export interface SampleObject {

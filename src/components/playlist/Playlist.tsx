@@ -5,8 +5,9 @@ import { MusicContext } from '../../util/contexts/music';
 import clsx from 'clsx';
 import { PlaylistObject, PlaylistProps } from '../../util/api/types';
 import { useStyles } from './useStyles';
+import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
-// Todo: only display playlist that has beats/samples
+// Todo: all your playlist + others public playlists
 const Playlist: React.FC<PlaylistProps> = ({...props}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,8 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
   const [isEmptyPlaylist, setIsPlaylistEmpty] = useState(false);
 
   const loadData = async () => {
-    axios.post(url + '/api/user/get_owned_playlists', 
+    ValidateAndRegenerateAccessToken();
+    axios.post(url + '/api/playlist/get_all_playlists', 
     {
       email: userEmail
     },
@@ -38,6 +40,8 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
           "imageUrl": item.properties['image'][0]['value'],
           "name": item.properties['name'][0]['value'],
         };
+
+        // Todo: only add if length is great than 0
         playlistArray.push(newPlaylist);
       });
       musicProvider.setOriginalPlaylistArray(playlistArray);
@@ -75,7 +79,7 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
       let playlistArrayByName = [] as PlaylistObject[];
 
       musicProvider.getOriginalPlaylistArray().forEach((playlist: PlaylistObject) => {
-        if (playlist.name.toLowerCase() === searchName.toLowerCase()) {
+        if (playlist.name.toLowerCase().includes(searchName.toLowerCase())) {
           playlistArrayByName.push(playlist);
         }
       });

@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
   },
   scroll: {
     whiteSpace: 'nowrap',
-    height: '193px',
+    height: '210px',
     overflowY: 'hidden',
     overflowX: 'scroll',
     marginLeft: '20px',
@@ -21,15 +21,19 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     margin: '20px',
     position: 'relative',
-    cursor: 'pointer',
     minWidth: '150px',
-    minHeight: '150px'
+    minHeight: '150px',
   },
   samplePicture: {
     width: '150px',
     height: '150px',
     borderRadius: '50%',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: 'rgba(53, 53, 53, 0.249)',
+      border: 'solid 0.8px',
+      transition: '0.2s',
+    }
   },
   sampleTitle: {
     overflow: 'hidden',

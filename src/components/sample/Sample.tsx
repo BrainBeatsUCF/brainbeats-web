@@ -5,7 +5,9 @@ import MusicContext from '../../util/contexts/music/MusicContext';
 import clsx from 'clsx';
 import { SampleObject, SampleProps } from '../../util/api/types';
 import { useStyles } from './useStyles';
+import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
+// All the public samples, both yours and others
 const Sample: React.FC<SampleProps> = ({...props}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,8 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
   const [message, setMessage] = useState('');
 
   const loadData = async () => {
-    axios.post(url + 'api/user/get_owned_samples', 
+    ValidateAndRegenerateAccessToken();
+    axios.post(url + 'api/sample/get_all_samples', 
     {
       email: userEmail
     },
@@ -30,7 +33,6 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
-      musicProvider.setNumSamples(res.data.length);
       res.data.forEach((item: any) => {
         const newSample = 
         {
@@ -42,7 +44,6 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
         sampleArray.push(newSample);
       });
       musicProvider.setOriginalSampleArray(sampleArray);
-      props.setNumSamplesMethod(sampleArray.length);
       if (sampleArray.length === 0) {
         setMessage('You have 0 sample.');
         setIsSampleEmpty(true);
@@ -55,9 +56,34 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
     });
   }
 
+  const loadNumSample = async () => {
+    ValidateAndRegenerateAccessToken();
+    let numPublicSample: number = 0;
+    axios.post(url + 'api/user/get_owned_samples', 
+    {
+      email: userEmail
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    }).then((res) => {
+      res.data.forEach((sample: any) => {
+        if (sample.properties['isPrivate'][0]['value'].toLowerCase() === 'true') {
+          numPublicSample++;
+        }
+      });
+      props.setNumSamplesMethod(res.data.length);
+      props.setNumPublicSamplesMethod(numPublicSample);
+    }).catch((err) => {
+      // console.log(err);
+    });
+  }
+
   useEffect(() => {
     const getData = async () => {
       await loadData();
+      await loadNumSample();
       setLoading(false);
     };
     getData();
@@ -77,7 +103,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       let sampleArrayByName = [] as SampleObject[];
 
       musicProvider.getOriginalSampleArray().forEach((sample: SampleObject) => {
-        if (sample.name.toLowerCase() === searchName.toLowerCase()) {
+        if (sample.name.toLowerCase().includes(searchName.toLowerCase())) {
           sampleArrayByName.push(sample);
         }
       });
@@ -101,7 +127,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
     <div className={classes.componentContainer}>
       <div className={classes.header}>
         <div style={{display: 'flex', flexDirection: 'row', marginLeft: '10px', alignSelf: 'flex-end'}}>
-          <h4 className={classes.title}>My Samples</h4>
+          <h4 className={classes.title}>Public Samples</h4>
           <form style={{display: 'flex'}} onSubmit={submitSearch}>
             <input className={clsx(classes.formInput, classes.formElement)} onChange={(e: any) => {
             setSearchName(e.target.value);

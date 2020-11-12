@@ -8,6 +8,7 @@ import { useStyles } from './useStyles';
 import RedHeartButton from '../../images/redHeartButton.png';
 import WhiteHeartButton from '../../images/whiteHeartButton.png';
 import PlayButton from '../../images/playButton.png';
+import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 // import PauseButton from '../../images/pauseButton.png';
 
 // Todo: call /api/user/get_liked_beats to get liked beats, then use orignalPubliBeat to see if any public beat is pre-liked
@@ -30,7 +31,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   const [message, setMessage] = useState('');
 
   const loadLikedBeats = async () => {
-    // call api to get liked beat
+    ValidateAndRegenerateAccessToken();
     const data = {
       'email': userEmail
     };
@@ -73,6 +74,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   }
 
   const loadData = async () => {
+    ValidateAndRegenerateAccessToken();
     axios.post(url + 'api/beat/get_all_beats', 
     {
       email: userEmail
@@ -90,8 +92,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
           "name": item.properties['name'][0]['value'],
           "like": false,
           "duration": item.properties['duration'][0]['value'],
-          // "isPlaying": false,
-          // "instrumentList": instrumentListArray
+          "instrumentList": item.properties['instrumentList'][0]['value'],
         };
         
         publicBeatArray.push(newPublicBeat);
@@ -126,7 +127,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
       let publicBeatArrayByName = [] as PublicBeatObject[];
 
       musicProvider.getOriginalPublicBeatArray().forEach((publicBeat: PublicBeatObject) => {
-        if (publicBeat.name.toLowerCase() === searchName.toLowerCase()) {
+        if (publicBeat.name.toLowerCase().includes(searchName.toLowerCase())) {
           publicBeatArrayByName.push(publicBeat);
         }
       })
@@ -221,16 +222,14 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
                       <div>
                         <div>{publicBeat.name}</div>
                         <div className={classes.playButtonAndBeatInfo}>
-                          {/* <div>
-                            {publicBeat.isPlaying ? 
-                              <img alt ='Pause Button'src={PauseButton}></img> :
-                              <img alt ='Play Button'src={PlayButton}></img>
-                            }
-                          </div> */}
                           <img style={{cursor: 'pointer'}} alt ='Play Button'src={PlayButton} onClick={() => playPublicBeat(publicBeat.id)}></img>
-                          <div>
-                            <div>Rock</div>
-                            <div>{publicBeat.duration}</div>
+                          <div style={{marginLeft: '8px'}}>
+                            {
+                              JSON.parse(publicBeat.instrumentList).map((item: string, index: number) => 
+                                <span style={{marginRight: '5px'}} key={index}>{item}</span>
+                              )
+                            }
+                            <div>{publicBeat.duration} seconds</div>
                           </div>
                         </div>
                       </div>  
@@ -240,7 +239,6 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
                         <img className={classes.likeButton} alt='Red Heart Button' src={RedHeartButton} onClick={() => {unlikeBeat(publicBeat.id, key)}}></img> : 
                         <img className={classes.likeButton} alt='White Heart Button' src={WhiteHeartButton} onClick={() => {likeBeat(publicBeat.id, key)}}></img>
                       }
-                      
                     </div>
                   </div>
                 )

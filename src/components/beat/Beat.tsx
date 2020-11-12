@@ -6,7 +6,9 @@ import axios from 'axios';
 import { BeatObject, BeatProps } from '../../util/api/types';
 import clsx from 'clsx';
 import { useStyles } from './useStyles';
+import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
+// All your beats created
 const Beat: React.FC<BeatProps> = ({...props}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
@@ -21,6 +23,8 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
   const [isEmptyBeat, setIsBeatEmpty] = useState(false);
 
   const loadData = async () => {
+    ValidateAndRegenerateAccessToken();
+    let numPublicBeat: number = 0;
     axios.post(url + '/api/user/get_owned_beats', 
     {
       email: userEmail
@@ -30,20 +34,21 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
-      musicProvider.setNumBeats(res.data.length);
       res.data.forEach((item: any) => {
         const newBeat = 
         {
           "id": item.id,
           "imageUrl": item.properties['image'][0]['value'],
           "name": item.properties['name'][0]['value'],
-          // "instrumentList": instrumentListArray
+          "instrumentList": item.properties['instrumentList'][0]['value'],
         };
-        
+        if (item.properties['isPrivate'][0]['value'].toLowerCase() === 'true')
+          numPublicBeat++;
         beatArray.push(newBeat);
       });
       musicProvider.setOriginalBeatArray(beatArray);
       props.setNumBeatsMethod(beatArray.length);
+      props.setNumPublicBeatsMethod(numPublicBeat);
       if (beatArray.length === 0) {
         setMessage('You have 0 beat.');
         setIsBeatEmpty(true);
@@ -78,7 +83,7 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
       let beatArrayByName = [] as BeatObject[];
 
       musicProvider.getOriginalBeatArray().forEach((beat: BeatObject) => {
-        if (beat.name.toLowerCase() === searchName.toLowerCase()) {
+        if (beat.name.toLowerCase().includes(searchName.toLowerCase())) {
           beatArrayByName.push(beat);
         }
       });
@@ -132,22 +137,9 @@ const Beat: React.FC<BeatProps> = ({...props}) => {
                           p={1}
                           m={1}
                         >
-                          {/* {instrumentList} */}
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Clap
-                          </Box>
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Saxophone
-                          </Box>
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Heavy Gutar
-                          </Box>
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Drums
-                          </Box>
-                          <Box className={classes.sampleInstrument} p={1}>
-                            Snare
-                          </Box>
+                          {
+                            JSON.parse(beat.instrumentList).map((item: string, index: number) => <Box key={index} className={classes.sampleInstrument} p={1}>{item}</Box>)
+                          }
                         </Box>
                           </div>
                       </div>
