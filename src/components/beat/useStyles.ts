@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
     marginLeft: '20px',
   },
   card: {
-    borderRadius: '10px',
+    borderRadius: '15px',
     display: 'inline-block',
     textAlign: 'center',
     margin: '20px',
@@ -25,6 +25,11 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
     minWidth: '200px',
     minHeight: '150px',
+    '&:hover': {
+      border: 'solid 2px rgba(101, 101, 101, 0.6)',
+      borderRadius: '15px',
+      transition: 'border 0.8s',
+    }
   },
   background: {
     backgroundRepeat: 'no-repeat',

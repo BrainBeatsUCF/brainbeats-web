@@ -79,7 +79,7 @@ const Playlist: React.FC<PlaylistProps> = ({...props}) => {
       let playlistArrayByName = [] as PlaylistObject[];
 
       musicProvider.getOriginalPlaylistArray().forEach((playlist: PlaylistObject) => {
-        if (playlist.name.toLowerCase() === searchName.toLowerCase()) {
+        if (playlist.name.toLowerCase().includes(searchName.toLowerCase())) {
           playlistArrayByName.push(playlist);
         }
       });

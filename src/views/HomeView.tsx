@@ -59,10 +59,7 @@ const HomeView: React.FC = () => {
   const [numShares, setNumShares] = useState(0);
   const url = "https://brain-beats-server-docker.azurewebsites.net";
   let userEmail = localStorage.getItem('userEmail');
-  let jwt = localStorage.getItem('accessToken');
   let expired: boolean = false;
-
-  // console.log(jwt);
 
   const setNumBeatsMethod = (numBeats: number) => {
     setNumBeats(numBeats);
@@ -76,6 +73,14 @@ const HomeView: React.FC = () => {
     setId(audioId);
     console.log(`audioId: ${audioId}`)
   };
+
+  const setNumPublicSamplesMethod = (numPublicSamples: number) => {
+    setNumShares(numShares => numShares + numPublicSamples);
+  }
+
+  const setNumPublicBeatsMethod = (numPublicBeats: number) => {
+    setNumShares(numShares => numShares + numPublicBeats);
+  }
 
   // Todo: tomorrow: run one hour and test to see if new access token console is printed, if so
   //     in catch err api, call the function again
@@ -97,19 +102,14 @@ const HomeView: React.FC = () => {
                   <NavBar />
                 </Grid>
                 <Grid className={classes.scrollableView} item xs={12}>
-                  <Beat setAudioGlobal={setAudioGlobal} setNumBeatsMethod={setNumBeatsMethod}/>
+                  <Beat setNumPublicBeatsMethod={setNumPublicBeatsMethod} setAudioGlobal={setAudioGlobal} setNumBeatsMethod={setNumBeatsMethod}/>
                   <Playlist setAudioGlobal={setAudioGlobal}/>
-                  <Sample setAudioGlobal={setAudioGlobal} setNumSamplesMethod={setNumSamplesMethod}/>
+                  <Sample setNumPublicSamplesMethod={setNumPublicSamplesMethod} setAudioGlobal={setAudioGlobal} setNumSamplesMethod={setNumSamplesMethod}/>
                   <PublicBeat setAudioGlobal={setAudioGlobal}/>
                   <RecommendedBeat setAudioGlobal={setAudioGlobal}/>
                 </Grid>
               </Grid>
             </Grid>
-
-            {/* Testing Gradient */}
-            {/* <Grid>
-              <div className={classes.overlaySection}></div>
-            </Grid> */}
             <Grid className={classes.fixedTopRight} item xs={12} md={3}>
               <SideBar id={id} numBeats={numBeats} numSamples={numSamples} numShares={numShares}/>
             </Grid>

@@ -58,6 +58,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
 
   const loadNumSample = async () => {
     ValidateAndRegenerateAccessToken();
+    let numPublicSample: number = 0;
     axios.post(url + 'api/user/get_owned_samples', 
     {
       email: userEmail
@@ -67,7 +68,13 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
     }).then((res) => {
+      res.data.forEach((sample: any) => {
+        if (sample.properties['isPrivate'][0]['value'].toLowerCase() === 'true') {
+          numPublicSample++;
+        }
+      });
       props.setNumSamplesMethod(res.data.length);
+      props.setNumPublicSamplesMethod(numPublicSample);
     }).catch((err) => {
       // console.log(err);
     });
@@ -96,7 +103,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
       let sampleArrayByName = [] as SampleObject[];
 
       musicProvider.getOriginalSampleArray().forEach((sample: SampleObject) => {
-        if (sample.name.toLowerCase() === searchName.toLowerCase()) {
+        if (sample.name.toLowerCase().includes(searchName.toLowerCase())) {
           sampleArrayByName.push(sample);
         }
       });
@@ -120,7 +127,7 @@ const Sample: React.FC<SampleProps> = ({...props}) => {
     <div className={classes.componentContainer}>
       <div className={classes.header}>
         <div style={{display: 'flex', flexDirection: 'row', marginLeft: '10px', alignSelf: 'flex-end'}}>
-          <h4 className={classes.title}>My Samples</h4>
+          <h4 className={classes.title}>Public Samples</h4>
           <form style={{display: 'flex'}} onSubmit={submitSearch}>
             <input className={clsx(classes.formInput, classes.formElement)} onChange={(e: any) => {
             setSearchName(e.target.value);
