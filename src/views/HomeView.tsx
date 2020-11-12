@@ -74,6 +74,7 @@ const HomeView: React.FC = () => {
 
   const setAudioGlobal = (audioId: string) => {
     setId(audioId);
+    console.log(`audioId: ${audioId}`)
   };
 
   // Todo: tomorrow: run one hour and test to see if new access token console is printed, if so
