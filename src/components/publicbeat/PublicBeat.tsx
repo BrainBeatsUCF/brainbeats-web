@@ -8,7 +8,9 @@ import { useStyles } from './useStyles';
 import RedHeartButton from '../../images/redHeartButton.png';
 import WhiteHeartButton from '../../images/whiteHeartButton.png';
 import PlayButton from '../../images/playButton.png';
+import PauseButton from '../../images/pauseButton.png';
 import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
+import { Pause } from '@material-ui/icons';
 // import PauseButton from '../../images/pauseButton.png';
 
 // Todo: call /api/user/get_liked_beats to get liked beats, then use orignalPubliBeat to see if any public beat is pre-liked
@@ -75,10 +77,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
 
   const loadData = async () => {
     ValidateAndRegenerateAccessToken();
-    axios.post(url + 'api/beat/get_all_beats', 
-    {
-      email: userEmail
-    },
+    axios.get(url + 'api/v2/beats',
     {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -145,7 +144,8 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
 
   const playPublicBeat = (id: string) => {
     props.setAudioGlobal(id);
-    musicProvider.setAudioPlayingType('beat');
+    musicProvider.setAudioPlayingType('public-beats');
+    musicProvider.togglePlayingStatus();
   }
 
   const likeBeat = (id: string, idx: number) => {

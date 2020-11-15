@@ -207,31 +207,31 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
               "authorName": "missingno",
               "audioUrl": item.properties['audio'][0]['value'],
             };
-            
+
             audioArrayData.push(newBeat);
           });
 
           // Note: This implementation is for demo purpose. Should be redacted for an efficient solution using the audio-player-package.
           // grabs current clicked index and start from there. Enqueue other songs right after that index. If the size starts at the end wrap around it until you hit the currently clicked index.
-          
+
           const clickedBeatIndex = audioArrayData.map(beat => beat.id).indexOf(props.id)
-          
+
           var newAudioArrayData = [audioArrayData[clickedBeatIndex]];
 
           console.log(`clickedBeat: ${clickedBeatIndex}`)
           console.log(`length of audioArrayData is ${audioArrayData.length}`)
 
-          
+
           var tempIndex = clickedBeatIndex + 1;
-          
+
           if (tempIndex >= audioArrayData.length)
             tempIndex = 0;
-          
-          while (tempIndex != clickedBeatIndex){
+
+          while (tempIndex != clickedBeatIndex) {
             console.log(`tempIndex: ${tempIndex}`)
 
             newAudioArrayData.push(audioArrayData[tempIndex])
-            
+
             tempIndex++;
 
             if (tempIndex >= audioArrayData.length)
@@ -251,160 +251,284 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
   console.dir(audioArrayData, { depth: null })
   console.log('audioArray ouput')
   console.dir(audioArray, { depth: null })*/
-  else if (musicProvider.getAudioPlayingType() === 'sample') {
-    ValidateAndRegenerateAccessToken();
-    const sampleResponse = await axios.post(url + '/api/sample/read_sample', {
-      email: userEmail,
-      id: props.id
-    },
-      {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      });
 
-    sampleResponse.data.forEach((item: any) => {
+
+    else if (musicProvider.getAudioPlayingType() === 'sample') {
       ValidateAndRegenerateAccessToken();
-
-      axios.post(url + '/api/user/read_user', {
-        email: userEmail,
-        id: props.id
-      },
+      axios.get(url + '/api/v2/samples',
         {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
           }
-        }).then((res) => {
-          const newAudio =
+        })
+        .then((res) => {
+          res.data.forEach((item: any) => {
+            const newSample =
+            {
+              "id": item.id,
+              "imageUrl": item.properties['image'][0]['value'],
+              "audioUrl": item.properties['audio'][0]['value'],
+              "title": item.properties['name'][0]['value'],
+              "authorName": 'Unknown Author'
+            };
+            console.dir(item, { depth: null })
+            audioArrayData.push(newSample);
+          });
+          const clickedSampleIndex = audioArrayData.map(sample => sample.id).indexOf(props.id)
+
+          var newAudioArrayData = [audioArrayData[clickedSampleIndex]];
+
+          console.log(`clickedBeat: ${clickedSampleIndex}`)
+          console.log(`length of audioArrayData is ${audioArrayData.length}`)
+
+
+          var tempIndex = clickedSampleIndex + 1;
+
+          if (tempIndex >= audioArrayData.length)
+            tempIndex = 0;
+
+          while (tempIndex != clickedSampleIndex) {
+            console.log(`tempIndex: ${tempIndex}`)
+
+            newAudioArrayData.push(audioArrayData[tempIndex])
+
+            tempIndex++;
+
+            if (tempIndex >= audioArrayData.length)
+              tempIndex = 0;
+
+          }
+          setAudioArray(newAudioArrayData);
+
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+    }
+
+    else if (musicProvider.getAudioPlayingType() == 'public-beats'){
+      ValidateAndRegenerateAccessToken();
+
+      axios.get(url + '/api/v2/beats',
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      })
+      .then((res) => {
+        res.data.forEach((item: any) => {
+          const newBeat =
           {
             "id": item.id,
             "imageUrl": item.properties['image'][0]['value'],
-            "audioUrl": item.properties['audio'][0]['value'],
             "title": item.properties['name'][0]['value'],
-            "authorName": 'Unknown Author'
+            "instrumentList": item.properties['instrumentList'][0]['value'],
+            "authorName": "missingno",
+            "audioUrl": item.properties['audio'][0]['value'],
           };
-          if (res.data[0].properties['name'][0]['value'])
-            newAudio['authorName'] = res.data[0].properties['name'][0]['value'];
-          audioArrayData.push(newAudio);
-          setAudioArray(audioArrayData);
-        }).catch((err) => {
-          // console.log(err);
+
+          audioArrayData.push(newBeat);
         });
-    })
+
+        // Note: This implementation is for demo purpose. Should be redacted for an efficient solution using the audio-player-package.
+        // grabs current clicked index and start from there. Enqueue other songs right after that index. If the size starts at the end wrap around it until you hit the currently clicked index.
+
+        const clickedBeatIndex = audioArrayData.map(beat => beat.id).indexOf(props.id)
+
+        var newAudioArrayData = [audioArrayData[clickedBeatIndex]];
+
+        console.log(`clickedBeat: ${clickedBeatIndex}`)
+        console.log(`length of audioArrayData is ${audioArrayData.length}`)
+
+
+        var tempIndex = clickedBeatIndex + 1;
+
+        if (tempIndex >= audioArrayData.length)
+          tempIndex = 0;
+
+        while (tempIndex != clickedBeatIndex) {
+          console.log(`tempIndex: ${tempIndex}`)
+
+          newAudioArrayData.push(audioArrayData[tempIndex])
+
+          tempIndex++;
+
+          if (tempIndex >= audioArrayData.length)
+            tempIndex = 0;
+
+        }
+        setAudioArray(newAudioArrayData);
+      })
+    }
+    else if (musicProvider.getAudioPlayingType() == 'recommended-beats') {
+      ValidateAndRegenerateAccessToken();
+    axios.post(url + '/api/user/get_recommended_beats', 
+    {
+      email: userEmail
+    }, 
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    }).then((res) => {
+      res.data.forEach((item: any) => {
+        const newBeat = 
+        {
+          "id": item.id,
+          "imageUrl": item.properties['image'][0]['value'],
+          "title": item.properties['name'][0]['value'],
+          "instrumentList": item.properties['instrumentList'][0]['value'],
+          "authorName": "missingno",
+          "audioUrl": item.properties['audio'][0]['value'],
+        };
+        
+        audioArrayData.push(newBeat);
+      });
+      
+      const clickedBeatIndex = audioArrayData.map(beat => beat.id).indexOf(props.id)
+
+        var newAudioArrayData = [audioArrayData[clickedBeatIndex]];
+
+        console.log(`clickedBeat: ${clickedBeatIndex}`)
+        console.log(`length of audioArrayData is ${audioArrayData.length}`)
+
+
+        var tempIndex = clickedBeatIndex + 1;
+
+        if (tempIndex >= audioArrayData.length)
+          tempIndex = 0;
+
+        while (tempIndex != clickedBeatIndex) {
+          console.log(`tempIndex: ${tempIndex}`)
+
+          newAudioArrayData.push(audioArrayData[tempIndex])
+
+          tempIndex++;
+
+          if (tempIndex >= audioArrayData.length)
+            tempIndex = 0;
+
+        }
+        setAudioArray(newAudioArrayData);
+
+    }).catch((err) => {
+      // console.log(err);
+    });
+    }
+    
   }
-}
 
-useEffect(() => {
-  const getPlaylist = async () => {
-    await loadPlaylist();
-  };
-  getPlaylist();
-}, [props.id]);
+    useEffect(() => {
+      const getPlaylist = async () => {
+        await loadPlaylist();
+      };
+      getPlaylist();
+    }, [props.id]);
 
-useEffect(() => {
-  const getData = async () => {
-    await loadData();
-  };
-  getData();
-  RequestUserProfileImage();
-}, [props.id]);
+    useEffect(() => {
+      const getData = async () => {
+        await loadData();
+      };
+      getData();
+      RequestUserProfileImage();
+    }, [props.id]);
 
-// playListPopUp 
-useEffect(() => {
-  // add when mounted
-  document.addEventListener("mousedown", handleClick);
-  // return function to be called when unmounted
-  return () => {
-    document.removeEventListener("mousedown", handleClick);
-  };
-}, [playListPopup]);
+    // playListPopUp 
+    useEffect(() => {
+      // add when mounted
+      document.addEventListener("mousedown", handleClick);
+      // return function to be called when unmounted
+      return () => {
+        document.removeEventListener("mousedown", handleClick);
+      };
+    }, [playListPopup]);
 
-let audioContent, userStat, isShowAddToPlaylist;
+    let audioContent, userStat, isShowAddToPlaylist;
 
-userStat = (
-  <>
-    <div className={classes.statElement}>
-      <img className={classes.statPicture} alt='Beat Icon' src={BeatButtonImage}></img>
-      <div className={classes.statValues}>
-        <h4>Beats</h4>
-        <h4>{props.numBeats}</h4>
-      </div>
-    </div>
-    <div className={classes.statElement}>
-      <img className={classes.statPicture} alt='Sample Icon' src={SampleButtonImage}></img>
-      <div className={classes.statValues}>
-        <h4>Samples</h4>
-        <h4>{props.numSamples}</h4>
-      </div>
-    </div>
-    <div className={classes.statElement}>
-      <img className={classes.statPicture} alt='Share Icon' src={ShareButtonImage}></img>
-      <div className={classes.statValues}>
-        <h4>Shares</h4>
-        <h4>{props.numShares}</h4>
-      </div>
-    </div>
-  </>
-)
+    userStat = (
+      <>
+        <div className={classes.statElement}>
+          <img className={classes.statPicture} alt='Beat Icon' src={BeatButtonImage}></img>
+          <div className={classes.statValues}>
+            <h4>Beats</h4>
+            <h4>{props.numBeats}</h4>
+          </div>
+        </div>
+        <div className={classes.statElement}>
+          <img className={classes.statPicture} alt='Sample Icon' src={SampleButtonImage}></img>
+          <div className={classes.statValues}>
+            <h4>Samples</h4>
+            <h4>{props.numSamples}</h4>
+          </div>
+        </div>
+        <div className={classes.statElement}>
+          <img className={classes.statPicture} alt='Share Icon' src={ShareButtonImage}></img>
+          <div className={classes.statValues}>
+            <h4>Shares</h4>
+            <h4>{props.numShares}</h4>
+          </div>
+        </div>
+      </>
+    )
 
-if (musicProvider.getAudioPlayingType() === 'playlist' || musicProvider.getAudioPlayingType() === 'beat')
-  isShowAddToPlaylist = true;
-else
-  isShowAddToPlaylist = false;
+    if (musicProvider.getAudioPlayingType() === 'playlist' || musicProvider.getAudioPlayingType() === 'beat')
+      isShowAddToPlaylist = true;
+    else
+      isShowAddToPlaylist = false;
 
-// console.log(`current audioArray: ${audioArray}`)
-if (audioArray.length > 0) {
-  console.dir(audioArray, { depth: null })
-  audioContent = (
-    <>
-      {isShowAddToPlaylist ? <button className={classes.addPlaylistButton} onClick={showPlaylistArea}>Add to my playlists</button> : ""}
-      <BrainBeatsAudioPlayer audioObjectArray={audioArray} setPlayingIndexAudioPackage={setPlayingIndexAudioPackage} />
-    </>
-  );
-} else {
-  audioContent = <></>;
-}
+    // console.log(`current audioArray: ${audioArray}`)
+    if (audioArray.length > 0) {
+      console.dir(audioArray, { depth: null })
+      audioContent = (
+        <>
+          {isShowAddToPlaylist ? <button className={classes.addPlaylistButton} onClick={showPlaylistArea}>Add to my playlists</button> : ""}
+          <BrainBeatsAudioPlayer audioObjectArray={audioArray} setPlayingIndexAudioPackage={setPlayingIndexAudioPackage} />
+        </>
+      );
+    } else {
+      audioContent = <></>;
+    }
 
-return (
-  <div className={classes.sideBarContainer}>
-    <div className={classes.userInfo}>
-      <div className={classes.logOut} onClick={() => {
-        // Todo: handle log out logic
-        logout();
-      }} >
-        <div style={{ marginRight: '10px' }}>
-          Log out
+    return (
+      <div className={classes.sideBarContainer}>
+        <div className={classes.userInfo}>
+          <div className={classes.logOut} onClick={() => {
+            // Todo: handle log out logic
+            logout();
+          }} >
+            <div style={{ marginRight: '10px' }}>
+              Log out
           </div>
 
-        <img alt='Logout' src={LogOutImage}></img>
+            <img alt='Logout' src={LogOutImage}></img>
+          </div>
+          <div className={classes.userPictureContainer}>
+            <img className={classes.userPicture} src={userPicture} alt=""></img>
+          </div>
+
+          <div className={classes.userStatContainer}>
+            {userStat}
+          </div>
+
+          <div className={classes.playlists} ref={wrapperRef} style={{ display: showPlaylists ? 'flex' : 'none' }}>
+            <button onClick={openCreatePlaylistPopup}>Create a playlist</button>
+            {playlists.map((playlist, key) => {
+              return (
+                <div className={classes.playlistTitle} key={key} onClick={() => { addToPlaylist(audioArray[playingIndex].id, playlist.id) }}>
+                  {key + 1}. {playlist.name}
+                </div>
+              )
+            })}
+          </div>
+          {playListPopup ? <CreatePlaylistPopup closeCreatePlaylistPopup={closeCreatePlaylistPopup} /> : ""}
+        </div>
+
+        <div>
+          {audioContent}
+        </div>
+
       </div>
-      <div className={classes.userPictureContainer}>
-        <img className={classes.userPicture} src={userPicture} alt=""></img>
-      </div>
+    );
+  }
 
-      <div className={classes.userStatContainer}>
-        {userStat}
-      </div>
-
-      <div className={classes.playlists} ref={wrapperRef} style={{ display: showPlaylists ? 'flex' : 'none' }}>
-        <button onClick={openCreatePlaylistPopup}>Create a playlist</button>
-        {playlists.map((playlist, key) => {
-          return (
-            <div className={classes.playlistTitle} key={key} onClick={() => { addToPlaylist(audioArray[playingIndex].id, playlist.id) }}>
-              {key + 1}. {playlist.name}
-            </div>
-          )
-        })}
-      </div>
-      {playListPopup ? <CreatePlaylistPopup closeCreatePlaylistPopup={closeCreatePlaylistPopup} /> : ""}
-    </div>
-
-    <div>
-      {audioContent}
-    </div>
-
-  </div>
-);
-}
-
-export default SideBar;
+  export default SideBar;
