@@ -76,6 +76,7 @@ export interface PublicBeatObject {
   imageUrl: string,
   like: boolean,
   duration: string,
+  isPlaying: boolean,
 }
 
 export interface PlaylistProps {

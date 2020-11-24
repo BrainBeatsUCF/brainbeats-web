@@ -32,6 +32,9 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   const [isPublicBeatEmpty, setIsPublicBeatEmpty] = useState(false);
   const [message, setMessage] = useState('');
 
+  //Testing status
+  const [isPlaying,setIsPlaying] = useState(false);
+
   const loadLikedBeats = async () => {
     ValidateAndRegenerateAccessToken();
     const data = {
@@ -92,6 +95,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
           "like": false,
           "duration": item.properties['duration'][0]['value'],
           "instrumentList": item.properties['instrumentList'][0]['value'],
+          "isPlaying": false,
         };
         
         publicBeatArray.push(newPublicBeat);
@@ -142,10 +146,21 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
     }    
   }
 
-  const playPublicBeat = (id: string) => {
+  const playPublicBeat = (id: string, key: number) => {
     props.setAudioGlobal(id);
     musicProvider.setAudioPlayingType('public-beats');
-    musicProvider.togglePlayingStatus();
+    
+    publicBeats[key]['isPlaying'] = true;
+    publicBeatArray = [...publicBeats];
+    setPublicBeats(publicBeatArray);
+    musicProvider.playNew();
+  }
+
+  const pausePublicBeat = (key: number) => {
+    publicBeats[key]['isPlaying'] = false;
+    publicBeatArray = [...publicBeats];
+    setPublicBeats(publicBeatArray);
+    musicProvider.changePlayingStatus();
   }
 
   const likeBeat = (id: string, idx: number) => {
@@ -222,7 +237,11 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
                       <div>
                         <div>{publicBeat.name}</div>
                         <div className={classes.playButtonAndBeatInfo}>
-                          <img style={{cursor: 'pointer'}} alt ='Play Button'src={PlayButton} onClick={() => playPublicBeat(publicBeat.id)}></img>
+                          {
+                            publicBeat.isPlaying ? 
+                            <img style={{cursor: 'pointer'}} alt ='Pause Button'src={PauseButton} onClick={() => {pausePublicBeat(key)}}></img> :
+                            <img style={{cursor: 'pointer'}} alt ='Play Button'src={PlayButton} onClick={() => playPublicBeat(publicBeat.id, key)}></img>
+                          }
                           <div style={{marginLeft: '8px'}}>
                             {
                               JSON.parse(publicBeat.instrumentList).map((item: string, index: number) => 
