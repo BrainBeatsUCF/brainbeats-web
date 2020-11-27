@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     top: '15%',
     margin: 'auto',
     borderRadius: '20px',
-    backgroundColor: '#787878'
+    backgroundColor: '#38363a'
   },
   header: {
     marginTop: '10px',

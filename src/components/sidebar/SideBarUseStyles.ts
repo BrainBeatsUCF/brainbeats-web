@@ -142,7 +142,7 @@ const useStyles = makeStyles(() => ({
   },
   addPlaylistButton: {
     backgroundColor: '#D0351E',
-    borderRadius: '5px'
+    borderRadius: '5px',
   },
   logOut: {
     display: 'flex',

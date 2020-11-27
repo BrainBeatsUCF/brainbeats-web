@@ -238,8 +238,6 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
                         <div>{publicBeat.name}</div>
                         <div className={classes.playButtonAndBeatInfo}>
                           {
-                            publicBeat.isPlaying ? 
-                            <img style={{cursor: 'pointer'}} alt ='Pause Button'src={PauseButton} onClick={() => {pausePublicBeat(key)}}></img> :
                             <img style={{cursor: 'pointer'}} alt ='Play Button'src={PlayButton} onClick={() => playPublicBeat(publicBeat.id, key)}></img>
                           }
                           <div style={{marginLeft: '8px'}}>
