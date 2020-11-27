@@ -17,6 +17,10 @@ export default class MusicContextProvider {
     return this.isPlaying;
   }
 
+  public changePlayingStatus(): boolean{
+    return !this.isPlaying;
+  }
+
   public togglePlayingStatus(): void {
     this.isPlaying = !this.isPlaying;
   }

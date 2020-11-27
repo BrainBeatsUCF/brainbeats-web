@@ -8,7 +8,9 @@ import { useStyles } from './useStyles';
 import RedHeartButton from '../../images/redHeartButton.png';
 import WhiteHeartButton from '../../images/whiteHeartButton.png';
 import PlayButton from '../../images/playButton.png';
+import PauseButton from '../../images/pauseButton.png';
 import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
+import { Pause } from '@material-ui/icons';
 // import PauseButton from '../../images/pauseButton.png';
 
 // Todo: call /api/user/get_liked_beats to get liked beats, then use orignalPubliBeat to see if any public beat is pre-liked
@@ -29,6 +31,9 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
   const [searchName, setSearchName] = useState('');
   const [isPublicBeatEmpty, setIsPublicBeatEmpty] = useState(false);
   const [message, setMessage] = useState('');
+
+  //Testing status
+  const [isPlaying,setIsPlaying] = useState(false);
 
   const loadLikedBeats = async () => {
     ValidateAndRegenerateAccessToken();
@@ -75,10 +80,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
 
   const loadData = async () => {
     ValidateAndRegenerateAccessToken();
-    axios.post(url + 'api/beat/get_all_beats', 
-    {
-      email: userEmail
-    },
+    axios.get(url + 'api/v2/beats',
     {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -93,6 +95,7 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
           "like": false,
           "duration": item.properties['duration'][0]['value'],
           "instrumentList": item.properties['instrumentList'][0]['value'],
+          "isPlaying": false,
         };
         
         publicBeatArray.push(newPublicBeat);
@@ -143,9 +146,21 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
     }    
   }
 
-  const playPublicBeat = (id: string) => {
+  const playPublicBeat = (id: string, key: number) => {
     props.setAudioGlobal(id);
-    musicProvider.setAudioPlayingType('beat');
+    musicProvider.setAudioPlayingType('public-beats');
+    
+    publicBeats[key]['isPlaying'] = true;
+    publicBeatArray = [...publicBeats];
+    setPublicBeats(publicBeatArray);
+    musicProvider.playNew();
+  }
+
+  const pausePublicBeat = (key: number) => {
+    publicBeats[key]['isPlaying'] = false;
+    publicBeatArray = [...publicBeats];
+    setPublicBeats(publicBeatArray);
+    musicProvider.changePlayingStatus();
   }
 
   const likeBeat = (id: string, idx: number) => {
@@ -222,7 +237,9 @@ const PublicBeat: React.FC<PublicBeatProps> = ({...props}) => {
                       <div>
                         <div>{publicBeat.name}</div>
                         <div className={classes.playButtonAndBeatInfo}>
-                          <img style={{cursor: 'pointer'}} alt ='Play Button'src={PlayButton} onClick={() => playPublicBeat(publicBeat.id)}></img>
+                          {
+                            <img style={{cursor: 'pointer'}} alt ='Play Button'src={PlayButton} onClick={() => playPublicBeat(publicBeat.id, key)}></img>
+                          }
                           <div style={{marginLeft: '8px'}}>
                             {
                               JSON.parse(publicBeat.instrumentList).map((item: string, index: number) => 

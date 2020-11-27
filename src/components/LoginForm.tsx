@@ -121,8 +121,8 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
             <Formik
             validationSchema = {schema}
             initialValues={{
-              email: props.email || 'Your email',
-              password: props.password || 'Your password',
+              email: props.email || '',
+              password: props.password || '',
             }}
             onSubmit={async (data: LoginProps): Promise<void> => {
               handleLogin(data, history);
@@ -138,6 +138,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                       name="email"
                       component={TextFormField}
                       type="email"
+                      placeholder="Enter email"
                       />
                     </div>
                     <div>
@@ -146,6 +147,7 @@ const LoginForm: React.FC<LoginProps> = ({ ...props }) => {
                       name="password"
                       component={TextFormField}
                       type="password"
+                      placeholder="Enter password"
                       />
                     </div>
                     {/* {loading ? <p style={{color: 'white'}}>Loading... </p> : ""} */}

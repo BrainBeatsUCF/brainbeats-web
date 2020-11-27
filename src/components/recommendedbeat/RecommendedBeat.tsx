@@ -96,7 +96,7 @@ const RecommendedBeat: React.FC<RecommendedBeatProps> = ({...props}) => {
 
   const playBeat = (id:string) => {
     props.setAudioGlobal(id);
-    musicProvider.setAudioPlayingType('beat');
+    musicProvider.setAudioPlayingType('recommended-beats');
   };
 
   return (
