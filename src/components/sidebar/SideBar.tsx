@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import BrainBeatsAudioPlayer from '@brainbeatsucf/brainbeats-audio-player';
-import AudioPlayer from 'react-h5-audio-player';
 import '@brainbeatsucf/brainbeats-audio-player/src/style.css';
 import { useStyles } from './SideBarUseStyles';
 import BeatButtonImage from '../../images/beatButton.png';
@@ -204,7 +203,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
               "imageUrl": item.properties['image'][0]['value'],
               "title": item.properties['name'][0]['value'],
               "instrumentList": item.properties['instrumentList'][0]['value'],
-              "authorName": "missingno",
+              "authorName": "",
               "audioUrl": item.properties['audio'][0]['value'],
             };
 
@@ -269,8 +268,9 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
               "imageUrl": item.properties['image'][0]['value'],
               "audioUrl": item.properties['audio'][0]['value'],
               "title": item.properties['name'][0]['value'],
-              "authorName": 'Unknown Author'
+              "authorName": ''
             };
+            //console.log(`owner:${item.properties['owner'][0]['value']}`)
             console.dir(item, { depth: null })
             audioArrayData.push(newSample);
           });
@@ -323,7 +323,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
             "imageUrl": item.properties['image'][0]['value'],
             "title": item.properties['name'][0]['value'],
             "instrumentList": item.properties['instrumentList'][0]['value'],
-            "authorName": "missingno",
+            "authorName": "",
             "audioUrl": item.properties['audio'][0]['value'],
           };
 
@@ -378,7 +378,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
           "imageUrl": item.properties['image'][0]['value'],
           "title": item.properties['name'][0]['value'],
           "instrumentList": item.properties['instrumentList'][0]['value'],
-          "authorName": "missingno",
+          "authorName": "",
           "audioUrl": item.properties['audio'][0]['value'],
         };
         
