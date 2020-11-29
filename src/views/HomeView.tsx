@@ -44,11 +44,12 @@ const useStyles = makeStyles(() =>
     fixedTopRightGradient: {
       '@media (min-width: 960px)': {
         position: 'fixed',
-        right: 276,
+        left: 840,
         top: 0,
-        width: '15%',
+        width: '100%',
         height: '100%',
-        background: 'linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(40, 37, 43, 0.9) 60%, rgba(40, 37, 43, 1) 100%)'
+        background: 'linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(40, 37, 43, 0.9) 60%, rgba(40, 37, 43, 1) 100%)',
+        pointerEvents: 'none'
       }
     },
     leftContent: {
