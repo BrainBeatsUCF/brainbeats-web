@@ -42,7 +42,8 @@ const useStyles = makeStyles(() =>
       } 
     },
     leftContent: {
-      background: 'linear-gradient(to left, rgba(40, 45, 43, 0.9) 60%, #28252b)',
+      /*background: 'linear-gradient(to left, rgba(40, 45, 43, 0.9) 60%, #28252b)',*/
+      backgroundColor: '#28252b'
     }
   }),
 );
