@@ -12,7 +12,7 @@ BRAINBEATS_VERSIONS=$(az acr repository show-tags -n brainbeatscontainersregistr
 
 CURRENT_BRANCH=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 
-PRODUCTION_BRANCH="dockerfile-deploymen"
+PRODUCTION_BRANCH="dockerfile-deployment"
 
 # Check if you're current branch is the same as production.
 function checkGitBranch(){
