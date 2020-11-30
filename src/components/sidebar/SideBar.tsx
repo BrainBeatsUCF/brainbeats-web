@@ -37,6 +37,36 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
   const url = "https://brain-beats-server-docker.azurewebsites.net";
 
 
+   async function RequestUserFullName(email: string){
+    ValidateAndRegenerateAccessToken();
+
+    
+    /*
+    axios.get(url + `/api/v2/users/${email}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    }).then((res) => {
+      //console.log(`RequestOutput: ${res.data[0].properties['name'][0]['value']}`)
+      return res.data[0].properties['name'][0]['value'];
+    }).catch((err) => {
+      console.error(err);
+    });
+    */
+
+    const response = await axios.get(url + `/api/v2/users/${email}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    });
+
+    console.log(`ResponseData: ${response.data[0].properties['name'][0]['value']}`)
+
+    return response.data[0].properties['name'][0]['value'];
+  }
+
   const RequestUserProfileImage = () => {
     setUserPicture(UserRequestImage(userEmail, idToken));
   }
@@ -268,7 +298,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
               "imageUrl": item.properties['image'][0]['value'],
               "audioUrl": item.properties['audio'][0]['value'],
               "title": item.properties['name'][0]['value'],
-              "authorName": ''
+              "authorName": item.owner.properties['name'][0]['value']
             };
             //console.log(`owner:${item.properties['owner'][0]['value']}`)
             console.dir(item, { depth: null })
@@ -323,7 +353,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
             "imageUrl": item.properties['image'][0]['value'],
             "title": item.properties['name'][0]['value'],
             "instrumentList": item.properties['instrumentList'][0]['value'],
-            "authorName": "",
+            "authorName": item.owner.properties['name'][0]['value'],
             "audioUrl": item.properties['audio'][0]['value'],
           };
 
