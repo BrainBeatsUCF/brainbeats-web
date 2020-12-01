@@ -1,8 +1,12 @@
 #!/bin/bash
 
+#Web Developments script for pushing a docker container image to azures registry container. Ideally it's better to have a pipeline configured on azure for better development. We did'nt have the time to implement this with different libraries and codecs for the sepereate teams.
+
+#Run this script locally to push uptowards registry.
+
 #CONTAINER - azure registry container
 #BRAINBEATS_VERSIONS - get repository tag image versions
-#CURRENT_BRANCH - get current branch from the current directory
+#CURRENT_BRANCH - get current branch location from the current directory
 #PRODUCTION_BRANCH - branch that pushes towards production
 #Note make sure files are currently commited.
 
@@ -12,7 +16,7 @@ BRAINBEATS_VERSIONS=$(az acr repository show-tags -n brainbeatscontainersregistr
 
 CURRENT_BRANCH=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 
-PRODUCTION_BRANCH="dockerfile-deployment"
+PRODUCTION_BRANCH="master"
 
 # Check if you're current branch is the same as production.
 function checkGitBranch(){
@@ -86,6 +90,7 @@ function versionFormatCheck(){
 function main(){
 echo "Brain Beats Web Deployment Script"
 echo "This script only works if you have a MacOS/Linux."
+echo "Please make sure you have azure cli and docker installed."
 echo ""
 echo ""
 

@@ -1,0 +1,2 @@
+# Ignore web deployment script only for local use.
+deploy-web-script.sh
