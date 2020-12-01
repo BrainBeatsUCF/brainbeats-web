@@ -217,26 +217,25 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
       ValidateAndRegenerateAccessToken();
       console.log(`'inside beats token printme that id: ${props.id}`)
-      axios.post(url + '/api/user/get_owned_beats',
-        {
-          email: userEmail
-        },
+      console.log(`user logged in: ${localStorage.getItem('userEmail')}`)
+      axios.get(url + `/api/v2/users/${localStorage.getItem('userEmail')}/owned_by?type=beat`,
         {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json',
+            'Access-Control-Origin' : '*'
           }
         }).then((res) => {
           res.data.forEach((item: any) => {
             const newBeat =
-            {
-              "id": item.id,
-              "imageUrl": item.properties['image'][0]['value'],
-              "title": item.properties['name'][0]['value'],
-              "instrumentList": item.properties['instrumentList'][0]['value'],
-              "authorName": "",
-              "audioUrl": item.properties['audio'][0]['value'],
-            };
-
+          {
+            "id": item.id,
+            "imageUrl": item.properties['image'][0]['value'],
+            "title": item.properties['name'][0]['value'],
+            "instrumentList": item.properties['instrumentList'][0]['value'],
+            "authorName": item.owner.properties['name'][0]['value'],
+            "audioUrl": item.properties['audio'][0]['value'],
+          };
             audioArrayData.push(newBeat);
           });
 
@@ -245,8 +244,16 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
 
           const clickedBeatIndex = audioArrayData.map(beat => beat.id).indexOf(props.id)
 
-          var newAudioArrayData = [audioArrayData[clickedBeatIndex]];
+          if (audioArrayData.length <= 0){
+            console.log(`audioArrayData is freaking empty.`)
+          }
+          audioArrayData.forEach(data => {
+            console.log(`inside array data: ${data}`)
+          })
 
+          var newAudioArrayData = [audioArrayData[clickedBeatIndex]];
+          
+          console.dir(audioArrayData,{depth: null})
           console.log(`clickedBeat: ${clickedBeatIndex}`)
           console.log(`length of audioArrayData is ${audioArrayData.length}`)
 
@@ -392,10 +399,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
     }
     else if (musicProvider.getAudioPlayingType() == 'recommended-beats') {
       ValidateAndRegenerateAccessToken();
-    axios.post(url + '/api/user/get_recommended_beats', 
-    {
-      email: userEmail
-    }, 
+    axios.get(url + `/api/v2/users/${localStorage.getItem('userEmail')}/recommended?type=beat`, 
     {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -408,7 +412,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
           "imageUrl": item.properties['image'][0]['value'],
           "title": item.properties['name'][0]['value'],
           "instrumentList": item.properties['instrumentList'][0]['value'],
-          "authorName": "",
+          "authorName": item.owner.properties['name'][0]['value'],
           "audioUrl": item.properties['audio'][0]['value'],
         };
         
