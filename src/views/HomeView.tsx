@@ -39,10 +39,22 @@ const useStyles = makeStyles(() =>
         top: 0,
         width: '100%',
         height: '100%'
-      } 
+      }
+    },
+    fixedTopRightGradient: {
+      '@media (min-width: 960px)': {
+        position: 'fixed',
+        left: 840,
+        top: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(40, 37, 43, 0.9) 60%, rgba(40, 37, 43, 1) 100%)',
+        pointerEvents: 'none'
+      }
     },
     leftContent: {
-      background: 'linear-gradient(to left, rgba(40, 45, 43, 0.9) 60%, #28252b)',
+      /*background: 'linear-gradient(to left, rgba(40, 45, 43, 0.9) 60%, #28252b)',*/
+      backgroundColor: '#28252b'
     }
   }),
 );
@@ -109,6 +121,8 @@ const HomeView: React.FC = () => {
                   <RecommendedBeat setAudioGlobal={setAudioGlobal}/>
                 </Grid>
               </Grid>
+            </Grid>
+            <Grid className={classes.fixedTopRightGradient} item xs={12} md={3}>
             </Grid>
             <Grid className={classes.fixedTopRight} item xs={12} md={3}>
               <SideBar id={id} numBeats={numBeats} numSamples={numSamples} numShares={numShares}/>
