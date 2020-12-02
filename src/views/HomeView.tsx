@@ -83,7 +83,6 @@ const HomeView: React.FC = () => {
 
   const setAudioGlobal = (audioId: string) => {
     setId(audioId);
-    console.log(`audioId: ${audioId}`)
   };
 
   const setNumPublicSamplesMethod = (numPublicSamples: number) => {

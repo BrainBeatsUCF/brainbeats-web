@@ -14,11 +14,6 @@ import { SideBarProps, AudioObject, PlaylistObject } from '../../util/api/types'
 import { UserRequestImage } from '../../util/UserRequestImage';
 import { ValidateAndRegenerateAccessToken } from '../../util/ValidateRegenerateAccessToken';
 
-// Todo: 1. Add icon when audio is successfully/finished added to playlist
-
-// Todo: handle next/back button for audio player for example: Beat/Sample/Public Beat component can go next beat
-// beats in playlist can go back/next
-
 const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
   const classes = useStyles(useStyles);
   const [audioArray, setAudioArray] = useState([] as AudioObject[]);
@@ -35,37 +30,6 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
   const [userPicture, setUserPicture] = useState("");
 
   const url = "https://brain-beats-server-docker.azurewebsites.net";
-
-
-   async function RequestUserFullName(email: string){
-    ValidateAndRegenerateAccessToken();
-
-    
-    /*
-    axios.get(url + `/api/v2/users/${email}`,
-    {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-      }
-    }).then((res) => {
-      //console.log(`RequestOutput: ${res.data[0].properties['name'][0]['value']}`)
-      return res.data[0].properties['name'][0]['value'];
-    }).catch((err) => {
-      console.error(err);
-    });
-    */
-
-    const response = await axios.get(url + `/api/v2/users/${email}`,
-    {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-      }
-    });
-
-    console.log(`ResponseData: ${response.data[0].properties['name'][0]['value']}`)
-
-    return response.data[0].properties['name'][0]['value'];
-  }
 
   const RequestUserProfileImage = () => {
     setUserPicture(UserRequestImage(userEmail, idToken));
@@ -109,9 +73,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
       }).then((res) => {
-        // console.log(res);
       }).catch((err) => {
-        // console.log(err);
       });
   }
 
@@ -161,7 +123,6 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
 
         setPlaylists(playlistArrayData);
       }).catch((err) => {
-        // console.log(err);
       });
   }
 
@@ -216,8 +177,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
       setAudioArray(audioArrayData);
     } else if (musicProvider.getAudioPlayingType() === 'beat') {
       ValidateAndRegenerateAccessToken();
-      console.log(`'inside beats token printme that id: ${props.id}`)
-      console.log(`user logged in: ${localStorage.getItem('userEmail')}`)
+
       axios.get(url + `/api/v2/users/${localStorage.getItem('userEmail')}/owned_by?type=beat`,
         {
           headers: {
@@ -244,19 +204,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
 
           const clickedBeatIndex = audioArrayData.map(beat => beat.id).indexOf(props.id)
 
-          if (audioArrayData.length <= 0){
-            console.log(`audioArrayData is freaking empty.`)
-          }
-          audioArrayData.forEach(data => {
-            console.log(`inside array data: ${data}`)
-          })
-
           var newAudioArrayData = [audioArrayData[clickedBeatIndex]];
-          
-          console.dir(audioArrayData,{depth: null})
-          console.log(`clickedBeat: ${clickedBeatIndex}`)
-          console.log(`length of audioArrayData is ${audioArrayData.length}`)
-
 
           var tempIndex = clickedBeatIndex + 1;
 
@@ -264,7 +212,6 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
             tempIndex = 0;
 
           while (tempIndex != clickedBeatIndex) {
-            console.log(`tempIndex: ${tempIndex}`)
 
             newAudioArrayData.push(audioArrayData[tempIndex])
 
@@ -276,18 +223,8 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
           }
           setAudioArray(newAudioArrayData);
         }).catch((err) => {
-          // console.log(err);
         });
     }
-
-    /*
-  console.log("Length of data is " + audioArrayData.length);
-  setAudioArray(audioArrayData)
-  console.log('audioArrayData ouput')
-  console.dir(audioArrayData, { depth: null })
-  console.log('audioArray ouput')
-  console.dir(audioArray, { depth: null })*/
-
 
     else if (musicProvider.getAudioPlayingType() === 'sample') {
       ValidateAndRegenerateAccessToken();
@@ -307,17 +244,12 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
               "title": item.properties['name'][0]['value'],
               "authorName": item.owner.properties['name'][0]['value']
             };
-            //console.log(`owner:${item.properties['owner'][0]['value']}`)
-            console.dir(item, { depth: null })
+            
             audioArrayData.push(newSample);
           });
           const clickedSampleIndex = audioArrayData.map(sample => sample.id).indexOf(props.id)
 
           var newAudioArrayData = [audioArrayData[clickedSampleIndex]];
-
-          console.log(`clickedBeat: ${clickedSampleIndex}`)
-          console.log(`length of audioArrayData is ${audioArrayData.length}`)
-
 
           var tempIndex = clickedSampleIndex + 1;
 
@@ -325,7 +257,6 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
             tempIndex = 0;
 
           while (tempIndex != clickedSampleIndex) {
-            console.log(`tempIndex: ${tempIndex}`)
 
             newAudioArrayData.push(audioArrayData[tempIndex])
 
@@ -374,17 +305,12 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
 
         var newAudioArrayData = [audioArrayData[clickedBeatIndex]];
 
-        console.log(`clickedBeat: ${clickedBeatIndex}`)
-        console.log(`length of audioArrayData is ${audioArrayData.length}`)
-
-
         var tempIndex = clickedBeatIndex + 1;
 
         if (tempIndex >= audioArrayData.length)
           tempIndex = 0;
 
         while (tempIndex != clickedBeatIndex) {
-          console.log(`tempIndex: ${tempIndex}`)
 
           newAudioArrayData.push(audioArrayData[tempIndex])
 
@@ -423,17 +349,12 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
 
         var newAudioArrayData = [audioArrayData[clickedBeatIndex]];
 
-        console.log(`clickedBeat: ${clickedBeatIndex}`)
-        console.log(`length of audioArrayData is ${audioArrayData.length}`)
-
-
         var tempIndex = clickedBeatIndex + 1;
 
         if (tempIndex >= audioArrayData.length)
           tempIndex = 0;
 
         while (tempIndex != clickedBeatIndex) {
-          console.log(`tempIndex: ${tempIndex}`)
 
           newAudioArrayData.push(audioArrayData[tempIndex])
 
@@ -446,7 +367,6 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
         setAudioArray(newAudioArrayData);
 
     }).catch((err) => {
-      // console.log(err);
     });
     }
     
@@ -510,9 +430,7 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
     else
       isShowAddToPlaylist = false;
 
-    // console.log(`current audioArray: ${audioArray}`)
     if (audioArray.length > 0) {
-      console.dir(audioArray, { depth: null })
       audioContent = (
         <>
           {isShowAddToPlaylist ? <button className={classes.addPlaylistButton} onClick={showPlaylistArea}>Add to my playlists</button> : ""}
