@@ -44,7 +44,7 @@ const useStyles = makeStyles(() =>
     fixedTopRightGradient: {
       '@media (min-width: 960px)': {
         position: 'fixed',
-        left: 840,
+        left: '50%',
         top: 0,
         width: '100%',
         height: '100%',
@@ -83,7 +83,6 @@ const HomeView: React.FC = () => {
 
   const setAudioGlobal = (audioId: string) => {
     setId(audioId);
-    console.log(`audioId: ${audioId}`)
   };
 
   const setNumPublicSamplesMethod = (numPublicSamples: number) => {
@@ -122,10 +121,12 @@ const HomeView: React.FC = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid className={classes.fixedTopRightGradient} item xs={12} md={3}>
-            </Grid>
+            {/*<Grid className={classes.fixedTopRightGradient} item xs={12} md={3}>
+            </Grid>*/}
             <Grid className={classes.fixedTopRight} item xs={12} md={3}>
               <SideBar id={id} numBeats={numBeats} numSamples={numSamples} numShares={numShares}/>
+              <Grid className={classes.fixedTopRightGradient} item xs={12} md={3}>
+            </Grid>
             </Grid>
           </Grid>
         </div>
